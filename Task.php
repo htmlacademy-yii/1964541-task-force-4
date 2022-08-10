@@ -6,22 +6,49 @@ class Task
     private int $executor_id;
     private string $current_status = self::STATUS_NEW;
 
-    const STATUS_NEW = 'new';
-    const STATUS_CANCELED = 'canceled';
-    const STATUS_IN_WORK = 'in_work';
-    const STATUS_EXECUTED = 'done';
-    const STATUS_FAILED = 'failed';
-    const ACTION_CANCEL = 'cancel';
-    const ACTION_RESPOND = 'respond';
-    const ACTION_REFUSE = 'refuse';
-    const ACTION_EXECUTE = 'executed';
+    const STATUS_NEW = 'status_new';
+    const STATUS_CANCELED = 'status_canceled';
+    const STATUS_IN_WORK = 'status_in_work';
+    const STATUS_EXECUTED = 'status_executed';
+    const STATUS_FAILED = 'status_failed';
+    const ACTION_CANCEL = 'action_cancel';
+    const ACTION_ACCEPT = 'action_respond';
+    const ACTION_REFUSE = 'action_refuse';
+    const ACTION_EXECUTE = 'action_executed';
+
+    public function __construct($customer_id, $executor_id)
+    {
+        $this->customer_id = $customer_id;
+        $this->executor_id = $executor_id;
+    }
+
+    public function getCurrentStatus(): string
+    {
+        return $this->current_status;
+    }
+
+    public function getNextStatus($action): string
+    {
+        switch ($action) {
+            case self::ACTION_ACCEPT:
+                return self::STATUS_IN_WORK;
+            case self::ACTION_CANCEL:
+                return self::STATUS_CANCELED;
+            case self::ACTION_EXECUTE:
+                return self::STATUS_EXECUTED;
+            case self::ACTION_REFUSE:
+                return self::STATUS_FAILED;
+            default:
+                return 'Данное действие не предусмотрено';
+        }
+    }
 
     public function getAvailableActions(): array
     {
         switch ($this->current_status) {
             case self::STATUS_NEW:
                 return [
-                    self::ACTION_RESPOND => 'ответить',
+                    self::ACTION_ACCEPT => 'принять',
                     self::ACTION_CANCEL => 'отменить'
                 ];
             case self::STATUS_IN_WORK:
@@ -32,25 +59,24 @@ class Task
         }
     }
 
-    public function toRespond()
+    public function actionAccept(): void
     {
-        return $this->current_status = self::STATUS_IN_WORK;
+        $this->current_status = self::STATUS_IN_WORK;
     }
 
-    public function toRefuse()
+    public function actionRefuse(): void
     {
-        return $this->current_status = self::STATUS_CANCELED;
+        $this->current_status = self::STATUS_CANCELED;
     }
 
-    public function toExecute()
+    public function actionExecute(): void
     {
-        return $this->current_status = self::STATUS_EXECUTED;
+        $this->current_status = self::STATUS_EXECUTED;
     }
 
-    public function __construct($customer_id, $executor_id)
+    public function actionCancel(): void
     {
-        $this->customer_id = $customer_id;
-        $this->executor_id = $executor_id;
+        $this->current_status = self::STATUS_CANCELED;
     }
 
     public function getStatusMap(): array
@@ -59,11 +85,12 @@ class Task
             self::ACTION_CANCEL => 'отменить',
             self::ACTION_EXECUTE => 'выполнить',
             self::ACTION_REFUSE => 'отказаться',
-            self::ACTION_RESPOND => 'ответить',
+            self::ACTION_ACCEPT => 'принять',
             self::STATUS_CANCELED => 'отменено',
             self::STATUS_EXECUTED => 'выполнено',
             self::STATUS_NEW => 'новое',
             self::STATUS_IN_WORK => 'в работе',
-            self::STATUS_FAILED => 'провалено'];
+            self::STATUS_FAILED => 'провалено'
+        ];
     }
 }
