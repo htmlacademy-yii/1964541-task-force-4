@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Кирилл Соколов](https://up.htmlacademy.ru/yii/4/user/1964541).
-* Наставник: Никита Колосов (https://htmlacademy.ru/profile/id1186205).
+* Наставник: [Никита Колосов] (https://htmlacademy.ru/profile/id1186205).
 
 ---
 
