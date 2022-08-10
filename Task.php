@@ -29,18 +29,13 @@ class Task
 
     public function getNextStatus($action): string
     {
-        switch ($action) {
-            case self::ACTION_ACCEPT:
-                return self::STATUS_IN_WORK;
-            case self::ACTION_CANCEL:
-                return self::STATUS_CANCELED;
-            case self::ACTION_EXECUTE:
-                return self::STATUS_EXECUTED;
-            case self::ACTION_REFUSE:
-                return self::STATUS_FAILED;
-            default:
-                return 'Данное действие не предусмотрено';
-        }
+        return match ($action) {
+            self::ACTION_ACCEPT => self::STATUS_IN_WORK,
+            self::ACTION_CANCEL => self::STATUS_CANCELED,
+            self::ACTION_EXECUTE => self::STATUS_EXECUTED,
+            self::ACTION_REFUSE => self::STATUS_FAILED,
+            default => 'Данное действие не предусмотрено',
+        };
     }
 
     public function getAvailableActions(): array
