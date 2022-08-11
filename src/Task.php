@@ -1,4 +1,7 @@
 <?php
+namespace TaskForce;
+
+use Exception;
 
 class Task
 {
