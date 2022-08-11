@@ -34,7 +34,7 @@ class Task
             self::ACTION_CANCEL => self::STATUS_CANCELED,
             self::ACTION_EXECUTE => self::STATUS_EXECUTED,
             self::ACTION_REFUSE => self::STATUS_FAILED,
-            default => 'Данное действие не предусмотрено',
+            default => throw new Exception('Данное действие не предусмотрено'),
         };
     }
 
@@ -52,6 +52,8 @@ class Task
     {
         if (in_array(self::ACTION_ACCEPT, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_IN_WORK;
+        } else {
+            throw new Exception('Совершить данное действие невозможно');
         }
     }
 
@@ -59,6 +61,8 @@ class Task
     {
         if (in_array(self::ACTION_REFUSE, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_FAILED;
+        } else {
+            throw new Exception('Совершить данное действие невозможно');
         }
     }
 
@@ -66,6 +70,8 @@ class Task
     {
         if (in_array(self::ACTION_EXECUTE, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_EXECUTED;
+        } else {
+            throw new Exception('Совершить данное действие невозможно');
         }
     }
 
@@ -73,6 +79,8 @@ class Task
     {
         if (in_array(self::ACTION_CANCEL, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_CANCELED;
+        } else {
+            throw new Exception('Совершить данное действие невозможно');
         }
     }
 
