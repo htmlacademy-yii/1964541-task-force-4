@@ -16,7 +16,7 @@ class Task
     const ACTION_REFUSE = 'action_refuse';
     const ACTION_EXECUTE = 'action_executed';
 
-    public function __construct($customer_id, $executor_id)
+    public function __construct(int $customer_id, int $executor_id)
     {
         $this->customer_id = $customer_id;
         $this->executor_id = $executor_id;
@@ -27,7 +27,7 @@ class Task
         return $this->current_status;
     }
 
-    public function getNextStatus($action): string
+    public function getNextStatus(string $action): string
     {
         return match ($action) {
             self::ACTION_ACCEPT => self::STATUS_IN_WORK,
@@ -38,40 +38,42 @@ class Task
         };
     }
 
-    public function getAvailableActions(): array
+    public function getAvailableActions(int $id): array
     {
         switch ($this->current_status) {
             case self::STATUS_NEW:
-                return [
-                    self::ACTION_ACCEPT => 'принять',
-                    self::ACTION_CANCEL => 'отменить'
-                ];
+                return $id === $this->customer_id ? [self::ACTION_CANCEL] : [self::ACTION_ACCEPT, self::ACTION_REFUSE];
             case self::STATUS_IN_WORK:
-                return [
-                    self::ACTION_EXECUTE => 'выполнить',
-                    self::ACTION_REFUSE => 'отказаться'
-                ];
+                return $id === $this->customer_id ? [self::ACTION_EXECUTE, self::ACTION_CANCEL] : [self::ACTION_REFUSE];
         }
     }
 
-    public function actionAccept(): void
+    public function actionAccept(int $id): void
     {
-        $this->current_status = self::STATUS_IN_WORK;
+        if (in_array(self::ACTION_ACCEPT, $this->getAvailableActions($id))) {
+            $this->current_status = self::STATUS_IN_WORK;
+        }
     }
 
-    public function actionRefuse(): void
+    public function actionRefuse(int $id): void
     {
-        $this->current_status = self::STATUS_CANCELED;
+        if (in_array(self::ACTION_REFUSE, $this->getAvailableActions($id))) {
+            $this->current_status = self::STATUS_FAILED;
+        }
     }
 
-    public function actionExecute(): void
+    public function actionExecute(int $id): void
     {
-        $this->current_status = self::STATUS_EXECUTED;
+        if (in_array(self::ACTION_EXECUTE, $this->getAvailableActions($id))) {
+            $this->current_status = self::STATUS_EXECUTED;
+        }
     }
 
-    public function actionCancel(): void
+    public function actionCancel(int $id): void
     {
-        $this->current_status = self::STATUS_CANCELED;
+        if (in_array(self::ACTION_CANCEL, $this->getAvailableActions($id))) {
+            $this->current_status = self::STATUS_CANCELED;
+        }
     }
 
     public function getStatusMap(): array
