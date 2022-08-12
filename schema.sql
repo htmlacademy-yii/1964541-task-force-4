@@ -1,7 +1,21 @@
 CREATE DATABASE taskForce
 DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;
-USE taskFotce;
+USE taskForce;
+
+CREATE TABLE cities (
+                      id INT AUTO_INCREMENT PRIMARY KEY,
+                      name CHAR(64) DEFAULT NULL,
+                      location INT NOT NULL,
+                      UNIQUE INDEX UI_city (name)
+);
+
+CREATE TABLE task_categories (
+                               id INT AUTO_INCREMENT PRIMARY KEY,
+                               name VARCHAR(128) NOT NULL,
+                               type VARCHAR(128) NOT NULL,
+                               UNIQUE INDEX UI_type (type)
+);
 
 CREATE TABLE users (
                      id INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,13 +36,6 @@ CREATE TABLE users (
                      UNIQUE INDEX UI_login (login)
 );
 
-CREATE TABLE task_categories (
-                            id INT AUTO_INCREMENT PRIMARY KEY,
-                            name VARCHAR(128) NOT NULL,
-                            type VARCHAR(128) NOT NULL,
-                            UNIQUE INDEX UI_type (type)
-);
-
 CREATE TABLE tasks (
                      id INT AUTO_INCREMENT PRIMARY KEY,
                      title VARCHAR(128) NOT NULL,
@@ -45,13 +52,6 @@ CREATE TABLE tasks (
                      FOREIGN KEY (task_category_id) REFERENCES task_categories(id),
                      FOREIGN KEY (executor_id) REFERENCES users (id),
                      FOREIGN KEY (customer_id) REFERENCES users (id)
-);
-
-CREATE TABLE cities (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name CHAR(64) DEFAULT NULL,
-                    location INT NOT NULL,
-                    UNIQUE INDEX UI_city (name)
 );
 
 CREATE TABLE reviews (
