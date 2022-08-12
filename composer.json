@@ -1,0 +1,18 @@
+{
+    "name": "my/taskforce",
+    "description": "php level 2 project",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "g123udini",
+            "email": "g123udini@gmail.com"
+        }
+    ],
+    "require": {}
+}
