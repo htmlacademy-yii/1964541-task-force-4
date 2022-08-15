@@ -18,7 +18,7 @@ CREATE TABLE category (
                                UNIQUE INDEX UI_name (name)
 );
 
-CREATE TABLE users (
+CREATE TABLE user (
                      id INT AUTO_INCREMENT PRIMARY KEY,
                      email VARCHAR(320) NOT NULL,
                      password CHAR(64) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE users (
                      UNIQUE INDEX UI_login (login)
 );
 
-CREATE TABLE tasks (
+CREATE TABLE task (
                      id INT AUTO_INCREMENT PRIMARY KEY,
                      title VARCHAR(128) NOT NULL,
                      description TEXT DEFAULT NULL,
@@ -60,10 +60,11 @@ CREATE TABLE user_category (
                              user_id INT NOT NULL,
                              category_id INT NOT NULL,
                              FOREIGN KEY (category_id) REFERENCES category (id),
-                             FOREIGN KEY (user_id) REFERENCES users (id)
+                             FOREIGN KEY (user_id) REFERENCES users (id),
+                             PRIMARY KEY (user_id, category_id)
 );
 
-CREATE TABLE reviews (
+CREATE TABLE review (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         content TEXT NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE reviews (
                         FOREIGN KEY (task_id) REFERENCES tasks (id)
 );
 
-CREATE TABLE responses (
+CREATE TABLE response (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         task_id INT NOT NULL,
                         executor_id INT NOT NULL,
