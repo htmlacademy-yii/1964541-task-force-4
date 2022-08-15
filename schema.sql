@@ -1,20 +1,21 @@
-CREATE DATABASE taskForce
+CREATE DATABASE task_force
 DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;
-USE taskForce;
+USE task_force;
 
-CREATE TABLE cities (
+CREATE TABLE city (
                       id INT AUTO_INCREMENT PRIMARY KEY,
                       name CHAR(64) DEFAULT NULL,
-                      location INT NOT NULL,
-                      UNIQUE INDEX UI_city (name)
+                      lng FLOAT,
+                      lat FLOAT
 );
 
-CREATE TABLE task_categories (
+CREATE TABLE category (
                                id INT AUTO_INCREMENT PRIMARY KEY,
                                name VARCHAR(128) NOT NULL,
                                type VARCHAR(128) NOT NULL,
-                               UNIQUE INDEX UI_type (type)
+                               UNIQUE INDEX UI_type (type),
+                               UNIQUE INDEX UI_name (name)
 );
 
 CREATE TABLE users (
@@ -26,12 +27,10 @@ CREATE TABLE users (
                      avatar TEXT DEFAULT NULL,
                      user_type ENUM ('customer', 'executor'),
                      rating INT NOT NULL,
-                     city_id INT, #Возможно лучше сделать location с кордами, а не id города
-                     phone INT NOT NULL,
+                     city_id INT,
+                     phone INT,
                      telegram CHAR(64),
-                     task_category_id INT, #Может быть NULL у заказчиков
-                     FOREIGN KEY (city_id) REFERENCES cities(id),
-                     FOREIGN KEY (task_category_id) REFERENCES task_categories(id),
+                     FOREIGN KEY (city_id) REFERENCES city(id),
                      UNIQUE INDEX UI_email (email),
                      UNIQUE INDEX UI_login (login)
 );
@@ -41,7 +40,9 @@ CREATE TABLE tasks (
                      title VARCHAR(128) NOT NULL,
                      description TEXT DEFAULT NULL,
                      file VARCHAR(320) DEFAULT NULL,
-                     location INT NOT NULL,
+                     lng FLOAT,
+                     lat FLOAT,
+                     city_id INT,
                      price INT NOT NULL,
                      customer_id INT NOT NULL,
                      executor_id INT NOT NULL,
@@ -49,9 +50,17 @@ CREATE TABLE tasks (
                      task_category_id INT NOT NULL,
                      deadline TIMESTAMP,
                      dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                     FOREIGN KEY (task_category_id) REFERENCES task_categories(id),
+                     FOREIGN KEY (task_category_id) REFERENCES category(id),
                      FOREIGN KEY (executor_id) REFERENCES users (id),
-                     FOREIGN KEY (customer_id) REFERENCES users (id)
+                     FOREIGN KEY (customer_id) REFERENCES users (id),
+                     FOREIGN KEY (city_id) REFERENCES city (id)
+);
+
+CREATE TABLE user_category (
+                             user_id INT NOT NULL,
+                             category_id INT NOT NULL,
+                             FOREIGN KEY (category_id) REFERENCES category (id),
+                             FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE reviews (
