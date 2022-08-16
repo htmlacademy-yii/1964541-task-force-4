@@ -1,6 +1,10 @@
 <?php
 namespace TaskForce;
 
+use ActionAccept;
+use ActionCancel;
+use ActionExecute;
+use ActionRefuse;
 use Exception;
 
 class Task
@@ -9,15 +13,11 @@ class Task
     private int $executor_id;
     private string $current_status = self::STATUS_NEW;
 
-    const STATUS_NEW = 'status_new';
-    const STATUS_CANCELED = 'status_canceled';
-    const STATUS_IN_WORK = 'status_in_work';
-    const STATUS_EXECUTED = 'status_executed';
-    const STATUS_FAILED = 'status_failed';
-    const ACTION_CANCEL = 'action_cancel';
-    const ACTION_ACCEPT = 'action_respond';
-    const ACTION_REFUSE = 'action_refuse';
-    const ACTION_EXECUTE = 'action_executed';
+    const STATUS_NEW = 'new';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_IN_WORK = 'in_work';
+    const STATUS_EXECUTED = 'executed';
+    const STATUS_FAILED = 'failed';
 
     public function __construct(int $customer_id, int $executor_id)
     {
@@ -33,10 +33,10 @@ class Task
     public function getNextStatus(string $action): string
     {
         return match ($action) {
-            self::ACTION_ACCEPT => self::STATUS_IN_WORK,
-            self::ACTION_CANCEL => self::STATUS_CANCELED,
-            self::ACTION_EXECUTE => self::STATUS_EXECUTED,
-            self::ACTION_REFUSE => self::STATUS_FAILED,
+            ActionAccept::class => self::STATUS_IN_WORK,
+            ActionCancel::class => self::STATUS_CANCELED,
+            ActionExecute::class => self::STATUS_EXECUTED,
+            ActionRefuse::class => self::STATUS_FAILED,
             default => throw new Exception('Данное действие не предусмотрено'),
         };
     }
@@ -45,15 +45,15 @@ class Task
     {
         switch ($this->current_status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? [self::ACTION_CANCEL] : [self::ACTION_ACCEPT, self::ACTION_REFUSE];
+                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
             case self::STATUS_IN_WORK:
-                return $id === $this->customer_id ? [self::ACTION_EXECUTE, self::ACTION_CANCEL] : [self::ACTION_REFUSE];
+                return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
         }
     }
 
     public function actionAccept(int $id): void
     {
-        if (in_array(self::ACTION_ACCEPT, $this->getAvailableActions($id))) {
+        if (in_array(ActionAccept::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_IN_WORK;
         } else {
             throw new Exception('Совершить данное действие невозможно');
@@ -62,7 +62,7 @@ class Task
 
     public function actionRefuse(int $id): void
     {
-        if (in_array(self::ACTION_REFUSE, $this->getAvailableActions($id))) {
+        if (in_array(ActionRefuse::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_FAILED;
         } else {
             throw new Exception('Совершить данное действие невозможно');
@@ -71,7 +71,7 @@ class Task
 
     public function actionExecute(int $id): void
     {
-        if (in_array(self::ACTION_EXECUTE, $this->getAvailableActions($id))) {
+        if (in_array(ActionExecute::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_EXECUTED;
         } else {
             throw new Exception('Совершить данное действие невозможно');
@@ -80,7 +80,7 @@ class Task
 
     public function actionCancel(int $id): void
     {
-        if (in_array(self::ACTION_CANCEL, $this->getAvailableActions($id))) {
+        if (in_array(ActionCancel::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_CANCELED;
         } else {
             throw new Exception('Совершить данное действие невозможно');
@@ -90,10 +90,10 @@ class Task
     public function getStatusMap(): array
     {
         return [
-            self::ACTION_CANCEL => 'отменить',
-            self::ACTION_EXECUTE => 'выполнить',
-            self::ACTION_REFUSE => 'отказаться',
-            self::ACTION_ACCEPT => 'принять',
+            ActionCancel::class => 'отменить',
+            ActionExecute::class => 'выполнить',
+            ActionRefuse::class => 'отказаться',
+            ActionAccept::class => 'принять',
             self::STATUS_CANCELED => 'отменено',
             self::STATUS_EXECUTED => 'выполнено',
             self::STATUS_NEW => 'новое',
