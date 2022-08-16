@@ -13,15 +13,11 @@ class Task
     private int $executor_id;
     private string $current_status = self::STATUS_NEW;
 
-    const STATUS_NEW = 'status_new';
-    const STATUS_CANCELED = 'status_canceled';
-    const STATUS_IN_WORK = 'status_in_work';
-    const STATUS_EXECUTED = 'status_executed';
-    const STATUS_FAILED = 'status_failed';
-    const ACTION_CANCEL = 'action_cancel';
-    const ACTION_ACCEPT = 'action_respond';
-    const ACTION_REFUSE = 'action_refuse';
-    const ACTION_EXECUTE = 'action_executed';
+    const STATUS_NEW = 'new';
+    const STATUS_CANCELED = 'canceled';
+    const STATUS_IN_WORK = 'in_work';
+    const STATUS_EXECUTED = 'executed';
+    const STATUS_FAILED = 'failed';
 
     public function __construct(int $customer_id, int $executor_id)
     {
