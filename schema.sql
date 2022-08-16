@@ -46,7 +46,7 @@ CREATE TABLE task (
                      price INT NOT NULL,
                      customer_id INT NOT NULL,
                      executor_id INT,
-                     status ENUM ('status_new', 'status_canceled', 'status_in_work', 'status_executed', 'status_failed'),
+                     status ENUM ('new', 'canceled', 'in_work', 'executed', 'failed'),
                      category_id INT NOT NULL,
                      deadline TIMESTAMP,
                      dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
