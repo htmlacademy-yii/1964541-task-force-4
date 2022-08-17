@@ -1,19 +1,18 @@
 <?php
 
-namespace TaskForce;
+namespace TaskForce\importers;
 
-class DataImporter
+abstract class DataImporter
 {
-    private string $filename;
-    private string $new_file_name;
-    private object $fileObject;
-    private array $data;
-    private string $table_name;
+    protected string $filename;
+    protected string $new_file_name;
+    protected object $fileObject;
+    protected array $data;
+    protected string $table_name;
 
-    public function __construct($filename, $new_file_name, $table_name)
+    public function __construct($filename, $new_file_name)
     {
         $this->filename = $filename;
-        $this->table_name = $table_name;
         $this->new_file_name = $new_file_name;
     }
 
@@ -22,26 +21,24 @@ class DataImporter
         $this->getDataArr();
         $this->dataIntoSql();
         $new_file = fopen($this->new_file_name . '.sql', "w");
-        fwrite($new_file, 'USE task_force;
-        ');
+        fwrite($new_file, 'USE task_force;' . PHP_EOL);
         foreach ($this->data as $sql_query) {
             fwrite($new_file, $sql_query);
         }
         fclose($new_file);
     }
 
-    private function dataIntoSql(): void
+    protected function dataIntoSql(): void
     {
         $sql_query = 'INSERT INTO ' . $this->table_name;
         $sql_query_arr = [];
         foreach ($this->getTableValues() as $value) {
-            $sql_query_arr[] = $sql_query . ' (' . $this->getTableTitles() . ') VALUE ' . '(' . $value . ');
-            ';
+            $sql_query_arr[] = $sql_query . ' (' . $this->getTableTitles() . ') VALUE ' . '(' . $value . ');' . PHP_EOL;
         }
         $this->data = $sql_query_arr;
     }
 
-    private function getDataArr(): void
+    protected function getDataArr(): void
     {
         $this->fileObject = new \SplFileObject($this->filename);
 
@@ -50,27 +47,15 @@ class DataImporter
         }
     }
 
-    private function getTableValues(): array
-    {
-        unset($this->data[0]);
-        $new = [];
-        foreach ($this->data as $data_arr) {
-            foreach ($data_arr as $item) {
-                $new_arr[] = '\'' . $item .'\'';
-            }
-            $new[] = implode(',', $new_arr);
-            $new_arr = [];
-        }
-        return $this->data = $new;
-    }
+    abstract protected function getTableValues(): array;
 
-    private function getTableTitles(): string
+    protected function getTableTitles(): string
     {
         $this->fileObject->rewind();
         return implode(',', $this->fileObject->fgetcsv());
     }
 
-    private function getNextLine(): ?iterable
+    protected function getNextLine(): ?iterable
     {
         $result = null;
 

@@ -1,7 +1,10 @@
 <?php
+
+use TaskForce\importers\CategoryImporter;
+
 require_once 'vendor/autoload.php';
 
-$obj = new \TaskForce\DataImporter('data/categories.csv', 'test', 'category');
+$obj = new CategoryImporter('data/categories.csv', 'test', 'city');
 
 $obj->import();
 
