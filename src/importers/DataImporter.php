@@ -20,6 +20,11 @@ abstract class DataImporter
     {
         $this->getDataArr();
         $this->dataIntoSql();
+        $this->insertInto();
+    }
+
+    protected function insertInto(): void
+    {
         $new_file = fopen($this->new_file_name . '.sql', "w");
         fwrite($new_file, 'USE task_force;' . PHP_EOL);
         foreach ($this->data as $sql_query) {
