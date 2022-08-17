@@ -1,9 +1,8 @@
 <?php
 require_once 'vendor/autoload.php';
 
-$obj = new \TaskForce\DataImporter('data/cities.csv');
+$obj = new \TaskForce\DataImporter('data/cities.csv', 'city');
 
-$obj->import();
-$arr = $obj->getValues();
+$arr = $obj->import();
 
 var_dump($arr);
