@@ -1,10 +1,10 @@
 <?php
 
-use TaskForce\importers\CategoryImporter;
+use TaskForce\importers\CityImporter;
 
 require_once 'vendor/autoload.php';
 
-$obj = new CategoryImporter('data/categories.csv', 'test');
+$obj = new CityImporter('data/cities.csv', 'test');
 
 $obj->import();
 
