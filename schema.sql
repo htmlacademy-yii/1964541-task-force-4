@@ -11,11 +11,12 @@ CREATE TABLE city (
 );
 
 CREATE TABLE category (
-                               id INT AUTO_INCREMENT PRIMARY KEY,
-                               name VARCHAR(128) NOT NULL,
-                               icon VARCHAR(128) NOT NULL,
-                               UNIQUE INDEX UI_type (icon),
-                               UNIQUE INDEX UI_name (name)
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        name VARCHAR(128) NOT NULL,
+                        type VARCHAR(128) NOT NULL,
+                        UNIQUE INDEX UI_type (type),
+                        UNIQUE INDEX UI_name (name)
+
 );
 
 CREATE TABLE user (
