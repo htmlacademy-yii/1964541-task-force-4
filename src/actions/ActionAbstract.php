@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\actions;
+
 abstract class ActionAbstract
 {
     protected string $name;

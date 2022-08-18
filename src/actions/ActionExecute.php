@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\actions;
+
 class ActionExecute extends ActionAbstract
 {
     protected string $name = 'Выполнить';

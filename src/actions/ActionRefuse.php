@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\actions;
+
 class ActionRefuse extends ActionAbstract
 {
     protected string $name = 'Отказаться';

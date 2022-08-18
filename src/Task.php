@@ -1,10 +1,10 @@
 <?php
 namespace TaskForce;
 
-use ActionAccept;
-use ActionCancel;
-use ActionExecute;
-use ActionRefuse;
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionRefuse;
 use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\ActionNotExistsException;
 use TaskForce\exceptions\StatusNotExistsException;
