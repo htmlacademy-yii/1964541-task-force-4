@@ -90,12 +90,10 @@ abstract class DataImporter
 
     protected function getNextLine(): ?iterable
     {
-        $result = null;
-
         while (!$this->fileObject->eof()) {
-            yield $result = $this->fileObject->fgetcsv();
+            yield $this->fileObject->fgetcsv();
         }
 
-        return $result;
+        return null;
     }
 }
