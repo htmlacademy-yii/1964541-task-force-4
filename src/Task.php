@@ -5,9 +5,9 @@ use ActionAccept;
 use ActionCancel;
 use ActionExecute;
 use ActionRefuse;
-use ActionUnavailableException;
-use ActionNotExistsException;
-use StatusNotExistsException;
+use TaskForce\exceptions\ActionUnavailableException;
+use TaskForce\exceptions\ActionNotExistsException;
+use TaskForce\exceptions\StatusNotExistsException;
 
 class Task
 {
