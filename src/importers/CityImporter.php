@@ -2,20 +2,22 @@
 
 namespace TaskForce\importers;
 
-class CityImporter extends DataImporter
+class CityImporter extends AbstractDataImporter
 {
     protected string $table_name = 'city';
 
     protected function getTableValues(): array
     {
-
         unset($this->data[0]);
-        $new = [];
-        foreach ($this->data as $data_arr) {
-            $city = '\'' . $data_arr[0] . '\',';
-            unset($data_arr[0]);
-            $new[] = $city . implode(',', $data_arr);
+
+        $string_cities_array = [];
+        foreach ($this->data as $city_info_array) {
+            $city_name = '\'' . $city_info_array[0] . '\',';
+            unset($city_info_array[0]);
+            $string_cities_array[] = $city_name . implode(',', $city_info_array);
         }
-        return $this->data = $new;
+        $this->data = $string_cities_array;
+
+        return $this->data;
     }
 }

@@ -5,19 +5,20 @@ namespace TaskForce\importers;
 use ColumnsNameException;
 use RuntimeException;
 use SourceFileException;
+use SplFileObject;
 use SqlTransformException;
 use Throwable;
 
-abstract class DataImporter
+abstract class AbstractDataImporter
 {
     protected string $filename;
     protected string $new_file_name;
-    protected object $fileObject;
+    protected object $file_object;
     protected array $data;
     protected string $table_name;
     protected array $column_names;
 
-    public function __construct($filename, $new_file_name, $column_names)
+    public function __construct(string $filename, string $new_file_name, array $column_names)
     {
         $this->filename = $filename;
         $this->new_file_name = $new_file_name;
@@ -27,7 +28,7 @@ abstract class DataImporter
     public function import(): void
     {
         try {
-            $this->getDataArr();
+            $this->extractDataArr();
             $this->dataIntoSql();
             $this->insertInto();
         } catch (Throwable $e) {
@@ -38,15 +39,17 @@ abstract class DataImporter
     protected function insertInto(): void
     {
         try {
-            $new_file = fopen($this->new_file_name . '.sql', "w");
+            $new_file = new SplFileObject($this->new_file_name . '.sql', 'w');;
         } catch(RuntimeException $e) {
             throw new SourceFileException("Не удалось создать файл");
         }
-        fwrite($new_file, 'USE task_force;' . PHP_EOL);
+
+        $new_file->fwrite('USE task_force;' . PHP_EOL);
+
         foreach ($this->data as $sql_query) {
-            fwrite($new_file, $sql_query);
+            $new_file->fwrite($sql_query);
         }
-        fclose($new_file);
+        $new_file = null;
     }
 
     protected function dataIntoSql(): void
@@ -54,7 +57,7 @@ abstract class DataImporter
         $sql_query = 'INSERT INTO ' . $this->table_name;
         $sql_query_arr = [];
         foreach ($this->getTableValues() as $value) {
-            $sql_query_arr[] = $sql_query . ' (' . $this->getTableTitles() . ') VALUE ' . '(' . $value . ');' . PHP_EOL;
+            $sql_query_arr[] = $sql_query . ' (' . implode(',', $this->getTableTitles()) . ') VALUE ' . '(' . $value . ');' . PHP_EOL;
         }
         if (empty($sql_query_arr)) {
             throw new SqlTransformException("Преобразование в sql не удалось");
@@ -63,10 +66,10 @@ abstract class DataImporter
         }
     }
 
-    protected function getDataArr(): void
+    protected function extractDataArr(): void
     {
         try {
-            $this->fileObject = new \SplFileObject($this->filename);
+            $this->file_object = new \SplFileObject($this->filename);
         } catch (RuntimeException $exception) {
             throw new SourceFileException("Не удалось открыть файл на чтение");
         }
@@ -78,20 +81,20 @@ abstract class DataImporter
 
     abstract protected function getTableValues(): array;
 
-    protected function getTableTitles(): string
+    protected function getTableTitles(): array
     {
-        $this->fileObject->rewind();
-        if (count($this->column_names) !== count($this->fileObject->fgetcsv())) {
+        $this->file_object->rewind();
+        if (count($this->column_names) !== count($this->file_object->fgetcsv())) {
             throw new ColumnsNameException("Количество столбцов не совпадает с заданным файлом");
         }
-        return implode(',', $this->column_names);
+        return $this->column_names;
 
     }
 
     protected function getNextLine(): ?iterable
     {
-        while (!$this->fileObject->eof()) {
-            yield $this->fileObject->fgetcsv();
+        while (!$this->file_object->eof()) {
+            yield $this->file_object->fgetcsv();
         }
 
         return null;

@@ -2,7 +2,7 @@
 
 namespace TaskForce\importers;
 
-class CategoryImporter extends DataImporter
+class CategoryImporter extends AbstractDataImporter
 {
     protected string $table_name = 'category';
 
@@ -10,14 +10,18 @@ class CategoryImporter extends DataImporter
     {
 
         unset($this->data[0]);
-        $new = [];
-        foreach ($this->data as $data_arr) {
-            foreach ($data_arr as $item) {
-                $new_arr[] = '\'' . $item .'\'';
+        $string_categories_array = [];
+        foreach ($this->data as $categories_array) {
+            foreach ($categories_array as $category) {
+                $refactored_categories_array[] = '\'' . $category .'\'';
             }
-            $new[] = implode(',', $new_arr);
-            $new_arr = [];
+            $string_categories_array[] = implode(',', $refactored_categories_array);
+            $refactored_categories_array = [];
         }
-        return $this->data = $new;
+
+        $this->data = $string_categories_array;
+
+        return $this->data;
     }
+
 }
