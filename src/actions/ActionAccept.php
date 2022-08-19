@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\actions;
+
 class ActionAccept extends ActionAbstract
 {
     protected string $name = 'Принять';

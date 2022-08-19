@@ -1,5 +1,7 @@
 <?php
 
+namespace TaskForce\actions;
+
 class ActionCancel extends ActionAbstract
 {
     protected string $name = 'Отменить';

@@ -1,11 +1,13 @@
 <?php
 namespace TaskForce;
 
-use ActionAccept;
-use ActionCancel;
-use ActionExecute;
-use ActionRefuse;
-use Exception;
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionRefuse;
+use TaskForce\exceptions\ActionUnavailableException;
+use TaskForce\exceptions\ActionNotExistsException;
+use TaskForce\exceptions\StatusNotExistsException;
 
 class Task
 {
@@ -37,7 +39,7 @@ class Task
             ActionCancel::class => self::STATUS_CANCELED,
             ActionExecute::class => self::STATUS_EXECUTED,
             ActionRefuse::class => self::STATUS_FAILED,
-            default => throw new Exception('Данное действие не предусмотрено'),
+            default => throw new ActionNotExistsException('Данное действие не предусмотрено'),
         };
     }
 
@@ -48,6 +50,8 @@ class Task
                 return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
             case self::STATUS_IN_WORK:
                 return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
+            default:
+                throw new StatusNotExistsException('Статус не существует');
         }
     }
 
@@ -56,7 +60,7 @@ class Task
         if (in_array(ActionAccept::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_IN_WORK;
         } else {
-            throw new Exception('Совершить данное действие невозможно');
+            throw new ActionUnavailableException('Совершить данное действие невозможно');
         }
     }
 
@@ -65,7 +69,7 @@ class Task
         if (in_array(ActionRefuse::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_FAILED;
         } else {
-            throw new Exception('Совершить данное действие невозможно');
+            throw new ActionUnavailableException('Совершить данное действие невозможно');
         }
     }
 
@@ -74,7 +78,7 @@ class Task
         if (in_array(ActionExecute::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_EXECUTED;
         } else {
-            throw new Exception('Совершить данное действие невозможно');
+            throw new ActionUnavailableException('Совершить данное действие невозможно');
         }
     }
 
@@ -83,7 +87,7 @@ class Task
         if (in_array(ActionCancel::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_CANCELED;
         } else {
-            throw new Exception('Совершить данное действие невозможно');
+            throw new ActionUnavailableException('Совершить данное действие невозможно');
         }
     }
 

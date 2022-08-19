@@ -1,6 +1,10 @@
 <?php
 require_once 'vendor/autoload.php';
 
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionRefuse;
 use TaskForce\Task;
 
 $task = new Task(1, 2);
