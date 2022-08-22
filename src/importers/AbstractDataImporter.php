@@ -9,8 +9,6 @@ use src\exceptions\SourceFileException;
 use src\exceptions\SqlTransformException;
 use Throwable;
 
-use const TaskForce\importers\PHP_EOL;
-
 abstract class AbstractDataImporter
 {
     protected string $filename;
