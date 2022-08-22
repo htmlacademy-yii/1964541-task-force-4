@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce\exceptions;
+namespace src\exceptions;
 
 use Exception;
 
