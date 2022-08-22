@@ -11,11 +11,12 @@ CREATE TABLE city (
 );
 
 CREATE TABLE category (
-                               id INT AUTO_INCREMENT PRIMARY KEY,
-                               name VARCHAR(128) NOT NULL,
-                               type VARCHAR(128) NOT NULL,
-                               UNIQUE INDEX UI_type (type),
-                               UNIQUE INDEX UI_name (name)
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        name VARCHAR(128) NOT NULL,
+                        type VARCHAR(128) NOT NULL,
+                        UNIQUE INDEX UI_type (type),
+                        UNIQUE INDEX UI_name (name)
+
 );
 
 CREATE TABLE user (
@@ -40,7 +41,7 @@ CREATE TABLE task (
                      title VARCHAR(128) NOT NULL,
                      description TEXT DEFAULT NULL,
                      file VARCHAR(320) DEFAULT NULL,
-                     lng FLOAT,
+                     `long` FLOAT,
                      lat FLOAT,
                      city_id INT,
                      price INT NOT NULL,
@@ -51,8 +52,8 @@ CREATE TABLE task (
                      deadline TIMESTAMP,
                      dt_add TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                      FOREIGN KEY (category_id) REFERENCES category(id),
-                     FOREIGN KEY (executor_id) REFERENCES users (id),
-                     FOREIGN KEY (customer_id) REFERENCES users (id),
+                     FOREIGN KEY (executor_id) REFERENCES user (id),
+                     FOREIGN KEY (customer_id) REFERENCES user (id),
                      FOREIGN KEY (city_id) REFERENCES city (id)
 );
 
@@ -60,7 +61,7 @@ CREATE TABLE user_category (
                              user_id INT NOT NULL,
                              category_id INT NOT NULL,
                              FOREIGN KEY (category_id) REFERENCES category (id),
-                             FOREIGN KEY (user_id) REFERENCES users (id),
+                             FOREIGN KEY (user_id) REFERENCES user (id),
                              PRIMARY KEY (user_id, category_id)
 );
 
@@ -70,9 +71,9 @@ CREATE TABLE review (
                         content TEXT NOT NULL,
                         user_id INT NOT NULL,
                         grade INT,
-                        FOREIGN KEY (user_id) REFERENCES users (id),
+                        FOREIGN KEY (user_id) REFERENCES user (id),
                         task_id INT NOT NULL,
-                        FOREIGN KEY (task_id) REFERENCES tasks (id)
+                        FOREIGN KEY (task_id) REFERENCES task (id)
 );
 
 CREATE TABLE response (
@@ -81,7 +82,7 @@ CREATE TABLE response (
                         executor_id INT NOT NULL,
                         content TEXT NOT NULL,
                         price INT,
-                        FOREIGN KEY (task_id) REFERENCES tasks (id),
-                        FOREIGN KEY (executor_id) REFERENCES users (id)
+                        FOREIGN KEY (task_id) REFERENCES task (id),
+                        FOREIGN KEY (executor_id) REFERENCES user (id)
 );
 
