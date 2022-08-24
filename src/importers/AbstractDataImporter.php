@@ -1,12 +1,12 @@
 <?php
 
-namespace src\importers;
+namespace TaskForce\importers;
 
 use RuntimeException;
 use SplFileObject;
-use src\exceptions\ColumnsNameException;
-use src\exceptions\SourceFileException;
-use src\exceptions\SqlTransformException;
+use TaskForce\exceptions\ColumnsNameException;
+use TaskForce\exceptions\SourceFileException;
+use TaskForce\exceptions\SqlTransformException;
 use Throwable;
 
 abstract class AbstractDataImporter

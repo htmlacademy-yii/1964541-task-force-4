@@ -1,6 +1,6 @@
 <?php
 
-namespace src\importers;
+namespace TaskForce\importers;
 
 class CategoryImporter extends AbstractDataImporter
 {
