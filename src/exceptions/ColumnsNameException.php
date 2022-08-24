@@ -1,6 +1,8 @@
 <?php
 
-namespace src\exceptions;
+namespace TaskForce\exceptions;
+
+use Exception;
 
 class ColumnsNameException extends Exception
 {

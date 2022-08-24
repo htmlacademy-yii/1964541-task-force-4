@@ -1,13 +1,13 @@
 <?php
-namespace src;
+namespace TaskForce;
 
-use src\actions\ActionAccept;
-use src\actions\ActionCancel;
-use src\actions\ActionExecute;
-use src\actions\ActionRefuse;
-use src\exceptions\ActionNotExistsException;
-use src\exceptions\ActionUnavailableException;
-use src\exceptions\StatusNotExistsException;
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionRefuse;
+use TaskForce\exceptions\ActionNotExistsException;
+use TaskForce\exceptions\ActionUnavailableException;
+use TaskForce\exceptions\StatusNotExistsException;
 
 class Task
 {

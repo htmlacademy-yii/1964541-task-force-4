@@ -1,6 +1,6 @@
 <?php
 
-namespace src\actions;
+namespace TaskForce\actions;
 
 abstract class ActionAbstract
 {
