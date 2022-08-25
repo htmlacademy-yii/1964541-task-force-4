@@ -26,19 +26,4 @@ class m220824_154215_insert_into_city extends Migration
         $this->delete('city', ['name' => 'Paris']);
         $this->delete('city', ['name' => 'Porto']);
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220824_154215_insert_into_city cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

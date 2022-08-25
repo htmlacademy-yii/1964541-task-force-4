@@ -26,19 +26,4 @@ class m220824_155155_insert_into_category extends Migration
         $this->delete('category', ['type' => 'Repair']);
         $this->delete('category', ['type' => 'Education']);
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m220824_155155_insert_into_category cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

@@ -10,7 +10,7 @@
         <p class="task-text"><?= $task->description ?></p>
         <div class="footer-task">
             <p class="info-text town-text"><?= $task->city->name ?></p>
-            <p class="info-text category-text"><?= $task->category->name ?>></p>
+            <p class="info-text category-text"><?= $task->category->name ?></p>
             <a href="#" class="button button--black">Смотреть Задание</a>
         </div>
     </div>
