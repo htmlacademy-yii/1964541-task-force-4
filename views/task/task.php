@@ -1,6 +1,6 @@
 <div class="left-column">
     <h3 class="head-main head-task">Новые задания</h3>
-    <?php foreach ($tasks_array as $task): ?>
+    <?php foreach ($tasksArray as $task): ?>
     <div class="task-card">
         <div class="header-task">
             <a  href="#" class="link link--block link--big"><?= $task->title ?></a>
