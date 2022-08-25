@@ -13,8 +13,8 @@ class TaskController extends Controller
         $activeQuery->joinWith('category');
         $activeQuery->where(['status'=> Task::STATUS_NEW]);
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
-        $taskArray = $activeQuery->all();
-        return $this->render('task', ['tasksArray' => $taskArray]);
+        $tasks = $activeQuery->all();
+        return $this->render('task', ['tasks' => $tasks]);
     }
 
 }
