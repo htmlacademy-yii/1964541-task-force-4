@@ -41,8 +41,11 @@ class m220824_155529_insert_into_user extends Migration
      */
     public function safeDown()
     {
-        echo "m220824_155529_insert_into_user cannot be reverted.\n";
-
-        return false;
+        $this->delete('user', ['id' => '1']);
+        $this->delete('user', ['id' => '2']);
+        $this->delete('user', ['id' => '3']);
+        $this->execute("ALTER TABLE user AUTO_INCREMENT = 1");
+        $this->execute("ALTER TABLE category AUTO_INCREMENT = 1");
+        $this->execute("ALTER TABLE city AUTO_INCREMENT = 1");
     }
 }

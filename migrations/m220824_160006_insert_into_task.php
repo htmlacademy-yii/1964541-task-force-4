@@ -43,8 +43,9 @@ class m220824_160006_insert_into_task extends Migration
      */
     public function safeDown()
     {
-        echo "m220824_160006_insert_into_task cannot be reverted.\n";
-
-        return false;
+        $this->delete('task', ['id' => '1']);
+        $this->delete('task', ['id' => '2']);
+        $this->delete('task', ['id' => '3']);
+        $this->execute("ALTER TABLE task AUTO_INCREMENT = 1");
     }
 }
