@@ -41,11 +41,14 @@
     <div class="right-card black">
         <div class="search-form">
             <?php $form = ActiveForm::begin([
-                    'id' => 'filterForm']);?>
+                'id' => 'filterForm']);?>
             <h4 class="head-card">Категории</h4>
-            <?php
-            echo $form->field($model, 'category',['template' => "{input}\n{error}"])->checkboxList($model->attributeLabels());
-            ?>
+            <?php foreach ($model->attributeLabels() as $attr => $label): ?>
+                <?php $field = new ActiveField([
+                    'model' => $model, 'attribute' => $attr]);
+                $field->checkbox(); ?>
+                <?=$field->render(); ?>
+            <?php endforeach; ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>
