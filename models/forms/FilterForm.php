@@ -7,11 +7,12 @@ use yii\base\Model;
 class FilterForm extends Model
 {
     public array $category;
-    public bool $noExecutor;
+    public bool $noExecutor = false;
     public string $period;
 
     public function rules() {
         return [
+            [['category', 'noExecutor', 'period'], 'safe'],
             [['noExecutor'], 'boolean'],
             [['category'], 'exist'],
             ['category', 'in', 'range' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
