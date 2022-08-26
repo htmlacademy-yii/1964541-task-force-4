@@ -78,7 +78,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
 </header>
 
 <main>
-    <div class="main-container">
+    <div class="main-content container">
         <?= $content ?>
     </div>
 </main>
