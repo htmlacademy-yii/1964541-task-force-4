@@ -43,12 +43,9 @@
             <?php $form = ActiveForm::begin([
                     'id' => 'filterForm']);?>
             <h4 class="head-card">Категории</h4>
-            <?php foreach ($model->attributeLabels() as $attr => $label): ?>
-                <?php $field = new ActiveField([
-                    'model' => $model, 'attribute' => $attr]);
-                $field->checkbox(); ?>
-                <?=$field->render(); ?>
-            <?php endforeach; ?>
+            <?php
+            echo $form->field($model, 'category',['template' => "{input}\n{error}"])->checkboxList($model->attributeLabels());
+            ?>
             <?php ActiveForm::end(); ?>
         </div>
     </div>

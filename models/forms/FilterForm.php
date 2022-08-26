@@ -12,8 +12,8 @@ class FilterForm extends Model
 
     public function rules() {
         return [
-            ['noExecutor' => 'boolean'],
-            ['category' => 'exist'],
+            [['noExecutor'], 'boolean'],
+            [['category'], 'exist'],
             ['category', 'in', 'range' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
             ['period', 'in', 'range' => ['1 час', '12 часов', '24 часа']]
         ];
