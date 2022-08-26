@@ -43,13 +43,20 @@
             <?php $form = ActiveForm::begin([
                 'id' => 'filterForm']);?>
             <h4 class="head-card">Категории</h4>
-            <?php foreach ($model->attributeLabels() as $attr => $label): ?>
-                <?php $field = new ActiveField([
-                    'model' => $model, 'attribute' => $attr]);
-                $field->checkbox(); ?>
-                <?=$field->render(); ?>
-            <?php endforeach; ?>
+            <?php
+            echo $form->field($model, 'category', ['template' => '{input}{error}' . PHP_EOL])->checkboxList($model->categoryAttributeLabels());?>
+            <h4 class="head-card">Дополнительно</h4>
+            <?php
+            echo $form->field($model, 'noExecutor', [])->checkbox();
+            ?>
+
+            <h4 class="head-card">Период</h4>
+            <?php
+            echo $form->field($model, 'period', ['template' => '{input}' . PHP_EOL . '{error}'])->dropDownList($model->periodAttributeLabels());
+            ?>
+            <input type="submit" class="button button--blue" value="Искать">
             <?php ActiveForm::end(); ?>
+
         </div>
     </div>
 </div>

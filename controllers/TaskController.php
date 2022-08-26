@@ -11,6 +11,9 @@ class TaskController extends Controller
 {
     public function actionIndex() {
         $filterForm = new FilterForm();
+        if (Yii::$app->request->getIsPost()) {
+            $filterForm->load(Yii::$app->request->post());
+        }
         $activeQuery = Task::find();
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');

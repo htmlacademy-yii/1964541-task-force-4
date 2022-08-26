@@ -6,7 +6,7 @@ use yii\base\Model;
 
 class FilterForm extends Model
 {
-    public array $category;
+    public array $category = [];
     public bool $noExecutor = false;
     public string $period;
 
@@ -15,12 +15,12 @@ class FilterForm extends Model
             [['category', 'noExecutor', 'period'], 'safe'],
             [['noExecutor'], 'boolean'],
             [['category'], 'exist'],
-            ['category', 'in', 'range' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
+            ['category', 'each', 'rule' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
             ['period', 'in', 'range' => ['1 час', '12 часов', '24 часа']]
         ];
     }
 
-    public function attributeLabels()
+    public function categoryAttributeLabels()
     {
         return [
             'courier' => 'Курьерские услуги',
@@ -32,6 +32,10 @@ class FilterForm extends Model
             'beauty' => 'Красота',
             'photo' => 'Фото'
         ];
+    }
+
+    public function periodAttributeLabels() {
+        return ['1 час' => '1 час', '12 часов' => '12 часов', '24 часа' => '24 часа'];
     }
 
 }
