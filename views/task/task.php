@@ -44,7 +44,7 @@
                 'id' => 'filterForm']);?>
             <h4 class="head-card">Категории</h4>
             <?php
-            echo $form->field($model, 'category', ['template' => '{input}{error}' . PHP_EOL])->checkboxList($model->categoryAttributeLabels());?>
+            echo $form->field($model, 'category', ['template' => '{input}{error}'])->checkboxList($model->categoryAttributeLabels());?>
             <h4 class="head-card">Дополнительно</h4>
             <?php
             echo $form->field($model, 'noExecutor', [])->checkbox();

@@ -8,7 +8,7 @@ class FilterForm extends Model
 {
     public array $category = [];
     public bool $noExecutor = false;
-    public string $period;
+    public string $period = '';
 
     public function rules() {
         return [
