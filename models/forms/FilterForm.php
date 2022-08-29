@@ -18,13 +18,13 @@ class FilterForm extends Model
         return [
             [['noExecutor'], 'boolean'],
             [['category'], 'exist'],
-            ['period', 'in', 'range' => [1, 2, 3]]
+            ['period', 'in', 'range' => ['1 hour', '12 hours', '24 hours']]
         ];
     }
 
     public function periodAttributeLabels(): array
     {
-        return [1 => self::ONE_HOUR, 2 => self::TWELVE_HOURS, 3 => self::TWENTY_FOUR_HOURS];
+        return ['1 hour' => self::ONE_HOUR, '12 hours' => self::TWELVE_HOURS, '24 hours' => self::TWENTY_FOUR_HOURS];
     }
 
 }

@@ -26,12 +26,11 @@ class TaskController extends Controller
             if ($filterForm->noExecutor) {
                 $activeQuery->andWhere(['executor_id' => null]);
             }
-            /*if ($filterForm->period) {
-                echo $timeNow = date('Y-m-d H:i:s');
-                echo $periodTime = date('Y-m-d H:i:s', strtotime('+' . $filterForm->period));
-                $activeQuery->andFilterWhere(['between', 'deadline', $timeNow, $periodTime]);
-                echo $activeQuery->createCommand()->rawSql;
-            }*/
+            if ($filterForm->period) {
+                $nowDate = date('Y-m-d H:i:s');
+                $periodDate = date('Y-m-d H:i:s', strtotime('+'. $filterForm->period));
+                $activeQuery->andFilterWhere(['between', 'deadline', $nowDate, $periodDate]);
+            }
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
         $tasks = $activeQuery->all();
