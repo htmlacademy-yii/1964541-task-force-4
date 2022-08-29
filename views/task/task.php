@@ -1,22 +1,28 @@
+<?php
+
+use app\models\Category;
+use yii\widgets\ActiveForm;
+
+?>
 <div class="left-column">
     <h3 class="head-main head-task">Новые задания</h3>
     <?php
-    use yii\widgets\ActiveField;
-    use yii\widgets\ActiveForm;foreach ($tasks as $task): ?>
-    <div class="task-card">
-        <div class="header-task">
-            <a  href="#" class="link link--block link--big"><?= $task->title ?></a>
-            <p class="price price--task"><?= $task->price ?></p>
+    foreach ($tasks as $task): ?>
+        <div class="task-card">
+            <div class="header-task">
+                <a href="#" class="link link--block link--big"><?= $task->title ?></a>
+                <p class="price price--task"><?= $task->price ?></p>
+            </div>
+            <p class="info-text"><span class="current-time">4 часа </span>назад</p>
+            <p class="task-text"><?= $task->description ?></p>
+            <div class="footer-task">
+                <p class="info-text town-text"><?= $task->city->name ?></p>
+                <p class="info-text category-text"><?= $task->category->name ?></p>
+                <a href="#" class="button button--black">Смотреть Задание</a>
+            </div>
         </div>
-        <p class="info-text"><span class="current-time">4 часа </span>назад</p>
-        <p class="task-text"><?= $task->description ?></p>
-        <div class="footer-task">
-            <p class="info-text town-text"><?= $task->city->name ?></p>
-            <p class="info-text category-text"><?= $task->category->name ?></p>
-            <a href="#" class="button button--black">Смотреть Задание</a>
-        </div>
-    </div>
-    <?php endforeach; ?>
+    <?php
+    endforeach; ?>
     <div class="pagination-wrapper">
         <ul class="pagination-list">
             <li class="pagination-item mark">
@@ -40,22 +46,38 @@
 <div class="right-column">
     <div class="right-card black">
         <div class="search-form">
-            <?php $form = ActiveForm::begin([
-                'id' => 'filterForm']);?>
-            <h4 class="head-card">Категории</h4>
             <?php
-            echo $form->field($model, 'category', ['template' => '{input}{error}'])->checkboxList($model->categoryAttributeLabels());?>
+            $form = ActiveForm::begin([
+                'id' => 'filterForm'
+            ]); ?>
+            <h4 class="head-card">Категории</h4>
+                    <?php
+                    echo $form->field($model, 'category', ['template' => '{input}{error}'])->checkboxList(
+                        Category::getCategoriesList(),
+                        [
+                            'itemOptions' => [
+                                'labelOptions' => [
+                                    'class' => 'control-label',
+                                ],
+                            ],
+                        ]
+                    ); ?>
             <h4 class="head-card">Дополнительно</h4>
             <?php
-            echo $form->field($model, 'noExecutor', [])->checkbox();
+            echo $form->field($model, 'noExecutor', [])->checkbox([
+                'label' => 'Без исполнителя',
+                'class' => 'control-label',
+            ]);
             ?>
-
             <h4 class="head-card">Период</h4>
             <?php
-            echo $form->field($model, 'period', ['template' => '{input}' . PHP_EOL . '{error}'])->dropDownList($model->periodAttributeLabels());
+            echo $form->field($model, 'period', ['template' => '{input}{error}'])->dropDownList(
+                $model->periodAttributeLabels()
+            );
             ?>
             <input type="submit" class="button button--blue" value="Искать">
-            <?php ActiveForm::end(); ?>
+            <?php
+            ActiveForm::end(); ?>
 
         </div>
     </div>

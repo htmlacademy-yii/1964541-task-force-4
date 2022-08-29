@@ -6,36 +6,25 @@ use yii\base\Model;
 
 class FilterForm extends Model
 {
-    public array $category = [];
+    public string|array $category = [];
     public bool $noExecutor = false;
     public string $period = '';
 
+    const ONE_HOUR = '1 час';
+    const TWELVE_HOURS = '12 часов';
+    const TWENTY_FOUR_HOURS = '24 часа';
+
     public function rules() {
         return [
-            [['category', 'noExecutor', 'period'], 'safe'],
             [['noExecutor'], 'boolean'],
             [['category'], 'exist'],
-            ['category', 'each', 'rule' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
-            ['period', 'in', 'range' => ['1 час', '12 часов', '24 часа']]
+            ['period', 'in', 'range' => [1, 2, 3]]
         ];
     }
 
-    public function categoryAttributeLabels()
+    public function periodAttributeLabels(): array
     {
-        return [
-            'courier' => 'Курьерские услуги',
-            'clean' => 'Уборка',
-            'cargo' => 'Переезды',
-            'neo' => 'Компьютерная помощь',
-            'flat' => 'Ремонт квартирный',
-            'repair' => 'Ремонт техники',
-            'beauty' => 'Красота',
-            'photo' => 'Фото'
-        ];
-    }
-
-    public function periodAttributeLabels() {
-        return ['1 час' => '1 час', '12 часов' => '12 часов', '24 часа' => '24 часа'];
+        return [1 => self::ONE_HOUR, 2 => self::TWELVE_HOURS, 3 => self::TWENTY_FOUR_HOURS];
     }
 
 }
