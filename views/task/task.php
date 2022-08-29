@@ -48,25 +48,28 @@ use yii\widgets\ActiveForm;
         <div class="search-form">
             <?php
             $form = ActiveForm::begin([
-                'id' => 'filterForm'
+                'id' => 'filterForm',
             ]); ?>
             <h4 class="head-card">Категории</h4>
-                    <?php
-                    echo $form->field($model, 'category', ['template' => '{input}{error}'])->checkboxList(
-                        Category::getCategoriesList(),
-                        [
-                            'itemOptions' => [
-                                'labelOptions' => [
-                                    'class' => 'control-label',
-                                ],
-                            ],
-                        ]
-                    ); ?>
+            <?php
+            echo $form->field($model, 'category', ['template' => '{input}{error}'])->checkboxList(
+                Category::getCategoriesList(),
+                [
+                    'class' => 'checkbox-wrapper',
+                    'itemOptions' => [
+                        'labelOptions' => [
+                            'class' => 'control-label',
+                        ],
+                    ],
+                ]
+            ); ?>
             <h4 class="head-card">Дополнительно</h4>
             <?php
             echo $form->field($model, 'noExecutor', [])->checkbox([
                 'label' => 'Без исполнителя',
-                'class' => 'control-label',
+                'labelOptions' => [
+                    'class' => 'control-label',
+                ]
             ]);
             ?>
             <h4 class="head-card">Период</h4>

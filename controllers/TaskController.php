@@ -27,9 +27,10 @@ class TaskController extends Controller
                 $activeQuery->andWhere(['executor_id' => null]);
             }
             /*if ($filterForm->period) {
-                echo $timeNow = time();
-                echo $periodTime = strtotime('+' . $filterForm->period);
+                echo $timeNow = date('Y-m-d H:i:s');
+                echo $periodTime = date('Y-m-d H:i:s', strtotime('+' . $filterForm->period));
                 $activeQuery->andFilterWhere(['between', 'deadline', $timeNow, $periodTime]);
+                echo $activeQuery->createCommand()->rawSql;
             }*/
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
