@@ -22,7 +22,9 @@ class TaskController extends Controller
             if (!$filterForm->validate()) {
                 $errors = $filterForm->getErrors();
             }
-            $activeQuery->andFilterWhere(['category.id' => $filterForm->category]);
+            if (isset($filterForm->category)) {
+                $activeQuery->andFilterWhere(['category.id' => $filterForm->category]);
+            }
             if ($filterForm->noExecutor) {
                 $activeQuery->andWhere(['executor_id' => null]);
             }

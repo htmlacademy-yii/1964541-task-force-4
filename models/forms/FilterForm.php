@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\models\Category;
 use yii\base\Model;
 
 class FilterForm extends Model
@@ -17,7 +18,7 @@ class FilterForm extends Model
     public function rules() {
         return [
             [['noExecutor'], 'boolean'],
-            [['category'], 'exist'],
+            ['category', 'exist', 'targetClass' => Category::class, 'targetAttribute' => 'id'],
             ['period', 'in', 'range' => ['1 hour', '12 hours', '24 hours']]
         ];
     }
