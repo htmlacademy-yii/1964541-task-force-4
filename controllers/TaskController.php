@@ -17,16 +17,17 @@ class TaskController extends Controller
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
+        $tasks = $activeQuery->all();
         $filterForm = new FilterForm();
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
-            if (!$filterForm->validate()) {
-                $errors = $filterForm->getErrors();
+            if ($filterForm->validate()) {
                 $tasks = $filterForm->getFilteredTasks();
+            } else {
+                $errors = $filterForm->getErrors();
             }
-        } else {
-            $tasks = $activeQuery->all();
         }
+
         return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
     }
 }
