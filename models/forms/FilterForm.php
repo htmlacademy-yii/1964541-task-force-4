@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use app\models\Category;
+use app\models\Task;
 use yii\base\Model;
 
 class FilterForm extends Model
@@ -14,6 +15,35 @@ class FilterForm extends Model
     const ONE_HOUR = '1 hour';
     const TWELVE_HOURS = '12 hours';
     const TWENTY_FOUR_HOURS = '24 hours';
+
+    public function getFilteredTasks(): array
+    {
+        $activeQuery = Task::find();
+        $activeQuery->joinWith('city');
+        $activeQuery->joinWith('category');
+        $activeQuery->where(['status' => Task::STATUS_NEW]);
+        if (isset($this->category)) {
+            $activeQuery->andFilterWhere(['category.id' => $this->category]);
+        }
+        if ($this->noExecutor) {
+            $activeQuery->andWhere(['executor_id' => null]);
+        }
+        if ($this->period) {
+            switch ($this->period) {
+                case self::ONE_HOUR:
+                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 1 hour']);
+                    break;
+                case self::TWELVE_HOURS:
+                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 12 hours']);
+                    break;
+                case self::TWENTY_FOUR_HOURS:
+                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 24 hours']);
+                    break;
+            }
+        }
+        $activeQuery->orderBy(['dt_add' => SORT_ASC]);
+        return $activeQuery->all();
+    }
 
     public function attributeLabels(): array
     {

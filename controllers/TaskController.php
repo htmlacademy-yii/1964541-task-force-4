@@ -16,34 +16,17 @@ class TaskController extends Controller
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
+        $activeQuery->orderBy(['dt_add' => SORT_ASC]);
         $filterForm = new FilterForm();
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
             if (!$filterForm->validate()) {
                 $errors = $filterForm->getErrors();
+                $tasks = $filterForm->getFilteredTasks();
             }
-            if (isset($filterForm->category)) {
-                $activeQuery->andFilterWhere(['category.id' => $filterForm->category]);
-            }
-            if ($filterForm->noExecutor) {
-                $activeQuery->andWhere(['executor_id' => null]);
-            }
-            if ($filterForm->period) {
-                switch ($filterForm->period) {
-                    case FilterForm::ONE_HOUR:
-                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 1 hour']);
-                        break;
-                    case FilterForm::TWELVE_HOURS:
-                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 12 hours']);
-                        break;
-                    case FilterForm::TWENTY_FOUR_HOURS:
-                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 24 hours']);
-                        break;
-                }
-            }
+        } else {
+            $tasks = $activeQuery->all();
         }
-        $activeQuery->orderBy(['dt_add' => SORT_ASC]);
-        $tasks = $activeQuery->all();
         return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
     }
 }
