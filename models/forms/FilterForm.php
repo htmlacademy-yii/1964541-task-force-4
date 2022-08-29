@@ -11,21 +11,30 @@ class FilterForm extends Model
     public bool $noExecutor = false;
     public string $period = '';
 
-    const ONE_HOUR = '1 час';
-    const TWELVE_HOURS = '12 часов';
-    const TWENTY_FOUR_HOURS = '24 часа';
+    const ONE_HOUR = '1 hour';
+    const TWELVE_HOURS = '12 hours';
+    const TWENTY_FOUR_HOURS = '24 hours';
+
+    public function attributeLabels(): array
+    {
+        return [
+            'category' => 'Категории',
+            'noExecutor' => 'Без исполнителя',
+            'period' => 'Период'
+        ];
+    }
 
     public function rules() {
         return [
             [['noExecutor'], 'boolean'],
             ['category', 'exist', 'targetClass' => Category::class, 'targetAttribute' => 'id'],
-            ['period', 'in', 'range' => ['1 hour', '12 hours', '24 hours']]
+            ['period', 'in', 'range' => [self::ONE_HOUR, self::TWELVE_HOURS, self::TWENTY_FOUR_HOURS]]
         ];
     }
 
     public function periodAttributeLabels(): array
     {
-        return ['1 hour' => self::ONE_HOUR, '12 hours' => self::TWELVE_HOURS, '24 hours' => self::TWENTY_FOUR_HOURS];
+        return [self::ONE_HOUR => '1 час', self::TWELVE_HOURS => '12 часов', self::TWENTY_FOUR_HOURS => '24 часа'];
     }
 
 }

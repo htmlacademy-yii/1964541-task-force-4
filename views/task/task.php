@@ -66,7 +66,6 @@ use yii\widgets\ActiveForm;
             <h4 class="head-card">Дополнительно</h4>
             <?php
             echo $form->field($model, 'noExecutor', [])->checkbox([
-                'label' => 'Без исполнителя',
                 'labelOptions' => [
                     'class' => 'control-label',
                 ]

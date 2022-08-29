@@ -29,9 +29,17 @@ class TaskController extends Controller
                 $activeQuery->andWhere(['executor_id' => null]);
             }
             if ($filterForm->period) {
-                $nowDate = date('Y-m-d H:i:s');
-                $periodDate = date('Y-m-d H:i:s', strtotime('+'. $filterForm->period));
-                $activeQuery->andFilterWhere(['between', 'deadline', $nowDate, $periodDate]);
+                switch ($filterForm->period) {
+                    case FilterForm::ONE_HOUR:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 1 hour']);
+                        break;
+                    case FilterForm::TWELVE_HOURS:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 12 hours']);
+                        break;
+                    case FilterForm::TWENTY_FOUR_HOURS:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 24 hours']);
+                        break;
+                }
             }
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
