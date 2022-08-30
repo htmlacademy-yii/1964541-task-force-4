@@ -69,7 +69,7 @@
             <dt>Срок выполнения</dt>
             <dd><?= Yii::$app->formatter->format($task->deadline, 'relativeTime') ?></dd>
             <dt>Статус</dt>
-            <dd>Открыт для новых заказов</dd>
+            <dd><?= $task->getStatusAttribute() ?></dd>
         </dl>
     </div>
     <div class="right-card white file-card">

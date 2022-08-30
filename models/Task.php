@@ -147,4 +147,20 @@ class Task extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Review::className(), ['task_id' => 'id']);
     }
+
+    public function getStatusAttribute(): string
+    {
+        return $this->getStatusMap()[$this->status];
+    }
+
+    private function getStatusMap(): array
+    {
+        return [
+            self::STATUS_CANCELED => 'Отменено',
+            self::STATUS_EXECUTED => 'Выполнено',
+            self::STATUS_NEW => 'Новое',
+            self::STATUS_IN_WORK => 'В работе',
+            self::STATUS_FAILED => 'Провалено'
+        ];
+    }
 }
