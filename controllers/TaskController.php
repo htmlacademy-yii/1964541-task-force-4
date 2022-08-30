@@ -25,7 +25,7 @@ class TaskController extends Controller
         $activeQuery->where(['task.id' => $id]);
         $task = $activeQuery->one();
         if (!$task) {
-            throw new NotFoundHttpException("Контакт с ID $id не найден");
+            throw new NotFoundHttpException("Задание с ID $id не найден");
         }
         return $this->render('view', ['task' => $task]);
     }
