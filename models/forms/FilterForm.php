@@ -4,6 +4,7 @@ namespace app\models\forms;
 
 use app\models\Category;
 use app\models\Task;
+use Yii;
 use yii\base\Model;
 
 class FilterForm extends Model
@@ -22,23 +23,30 @@ class FilterForm extends Model
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
-        if (isset($this->category)) {
-            $activeQuery->andFilterWhere(['category.id' => $this->category]);
-        }
-        if ($this->noExecutor) {
-            $activeQuery->andWhere(['executor_id' => null]);
-        }
-        if ($this->period) {
-            switch ($this->period) {
-                case self::ONE_HOUR:
-                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 1 hour']);
-                    break;
-                case self::TWELVE_HOURS:
-                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 12 hours']);
-                    break;
-                case self::TWENTY_FOUR_HOURS:
-                    $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 24 hours']);
-                    break;
+        if (Yii::$app->request->getIsPost()) {
+            $this->load(Yii::$app->request->post());
+            if (!$this->validate()) {
+                $errors = $this->getErrors();
+                return $activeQuery->all();
+            }
+            if (isset($this->category)) {
+                $activeQuery->andFilterWhere(['category.id' => $this->category]);
+            }
+            if ($this->noExecutor) {
+                $activeQuery->andWhere(['executor_id' => null]);
+            }
+            if ($this->period) {
+                switch ($this->period) {
+                    case self::ONE_HOUR:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 1 hour']);
+                        break;
+                    case self::TWELVE_HOURS:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 12 hours']);
+                        break;
+                    case self::TWENTY_FOUR_HOURS:
+                        $activeQuery->andFilterWhere(['between', 'deadline', 'NOW', 'NOW + 24 hours']);
+                        break;
+                }
             }
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
@@ -57,7 +65,7 @@ class FilterForm extends Model
     public function rules() {
         return [
             [['noExecutor'], 'boolean'],
-            ['category', 'exist', 'targetClass' => Category::class, 'targetAttribute' => 'id'],
+            [['category'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']]],
             ['period', 'in', 'range' => [self::ONE_HOUR, self::TWELVE_HOURS, self::TWENTY_FOUR_HOURS]]
         ];
     }
