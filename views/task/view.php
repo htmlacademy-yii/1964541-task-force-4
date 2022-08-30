@@ -65,9 +65,9 @@
             <dt>Категория</dt>
             <dd><?= $task->category->name ?></dd>
             <dt>Дата публикации</dt>
-            <dd>25 минут назад</dd>
+            <dd><?= Yii::$app->formatter->format($task->dt_add, 'relativeTime') ?></dd>
             <dt>Срок выполнения</dt>
-            <dd><?= $task->deadline ?></dd>
+            <dd><?= Yii::$app->formatter->format($task->deadline, 'relativeTime') ?></dd>
             <dt>Статус</dt>
             <dd>Открыт для новых заказов</dd>
         </dl>
