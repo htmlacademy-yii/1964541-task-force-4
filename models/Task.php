@@ -148,7 +148,7 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasMany(Review::className(), ['task_id' => 'id']);
     }
 
-    public function getStatusAttribute(): string
+    public function getStatusLabel(): string
     {
         return $this->getStatusMap()[$this->status];
     }

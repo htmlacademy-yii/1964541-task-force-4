@@ -47,7 +47,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'view/<id:\d+>' => 'task/view'
+                'task/view/<id:\d+>' => 'task/view'
             ],
         ],
     ],
