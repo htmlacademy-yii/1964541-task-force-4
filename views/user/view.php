@@ -4,7 +4,7 @@
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">
         <div class="photo-rate">
-            <img class="card-photo" src="../img/man-glasses.png" width="191" height="190" alt="Фото пользователя">
+            <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191" height="190" alt="Фото пользователя">
             <div class="card-rate">
                 <div class="stars-rating big"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
                 <span class="current-rate"><?= $user->rating ?></span>
