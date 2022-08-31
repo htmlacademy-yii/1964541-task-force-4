@@ -10,7 +10,7 @@ use yii\db\Expression;
 
 class FilterForm extends Model
 {
-    public string|array $category = [];
+    public array $category = [];
     public bool $noExecutor = false;
     public string $period = '';
 
@@ -24,8 +24,7 @@ class FilterForm extends Model
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
-        if (Yii::$app->request->getIsPost()) {
-            $this->load(Yii::$app->request->post());
+
             if (!$this->validate()) {
                 $errors = $this->getErrors();
                 return $activeQuery->all();
@@ -39,7 +38,6 @@ class FilterForm extends Model
             if ($this->period) {
                 $this->chooseRightPeriod($activeQuery);
             }
-        }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
 
         return $activeQuery->all();

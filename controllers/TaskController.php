@@ -13,6 +13,9 @@ class TaskController extends Controller
     public function actionIndex()
     {
         $filterForm = new FilterForm();
+        if (Yii::$app->request->getIsPost()) {
+            $filterForm->load(Yii::$app->request->post());
+        }
         $tasks = $filterForm->getFilteredTasks();
 
         return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
