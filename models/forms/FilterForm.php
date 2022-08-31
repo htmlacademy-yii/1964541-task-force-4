@@ -25,10 +25,6 @@ class FilterForm extends Model
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
 
-            if (!$this->validate()) {
-                $errors = $this->getErrors();
-                return $activeQuery->all();
-            }
             if (isset($this->category)) {
                 $activeQuery->andFilterWhere(['category.id' => $this->category]);
             }
