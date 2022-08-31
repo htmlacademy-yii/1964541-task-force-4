@@ -15,9 +15,9 @@
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($responses as $response): ?>
     <div class="response-card">
-        <img class="customer-photo" src="../img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
+        <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
         <div class="feedback-wrapper">
-            <a href="#" class="link link--block link--big"><?= $response->customer->login ?></a>
+            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>" class="link link--block link--big"><?= $response->customer->login ?></a>
             <div class="response-wrapper">
                 <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
                 <p class="reviews">2 отзыва</p>
