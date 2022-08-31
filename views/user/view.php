@@ -1,12 +1,16 @@
 <?php
+
 ?>
 <div class="left-column">
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">
         <div class="photo-rate">
-            <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191" height="190" alt="Фото пользователя">
+            <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191"
+                 height="190" alt="Фото пользователя">
             <div class="card-rate">
-                <div class="stars-rating big"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
+                <div class="stars-rating big"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span
+                            class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span>
+                </div>
                 <span class="current-rate"><?= $user->rating ?></span>
             </div>
         </div>
@@ -16,43 +20,40 @@
         <div class="specialization">
             <p class="head-info">Специализации</p>
             <ul class="special-list">
-                <?php foreach ($categories as $category): ?>
-                <li class="special-item">
-                    <a href="#" class="link link--regular"><?= $category->name ?></a>
-                </li>
-                <?php endforeach; ?>
+                <?php
+                foreach ($categories as $category): ?>
+                    <li class="special-item">
+                        <a href="#" class="link link--regular"><?= $category->name ?></a>
+                    </li>
+                <?php
+                endforeach; ?>
             </ul>
         </div>
         <div class="bio">
             <p class="head-info">Био</p>
-            <p class="bio-info"><span class="country-info">Россия</span>, <span class="town-info"><?= $user->city->name ?></span>, <span class="age-info">30</span> лет</p>
+            <p class="bio-info"><span class="country-info">Россия</span>, <span
+                        class="town-info"><?= $user->city->name ?></span>, <span class="age-info">30</span> лет</p>
         </div>
     </div>
     <h4 class="head-regular">Отзывы заказчиков</h4>
-    <div class="response-card">
-        <img class="customer-photo" src="../img/man-coat.png" width="120" height="127" alt="Фото заказчиков">
-        <div class="feedback-wrapper">
-            <p class="feedback">«Кумар сделал всё в лучшем виде. Буду обращаться к нему в
-                будущем, если возникнет такая необходимость!»</p>
-            <p class="task">Задание «<a href="#" class="link link--small">Повесить полочку</a>» выполнено</p>
+    <?php
+    foreach ($reviews as $review): ?>
+        <div class="response-card">
+            <img class="customer-photo" src="../img/man-coat.png" width="120" height="127" alt="Фото заказчиков">
+            <div class="feedback-wrapper">
+                <p class="feedback"><?= $review->content ?></p>
+                <p class="task">Задание «<a href="#" class="link link--small"><?= $review->task->title ?></a>» выполнено
+                </p>
+            </div>
+            <div class="feedback-wrapper">
+                <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
+                            class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span>
+                </div>
+                <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->format($review->dt_add, 'relativeTime') ?></p>
+            </div>
         </div>
-        <div class="feedback-wrapper">
-            <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-            <p class="info-text"><span class="current-time">25 минут </span>назад</p>
-        </div>
-    </div>
-    <div class="response-card">
-        <img class="customer-photo" src="../img/man-sweater.png" width="120" height="127" alt="Фото заказчиков">
-        <div class="feedback-wrapper">
-            <p class="feedback">«Кумар сделал всё в лучшем виде. Буду обращаться к нему в
-                будущем, если возникнет такая необходимость!»</p>
-            <p class="task">Задание «<a href="#" class="link link--small">Повесить полочку</a>» выполнено</p>
-        </div>
-        <div class="feedback-wrapper">
-            <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-            <p class="info-text"><span class="current-time">25 минут </span>назад</p>
-        </div>
-    </div>
+    <?php
+    endforeach; ?>
 </div>
 <div class="right-column">
     <div class="right-card black">

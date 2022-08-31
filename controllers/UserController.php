@@ -17,10 +17,11 @@ class UserController extends Controller
     {
         $user = User::findone($id);
         $categories = $user->categories;
+        $reviews = $user->reviews;
 
         if (!$user) {
             throw new NotFoundHttpException("Юзер с ID $id не найден");
         }
-        return $this->render('view', ['user' => $user, 'categories' => $categories]);
+        return $this->render('view', ['user' => $user, 'categories' => $categories, 'reviews' => $reviews]);
     }
 }

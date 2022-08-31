@@ -112,7 +112,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getReviews()
     {
-        return $this->hasMany(Review::className(), ['user_id' => 'id']);
+        return $this->hasMany(Review::className(), ['customer_id' => 'id']);
     }
 
     /**
