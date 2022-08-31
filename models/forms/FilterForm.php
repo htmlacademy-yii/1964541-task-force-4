@@ -10,30 +10,36 @@ use yii\db\Expression;
 
 class FilterForm extends Model
 {
-    public array $category = [];
-    public bool $noExecutor = false;
-    public string $period = '';
+    public $category = [];
+    public $noExecutor = false;
+    public $period = '';
 
     const ONE_HOUR = '1 hour';
     const TWELVE_HOURS = '12 hours';
     const TWENTY_FOUR_HOURS = '24 hours';
 
-    public function getFilteredTasks(): array
+    public function getTasksQuery():object
     {
         $activeQuery = Task::find();
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');
         $activeQuery->where(['status' => Task::STATUS_NEW]);
+        return $activeQuery;
+    }
 
-            if (isset($this->category)) {
-                $activeQuery->andFilterWhere(['category.id' => $this->category]);
-            }
-            if ($this->noExecutor) {
-                $activeQuery->andWhere(['executor_id' => null]);
-            }
-            if ($this->period) {
-                $this->chooseRightPeriod($activeQuery);
-            }
+    public function getFilteredTasks(): array
+    {
+        $activeQuery = $this->getTasksQuery();
+
+        if (isset($this->category)) {
+            $activeQuery->andFilterWhere(['category.id' => $this->category]);
+        }
+        if ($this->noExecutor) {
+            $activeQuery->andWhere(['executor_id' => null]);
+        }
+        if ($this->period) {
+            $this->chooseRightPeriod($activeQuery);
+        }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
 
         return $activeQuery->all();
