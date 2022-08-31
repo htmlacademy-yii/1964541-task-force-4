@@ -36,8 +36,9 @@
             <a href="#" class="button button--orange button--small">Отказать</a>
         </div>
     </div>
+    <?php endforeach; ?>
 </div>
-<?php endforeach; ?>
+
 <div class="right-column">
     <div class="right-card black info-card">
         <h4 class="head-card">Информация о задании</h4>
