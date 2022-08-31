@@ -13,6 +13,7 @@
         <p class="map-address">Новый арбат, 23, к. 1</p>
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
+    <?php foreach ($responses as $response): ?>
     <div class="response-card">
         <img class="customer-photo" src="../img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
         <div class="feedback-wrapper">
@@ -22,35 +23,13 @@
                 <p class="reviews">2 отзыва</p>
             </div>
             <p class="response-message">
-                Могу сделать всё в лучшем виде. У меня есть необходимый опыт и инструменты.
+                <?= $response->content ?>
             </p>
 
         </div>
         <div class="feedback-wrapper">
-            <p class="info-text"><span class="current-time">25 минут </span>назад</p>
-            <p class="price price--small">3700 ₽</p>
-        </div>
-        <div class="button-popup">
-            <a href="#" class="button button--blue button--small">Принять</a>
-            <a href="#" class="button button--orange button--small">Отказать</a>
-        </div>
-    </div>
-    <div class="response-card">
-        <img class="customer-photo" src="../img/man-sweater.png" width="146" height="156" alt="Фото заказчиков">
-        <div class="feedback-wrapper">
-            <a href="#" class="link link--block link--big">Дмитриев Андрей</a>
-            <div class="response-wrapper">
-                <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-                <p class="reviews">8 отзывов</p>
-            </div>
-            <p class="response-message">
-                Примусь за выполнение задания в течение часа, сделаю быстро и качественно.
-            </p>
-
-        </div>
-        <div class="feedback-wrapper">
-            <p class="info-text"><span class="current-time">2 часа </span>назад</p>
-            <p class="price price--small">1999 ₽</p>
+            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->format($response->dt_add, 'relativeTime') ?></p>
+            <p class="price price--small"><?= $response->price ?></p>
         </div>
         <div class="button-popup">
             <a href="#" class="button button--blue button--small">Принять</a>
@@ -58,6 +37,7 @@
         </div>
     </div>
 </div>
+<?php endforeach; ?>
 <div class="right-column">
     <div class="right-card black info-card">
         <h4 class="head-card">Информация о задании</h4>
