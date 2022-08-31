@@ -14,19 +14,19 @@ class TaskController extends Controller
     public function actionIndex()
     {
         $filterForm = new FilterForm();
+
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
         }
         $tasks = $filterForm->getFilteredTasks();
+
         return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
     }
 
-    public function actionView($id) {
-        $activeQuery = Task::find();
-        $activeQuery->joinWith('city');
-        $activeQuery->joinWith('category');
-        $activeQuery->where(['task.id' => $id]);
-        $task = $activeQuery->one();
+    public function actionView($id)
+    {
+        $task = Task::findone($id);
+
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }

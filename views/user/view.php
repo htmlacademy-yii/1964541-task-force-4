@@ -10,28 +10,17 @@
                 <span class="current-rate"><?= $user->rating ?></span>
             </div>
         </div>
-        <p class="user-description">
-            Внезапно, ключевые особенности структуры проекта
-            неоднозначны и будут подвергнуты целой серии
-            независимых исследований. Следует отметить, что
-            высококачественный прототип будущего проекта, в
-            своём классическом представлении, допускает
-            внедрение своевременного выполнения сверхзадачи.
-        </p>
+        <p class="user-description"><?= $user->description ?></p>
     </div>
     <div class="specialization-bio">
         <div class="specialization">
             <p class="head-info">Специализации</p>
             <ul class="special-list">
+                <?php foreach ($categories as $category): ?>
                 <li class="special-item">
-                    <a href="#" class="link link--regular">Ремонт бытовой техники</a>
+                    <a href="#" class="link link--regular"><?= $category->name ?></a>
                 </li>
-                <li class="special-item">
-                    <a href="#" class="link link--regular">Курьер</a>
-                </li>
-                <li class="special-item">
-                    <a href="#" class="link link--regular">Оператор ПК</a>
-                </li>
+                <?php endforeach; ?>
             </ul>
         </div>
         <div class="bio">
