@@ -17,7 +17,7 @@
     <div class="response-card">
         <img class="customer-photo" src="../img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
         <div class="feedback-wrapper">
-            <a href="#" class="link link--block link--big">Астахов Павел</a>
+            <a href="#" class="link link--block link--big"><?= $response->customer->login ?></a>
             <div class="response-wrapper">
                 <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
                 <p class="reviews">2 отзыва</p>
