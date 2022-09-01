@@ -150,10 +150,10 @@ class Task extends \yii\db\ActiveRecord
 
     public function getStatusLabel(): string
     {
-        return $this->getStatusMap()[$this->status];
+        return self::statusMap()[$this->status];
     }
 
-    private function getStatusMap(): array
+    static function statusMap(): array
     {
         return [
             self::STATUS_CANCELED => 'Отменено',
