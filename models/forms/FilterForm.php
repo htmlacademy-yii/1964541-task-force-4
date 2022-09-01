@@ -6,6 +6,7 @@ use app\models\Category;
 use app\models\Task;
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 use yii\db\Expression;
 
 class FilterForm extends Model
@@ -18,7 +19,7 @@ class FilterForm extends Model
     const TWELVE_HOURS = '12 hours';
     const TWENTY_FOUR_HOURS = '24 hours';
 
-    public function getTasksQuery():object
+    public function getTasksQuery(): ActiveQuery
     {
         $activeQuery = Task::find();
         $activeQuery->joinWith('city');
@@ -45,18 +46,15 @@ class FilterForm extends Model
         return $activeQuery->all();
     }
 
-    private function chooseRightPeriod($activeQuery): void
+    private function chooseRightPeriod($activeQuery): ActiveQuery
     {
         switch ($this->period) {
             case self::ONE_HOUR:
-                $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 1 HOUR')]);
-                return;
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 1 HOUR')]);
             case self::TWELVE_HOURS:
-                $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 12 HOUR')]);
-                return;
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 12 HOUR')]);
             case self::TWENTY_FOUR_HOURS:
-                $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 24 HOUR')]);
-                return;
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 24 HOUR')]);
         }
     }
 
