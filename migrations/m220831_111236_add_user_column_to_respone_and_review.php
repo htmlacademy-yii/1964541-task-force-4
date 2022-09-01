@@ -24,9 +24,12 @@ class m220831_111236_add_user_column_to_respone_and_review extends Migration
      */
     public function safeDown()
     {
-        echo "m220831_111236_add_user_column_to_respone_and_review cannot be reverted.\n";
+        $this->dropColumn('response', 'customer_id');
+        $this->dropColumn('review', 'executor_id');
+        $this->renameColumn('review', 'customer_id', 'user_id');
+        $this->dropForeignKey('response_ibfk_3', 'response');
+        $this->dropForeignKey('review_ibfk_3', 'review');
 
-        return false;
     }
 
     /*

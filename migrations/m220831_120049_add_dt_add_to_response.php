@@ -20,9 +20,7 @@ class m220831_120049_add_dt_add_to_response extends Migration
      */
     public function safeDown()
     {
-        echo "m220831_120049_add_dt_add_to_response cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('response', 'dt_add');
     }
 
     /*
