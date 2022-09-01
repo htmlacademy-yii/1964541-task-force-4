@@ -87,20 +87,18 @@ class User extends \yii\db\ActiveRecord
         return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 
-    public function getExecutedTasks():int
+    public function getExecutedTasks()
     {
        return Task::find()
             ->andFilterWhere(['id' => $this->id])
-           ->andFilterWhere(['status' => 'executed'])
-            ->count('id');
+           ->andFilterWhere(['status' => Task::STATUS_EXECUTED]);
     }
 
-    public function getFailedTasks():int
+    public function getFailedTasks()
     {
         return Task::find()
             ->andFilterWhere(['id' => $this->id])
-            ->andFilterWhere(['status' => 'failed'])
-            ->count('id');
+            ->andFilterWhere(['status' => Task::STATUS_FAILED]);
     }
 
     /**

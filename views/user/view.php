@@ -60,7 +60,7 @@
         <h4 class="head-card">Статистика исполнителя</h4>
         <dl class="black-list">
             <dt>Всего заказов</dt>
-            <dd><?= $user->getExecutedTasks() ?> выполнено, <?= $user->getFailedTasks() ?> провалено</dd>
+            <dd><?= $user->getExecutedTasks()->count('id'); ?> выполнено, <?= $user->getFailedTasks()->count('id'); ?> провалено</dd>
             <dt>Место в рейтинге</dt>
             <dd>25 место</dd>
             <dt>Дата регистрации</dt>
