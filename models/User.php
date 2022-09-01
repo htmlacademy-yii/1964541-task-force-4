@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\Query;
 
 /**
  * This is the model class for table "user".
@@ -82,7 +84,23 @@ class User extends \yii\db\ActiveRecord
      */
     public function getCategories()
     {
-        return $this->hasMany(Category::className(), ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
+        return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
+    }
+
+    public function getExecutedTasks():int
+    {
+       return Task::find()
+            ->andFilterWhere(['id' => $this->id])
+           ->andFilterWhere(['status' => 'executed'])
+            ->count('id');
+    }
+
+    public function getFailedTasks():int
+    {
+        return Task::find()
+            ->andFilterWhere(['id' => $this->id])
+            ->andFilterWhere(['status' => 'failed'])
+            ->count('id');
     }
 
     /**
@@ -112,7 +130,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getReviews()
     {
-        return $this->hasMany(Review::className(), ['user_id' => 'id']);
+        return $this->hasMany(Review::className(), ['customer_id' => 'id']);
     }
 
     /**
