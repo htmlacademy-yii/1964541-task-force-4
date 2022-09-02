@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "user".
@@ -53,7 +54,13 @@ class User extends \yii\db\ActiveRecord
             [['password', 'telegram'], 'string', 'max' => 64],
             [['email'], 'unique'],
             [['login'], 'unique'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -87,11 +94,20 @@ class User extends \yii\db\ActiveRecord
         return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 
+    public function getRatingPosition()
+    {
+        $rowsArray = User::find()
+            ->select('id, ROW_NUMBER() OVER (ORDER BY RATING DESC) as row_num')
+            ->asArray()
+            ->all();
+        return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
+    }
+
     public function getExecutedTasks()
     {
-       return Task::find()
+        return Task::find()
             ->andFilterWhere(['id' => $this->id])
-           ->andFilterWhere(['status' => Task::STATUS_EXECUTED]);
+            ->andFilterWhere(['status' => Task::STATUS_EXECUTED]);
     }
 
     public function getFailedTasks()

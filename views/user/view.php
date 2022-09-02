@@ -62,7 +62,7 @@
             <dt>Всего заказов</dt>
             <dd><?= $user->getExecutedTasks()->count('id'); ?> выполнено, <?= $user->getFailedTasks()->count('id'); ?> провалено</dd>
             <dt>Место в рейтинге</dt>
-            <dd>25 место</dd>
+            <dd><?= $user->getRatingPosition()?></dd>
             <dt>Дата регистрации</dt>
             <dd><?= Yii::$app->formatter->asDate($user->dt_add) ?></dd>
             <dt>Статус</dt>
