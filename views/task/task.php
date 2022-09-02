@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
                    class="link link--block link--big"><?= $task->title ?></a>
                 <p class="price price--task"><?= $task->price ?></p>
             </div>
-            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->format($task->dt_add, 'relativeTime') ?></p>
+            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></p>
             <p class="task-text"><?= $task->description ?></p>
             <div class="footer-task">
                 <p class="info-text town-text"><?= $task->city->name ?></p>

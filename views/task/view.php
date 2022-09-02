@@ -28,7 +28,7 @@
 
         </div>
         <div class="feedback-wrapper">
-            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->format($response->dt_add, 'relativeTime') ?></p>
+            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
             <p class="price price--small"><?= $response->price ?></p>
         </div>
         <div class="button-popup">
@@ -46,9 +46,9 @@
             <dt>Категория</dt>
             <dd><?= $task->category->name ?></dd>
             <dt>Дата публикации</dt>
-            <dd><?= Yii::$app->formatter->format($task->dt_add, 'relativeTime') ?></dd>
+            <dd><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></dd>
             <dt>Срок выполнения</dt>
-            <dd><?= Yii::$app->formatter->format($task->deadline, 'relativeTime') ?></dd>
+            <dd><?= Yii::$app->formatter->asRelativeTime($task->deadline) ?></dd>
             <dt>Статус</dt>
             <dd><?= $task->getStatusLabel() ?></dd>
         </dl>

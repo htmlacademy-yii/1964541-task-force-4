@@ -49,7 +49,7 @@
                 <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
                             class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span>
                 </div>
-                <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->format($review->dt_add, 'relativeTime') ?></p>
+                <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($review->dt_add) ?></p>
             </div>
         </div>
     <?php
@@ -64,7 +64,7 @@
             <dt>Место в рейтинге</dt>
             <dd>25 место</dd>
             <dt>Дата регистрации</dt>
-            <dd><?= Yii::$app->formatter->format($user->dt_add, 'date') ?></dd>
+            <dd><?= Yii::$app->formatter->asDate($user->dt_add) ?></dd>
             <dt>Статус</dt>
             <dd>Открыт для новых заказов</dd>
         </dl>
