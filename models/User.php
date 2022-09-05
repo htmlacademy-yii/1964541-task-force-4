@@ -106,14 +106,14 @@ class User extends \yii\db\ActiveRecord
     public function getExecutedTasks()
     {
         return Task::find()
-            ->andFilterWhere(['id' => $this->id])
+            ->andFilterWhere(['executor_id' => $this->id])
             ->andFilterWhere(['status' => Task::STATUS_EXECUTED]);
     }
 
     public function getFailedTasks()
     {
         return Task::find()
-            ->andFilterWhere(['id' => $this->id])
+            ->andFilterWhere(['executor_id' => $this->id])
             ->andFilterWhere(['status' => Task::STATUS_FAILED]);
     }
 
