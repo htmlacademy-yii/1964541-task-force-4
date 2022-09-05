@@ -15,7 +15,7 @@ class RegistrationForm extends ActiveRecord
     public $passwordRepeat;
     public $login;
     public $city_id;
-    public $user_type;
+    public $user_type = false;
 
     public static function tableName()
     {
@@ -57,7 +57,7 @@ class RegistrationForm extends ActiveRecord
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         $user->login = $this->login;
         $user->city_id = $this->city_id;
-        $user->user_type = $this->user_type === true ? 'executor' : 'customer';
+        $user->user_type = $this->user_type == 1 ? 'executor' : 'customer';
         $user->save();
     }
 }

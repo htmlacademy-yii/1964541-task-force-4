@@ -14,10 +14,10 @@ use yii\widgets\ActiveForm;
             <?php echo $form->field($model, 'city_id')->dropDownList(City::getCityList());  ?>
         </div>
         <div class="half-wrapper">
-        <?php echo $form->field($model, 'password')->textInput(['class' => 'control-label']);  ?>
+        <?php echo $form->field($model, 'password')->passwordInput(['class' => 'control-label']);  ?>
         </div>
         <div class="half-wrapper">
-            <?php echo $form->field($model, 'passwordRepeat')->textInput(['class' => 'control-label']);  ?>
+            <?php echo $form->field($model, 'passwordRepeat')->passwordInput(['class' => 'control-label']);  ?>
         </div>
         <?php echo $form->field($model, 'user_type')->checkbox(['class' => 'control-label']);  ?>
         <input type="submit" class="button button--blue" value="Создать аккаунт">
