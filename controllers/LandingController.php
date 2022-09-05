@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\forms\LoginForm;
+use Yii;
 use yii\web\Controller;
 
 class LandingController extends Controller
@@ -11,8 +12,11 @@ class LandingController extends Controller
     {
         $this->layout = 'landing';
         $loginForm = new LoginForm();
-        if ($loginForm->validate()) {
-            echo 'OK';
+        if (Yii::$app->request->getIsPost()) {
+            $loginForm->load(Yii::$app->request->post());
+            if ($loginForm->validate()) {
+                echo 'OK';
+            }
         }
 
         return $this->render('landing', ['model' => $loginForm]);
