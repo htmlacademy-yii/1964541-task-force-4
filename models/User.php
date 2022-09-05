@@ -176,4 +176,9 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
     }
+
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password);
+    }
 }
