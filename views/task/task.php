@@ -10,10 +10,11 @@ use yii\widgets\ActiveForm;
     foreach ($tasks as $task): ?>
         <div class="task-card">
             <div class="header-task">
-                <a href="#" class="link link--block link--big"><?= $task->title ?></a>
+                <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id]) ?>"
+                   class="link link--block link--big"><?= $task->title ?></a>
                 <p class="price price--task"><?= $task->price ?></p>
             </div>
-            <p class="info-text"><span class="current-time">4 часа </span>назад</p>
+            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></p>
             <p class="task-text"><?= $task->description ?></p>
             <div class="footer-task">
                 <p class="info-text town-text"><?= $task->city->name ?></p>
@@ -21,8 +22,7 @@ use yii\widgets\ActiveForm;
                 <a href="#" class="button button--black">Смотреть Задание</a>
             </div>
         </div>
-    <?php
-    endforeach; ?>
+    <?php endforeach; ?>
     <div class="pagination-wrapper">
         <ul class="pagination-list">
             <li class="pagination-item mark">

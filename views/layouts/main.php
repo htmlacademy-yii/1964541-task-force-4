@@ -4,13 +4,14 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\assets\MainAsset;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
 
-AppAsset::register($this);
+MainAsset::register($this);
 
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
@@ -26,7 +27,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Taskforce</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -34,7 +35,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
 <header class="page-header">
     <nav class="main-nav">
         <a href='#' class="header-logo">
-            <img class="logo-image" src="../img/logotype.png" width=227 height=60 alt="taskforce">
+            <img class="logo-image" src="<?= Yii::$app->urlManager->baseUrl ?>/img/logotype.png" width=227 height=60 alt="taskforce">
         </a>
         <div class="nav-wrapper">
             <ul class="nav-list">
@@ -55,7 +56,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => '@w
     </nav>
     <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="../img/man-glasses.png" width="55" height="55" alt="Аватар">
+            <img class="user-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55" height="55" alt="Аватар">
         </a>
         <div class="user-menu">
             <p class="user-name">Василий</p>

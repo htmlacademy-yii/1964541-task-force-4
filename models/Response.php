@@ -64,6 +64,11 @@ class Response extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'executor_id']);
     }
 
+    public function getCustomer()
+    {
+        return $this->hasOne(User::className(), ['id' => 'customer_id']);
+    }
+
     /**
      * Gets query for [[Task]].
      *

@@ -10,7 +10,8 @@ use Yii;
  * @property int $id
  * @property string|null $dt_add
  * @property string $content
- * @property int $user_id
+ * @property int $customer_id
+ * @property int $executor_id
  * @property int|null $grade
  * @property int $task_id
  *
@@ -34,10 +35,10 @@ class Review extends \yii\db\ActiveRecord
     {
         return [
             [['dt_add'], 'safe'],
-            [['content', 'user_id', 'task_id'], 'required'],
+            [['content', 'customer_id', 'task_id', 'executor_id'], 'required'],
             [['content'], 'string'],
-            [['user_id', 'grade', 'task_id'], 'integer'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['customer_id', 'grade', 'task_id'], 'integer'],
+            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
     }
@@ -51,7 +52,8 @@ class Review extends \yii\db\ActiveRecord
             'id' => 'ID',
             'dt_add' => 'Dt Add',
             'content' => 'Content',
-            'user_id' => 'User ID',
+            'customer_id' => 'Customer id',
+            'executor_id' => 'Executor ID',
             'grade' => 'Grade',
             'task_id' => 'Task ID',
         ];
@@ -72,8 +74,13 @@ class Review extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getExecutor()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'executor_id']);
+    }
+
+    public function getCustomer()
+    {
+        return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
 }
