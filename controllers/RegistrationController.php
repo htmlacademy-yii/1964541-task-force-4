@@ -15,6 +15,7 @@ class RegistrationController extends Controller
             $registrationForm->load(Yii::$app->request->post());
             if ($registrationForm->validate()) {
                 $registrationForm->loadToUser();
+                Yii::$app->response->redirect(['task']);
             }
         }
         return $this->render('registration', ['model' => $registrationForm]);
