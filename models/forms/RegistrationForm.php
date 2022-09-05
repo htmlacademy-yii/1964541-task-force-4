@@ -8,19 +8,14 @@ use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
-class RegistrationForm extends ActiveRecord
+class RegistrationForm extends Model
 {
     public $email;
     public $password;
     public $passwordRepeat;
     public $login;
     public $city_id;
-    public $user_type = false;
-
-    public static function tableName()
-    {
-        return '{{user}}';
-    }
+    public $user_type;
 
     public function rules()
     {
@@ -30,8 +25,8 @@ class RegistrationForm extends ActiveRecord
             [['password', 'passwordRepeat'], 'string', 'max' => 64],
             [['passwordRepeat'], 'compare', 'compareAttribute' => 'password'],
             [['email'], 'email'],
-            [['email'], 'unique'],
-            [['login'], 'unique'],
+            [['email'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['email' => 'email']],
+            [['login'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['login' => 'login']],
             [['user_type'], 'boolean'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
