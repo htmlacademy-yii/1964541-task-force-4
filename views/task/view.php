@@ -13,7 +13,7 @@
         <p class="map-address">Новый арбат, 23, к. 1</p>
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
-    <?php foreach ($responses as $response): ?>
+    <?php foreach ($task->responses as $response): ?>
     <div class="response-card">
         <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
         <div class="feedback-wrapper">
