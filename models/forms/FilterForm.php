@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+<<<<<<< HEAD
 use app\models\Category;
 use app\models\Task;
 use Yii;
@@ -79,6 +80,37 @@ class FilterForm extends Model
     public function periodAttributeLabels(): array
     {
         return [self::ONE_HOUR => '1 час', self::TWELVE_HOURS => '12 часов', self::TWENTY_FOUR_HOURS => '24 часа'];
+=======
+use yii\base\Model;
+
+class FilterForm extends Model
+{
+    public array $category;
+    public bool $noExecutor;
+    public string $period;
+
+    public function rules() {
+        return [
+            ['noExecutor' => 'boolean'],
+            ['category' => 'exist'],
+            ['category', 'in', 'range' => ['courier', 'clean', 'cargo', 'neo', 'flat', 'repair', 'beauty', 'photo']],
+            ['period', 'in', 'range' => ['1 час', '12 часов', '24 часа']]
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'courier' => 'Курьерские услуги',
+            'clean' => 'Уборка',
+            'cargo' => 'Переезды',
+            'neo' => 'Компьютерная помощь',
+            'flat' => 'Ремонт квартирный',
+            'repair' => 'Ремонт техники',
+            'beauty' => 'Красота',
+            'photo' => 'Фото'
+        ];
+>>>>>>> 0b9615f
     }
 
 }
