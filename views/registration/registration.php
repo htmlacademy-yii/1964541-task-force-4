@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
             <?php echo $form->field($model, 'passwordRepeat')->textInput(['class' => 'control-label']);  ?>
         </div>
         <?php echo $form->field($model, 'user_type')->checkbox(['class' => 'control-label']);  ?>
-        <?php ActiveForm::end() ?>
         <input type="submit" class="button button--blue" value="Создать аккаунт">
+        <?php ActiveForm::end() ?>
     </div>
 </div>
