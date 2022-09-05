@@ -40,6 +40,14 @@ class Task extends \yii\db\ActiveRecord
     const STATUS_EXECUTED = 'executed';
     const STATUS_FAILED = 'failed';
 
+    public static $statusMap = [
+        self::STATUS_CANCELED => 'Отменено',
+        self::STATUS_EXECUTED => 'Выполнено',
+        self::STATUS_NEW => 'Новое',
+        self::STATUS_IN_WORK => 'В работе',
+        self::STATUS_FAILED => 'Провалено'
+    ];
+
     public static function tableName()
     {
         return 'task';
@@ -150,17 +158,6 @@ class Task extends \yii\db\ActiveRecord
 
     public function getStatusLabel(): string
     {
-        return self::statusMap()[$this->status];
-    }
-
-    static function statusMap(): array
-    {
-        return [
-            self::STATUS_CANCELED => 'Отменено',
-            self::STATUS_EXECUTED => 'Выполнено',
-            self::STATUS_NEW => 'Новое',
-            self::STATUS_IN_WORK => 'В работе',
-            self::STATUS_FAILED => 'Провалено'
-        ];
+        return self::$statusMap[$this->status];
     }
 }

@@ -97,7 +97,7 @@ class User extends \yii\db\ActiveRecord
     public function getRatingPosition()
     {
         $rowsArray = User::find()
-            ->select('id, ROW_NUMBER() OVER (ORDER BY RATING DESC) as row_num')
+            ->select('id, ROW_NUMBER() OVER (ORDER BY rating DESC) as row_num')
             ->asArray()
             ->all();
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
