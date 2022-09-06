@@ -35,7 +35,8 @@ $this->beginPage() ?>
 <body>
 <?php
 $this->beginBody() ?>
-<div class="<?= $hidden = Yii::$app->user->isGuest ? 'hidden' : ''  ?>">
+<?php if (!Yii::$app->user->isGuest): ?>
+<div class="<?= $hidden = 'hidden' ?>">
     <header class="page-header">
         <nav class="main-nav">
             <a href='#' class="header-logo">
@@ -84,6 +85,7 @@ $this->beginBody() ?>
         </div>
     </header>
 </div>
+<?php endif; ?>
 
 <main>
     <div class="main-content container">

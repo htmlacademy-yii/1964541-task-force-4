@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
+use app\controllers\AccessControllers\AnonController;
 use app\models\forms\RegistrationForm;
-use app\models\User;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
-use yii\web\Controller;
 
-class RegistrationController extends Controller
+class RegistrationController extends AnonController
 {
     public function actionIndex()
     {

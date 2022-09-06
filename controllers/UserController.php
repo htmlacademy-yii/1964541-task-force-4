@@ -2,9 +2,9 @@
 
 namespace app\controllers;
 
+use app\controllers\AccessControllers\SecuredController;
 use app\models\User;
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class UserController extends SecuredController
