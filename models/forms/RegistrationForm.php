@@ -28,7 +28,7 @@ class RegistrationForm extends Model
             [['email'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['email' => 'email']],
             [['login'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['login' => 'login']],
             [['isUser'], 'boolean'],
-            [['cityId'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [['cityId'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['cityId' => 'id']],
         ];
     }
 

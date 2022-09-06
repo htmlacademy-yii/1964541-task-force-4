@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
         <?php echo $form->field($model, 'login')->textInput(['class' => 'control-label']);  ?>
         <div class="half-wrapper">
             <?php echo $form->field($model, 'email')->textInput(['class' => 'control-label']);  ?>
-            <?php echo $form->field($model, 'city_id')->dropDownList(City::getCityList());  ?>
+            <?php echo $form->field($model, 'cityId')->dropDownList(City::getCityList());  ?>
         </div>
         <div class="half-wrapper">
         <?php echo $form->field($model, 'password')->passwordInput(['class' => 'control-label']);  ?>
@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
         <div class="half-wrapper">
             <?php echo $form->field($model, 'passwordRepeat')->passwordInput(['class' => 'control-label']);  ?>
         </div>
-        <?php echo $form->field($model, 'user_type')->checkbox(['class' => 'control-label']);  ?>
+        <?php echo $form->field($model, 'isUser')->checkbox(['class' => 'control-label']);  ?>
         <input type="submit" class="button button--blue" value="Создать аккаунт">
         <?php ActiveForm::end() ?>
     </div>
