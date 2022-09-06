@@ -1,5 +1,7 @@
 <?php
+
 use yii\widgets\ActiveForm;
+
 ?>
 <main>
     <div class="landing-container">
@@ -9,7 +11,9 @@ use yii\widgets\ActiveForm;
             <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
                 У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
                 Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
-            <a href="<?= Yii::$app->urlManager->createUrl('registration') ?>"><button class="button">Создать аккаунт</button></a>
+            <a href="<?= Yii::$app->urlManager->createUrl('registration') ?>">
+                <button class="button">Создать аккаунт</button>
+            </a>
         </div>
         <div class="landing-center">
             <div class="landing-instruction">
@@ -95,12 +99,15 @@ use yii\widgets\ActiveForm;
 </main>
 <section class="modal enter-form form-modal" id="enter-form">
     <h2>Вход на сайт</h2>
-    <?php $form =  ActiveForm::begin([
-            'id' => 'loginForm',
+    <?php
+    $form = ActiveForm::begin([
+        'id' => 'loginForm',
+        'enableAjaxValidation' => true
     ]) ?>
-    <?php echo $form->field($model, 'email')->textInput(['class' => 'form-modal-description']) ?>
-    <?php echo $form->field($model, 'password')->passwordInput(['class' => 'form-modal-description']) ?>
-        <button class="button" type="submit">Войти</button>
-    <?php ActiveForm::end(); ?>
+    <?= $form->field($model, 'email')->textInput(['class' => 'form-modal-description']) ?>
+    <?= $form->field($model, 'password')->passwordInput(['class' => 'form-modal-description']) ?>
+    <button class="button" type="submit">Войти</button>
+    <?php
+    ActiveForm::end(); ?>
     <button class="form-modal-close" type="button">Закрыть</button>
 </section>
