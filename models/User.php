@@ -32,6 +32,8 @@ use yii\helpers\ArrayHelper;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public const CUSTOMER_STATUS = 'customer';
+    public const EXECUTOR_STATUS = 'executor';
     /**
      * {@inheritdoc}
      */

@@ -14,8 +14,8 @@ class RegistrationForm extends Model
     public $password;
     public $passwordRepeat;
     public $login;
-    public $city_id;
-    public $user_type;
+    public $cityId;
+    public $isUser;
 
     public function rules()
     {
@@ -27,8 +27,8 @@ class RegistrationForm extends Model
             [['email'], 'email'],
             [['email'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['email' => 'email']],
             [['login'], 'unique', 'targetClass' => User::class, 'targetAttribute' => ['login' => 'login']],
-            [['user_type'], 'boolean'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [['isUser'], 'boolean'],
+            [['cityId'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
@@ -40,8 +40,8 @@ class RegistrationForm extends Model
             'password' => 'Пароль',
             'passwordRepeat' => 'Повтор пароля',
             'login' => 'Ваше имя',
-            'user_type' => 'Я собираюсь откликаться на заказы',
-            'city_id' => 'Город',
+            'isUser' => 'Я собираюсь откликаться на заказы',
+            'cityId' => 'Город',
         ];
     }
 
@@ -51,8 +51,8 @@ class RegistrationForm extends Model
         $user->email = $this->email;
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
         $user->login = $this->login;
-        $user->city_id = $this->city_id;
-        $user->user_type = $this->user_type == 1 ? 'executor' : 'customer';
-        $user->save();
+        $user->city_id = $this->cityId;
+        $user->user_type = $this->isUser == 1 ? User::EXECUTOR_STATUS : User::CUSTOMER_STATUS;
+        return $user;
     }
 }
