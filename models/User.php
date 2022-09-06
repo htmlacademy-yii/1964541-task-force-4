@@ -44,6 +44,9 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->getPrimaryKey();
     }
 
+    public const CUSTOMER_STATUS = 'customer';
+    public const EXECUTOR_STATUS = 'executor';
+
     /**
      * {@inheritdoc}
      */
@@ -58,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'password', 'login', 'rating'], 'required'],
+            [['email', 'password', 'login'], 'required'],
             [['dt_add'], 'safe'],
             [['avatar', 'user_type'], 'string'],
             [['rating', 'city_id', 'phone'], 'integer'],

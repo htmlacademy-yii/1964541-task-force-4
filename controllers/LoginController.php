@@ -19,8 +19,8 @@ class LoginController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'allow' => false,
-                        'roles' => ['@']
+                        'allow' => true,
+                        'roles' => ['?']
                     ]
                 ]
             ]

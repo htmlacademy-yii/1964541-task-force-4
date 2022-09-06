@@ -80,7 +80,6 @@ use yii\widgets\ActiveForm;
             <input type="submit" class="button button--blue" value="Искать">
             <?php
             ActiveForm::end(); ?>
-
         </div>
     </div>
 </div>
