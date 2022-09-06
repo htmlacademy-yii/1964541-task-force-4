@@ -32,6 +32,8 @@ use yii\helpers\ArrayHelper;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public const CUSTOMER_STATUS = 'customer';
+    public const EXECUTOR_STATUS = 'executor';
     /**
      * {@inheritdoc}
      */
@@ -46,7 +48,7 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['email', 'password', 'login', 'rating'], 'required'],
+            [['email', 'password', 'login'], 'required'],
             [['dt_add'], 'safe'],
             [['avatar', 'user_type'], 'string'],
             [['rating', 'city_id', 'phone'], 'integer'],

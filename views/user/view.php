@@ -1,6 +1,3 @@
-<?php
-
-?>
 <div class="left-column">
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">

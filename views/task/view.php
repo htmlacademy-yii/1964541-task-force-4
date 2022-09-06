@@ -38,7 +38,6 @@
     </div>
     <?php endforeach; ?>
 </div>
-
 <div class="right-column">
     <div class="right-card black info-card">
         <h4 class="head-card">Информация о задании</h4>
