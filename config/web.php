@@ -9,6 +9,7 @@ $config = [
     'bootstrap' => ['log'],
     'language' => 'ru-RU',
     'homeUrl' => '/task',
+    'defaultRoute' => 'login',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -23,6 +24,7 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
+            'loginUrl' => 'login',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [

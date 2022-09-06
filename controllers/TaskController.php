@@ -9,7 +9,7 @@ use yii\db\Expression;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class TaskController extends Controller
+class TaskController extends SecuredController
 {
     public function actionIndex()
     {

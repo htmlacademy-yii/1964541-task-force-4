@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\forms\LoginForm;
 use Yii;
+use yii\filters\AccessControl;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
@@ -11,6 +12,21 @@ use yii\widgets\ActiveForm;
 
 class LoginController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => false,
+                        'roles' => ['@']
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $this->layout = 'landing';
