@@ -10,16 +10,16 @@ use yii\web\Controller;
 
 class RegistrationController extends Controller
 {
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $registrationForm = new RegistrationForm();
         if (Yii::$app->request->getIsPost()) {
             $registrationForm->load(Yii::$app->request->post());
             if ($registrationForm->validate()) {
-                if (!$registrationForm->loadToUser()->save()){
+                if (!$registrationForm->loadToUser()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
-                } else {
-                    Yii::$app->response->redirect(['task']);
                 }
+                Yii::$app->response->redirect(['task']);
             }
         }
         return $this->render('registration', ['model' => $registrationForm]);
