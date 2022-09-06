@@ -6,7 +6,7 @@ use app\models\forms\LoginForm;
 use Yii;
 use yii\web\Controller;
 
-class LandingController extends Controller
+class LoginController extends Controller
 {
     public function actionIndex()
     {
