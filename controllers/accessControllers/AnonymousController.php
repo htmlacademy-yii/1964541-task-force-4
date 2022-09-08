@@ -5,7 +5,7 @@ namespace app\controllers\AccessControllers;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-class AnonController extends Controller
+class AnonymousController extends Controller
 {
     public function behaviors()
     {
