@@ -17,7 +17,7 @@ class addTaskForm extends Model
     public $price;
     public $deadline;
     public $file;
-    public $file_path;
+    public $filePath;
 
     public function attributeLabels()
     {
@@ -50,7 +50,7 @@ class addTaskForm extends Model
             $newname = uniqid('upload') . '.' . $this->file->getExtension();
             $this->file->saveAs('@webroot/uploads/' . $newname);
 
-            $this->file_path = $newname;
+            $this->filePath = $newname;
             return true;
         }
         return false;
@@ -70,7 +70,7 @@ class addTaskForm extends Model
         $task->price = $this->price;
         $task->customer_id = Yii::$app->user->id;
         $task->deadline = $this->deadline;
-        $task->file = $this->file_path;
+        $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
 
         return $task;
