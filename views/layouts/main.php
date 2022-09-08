@@ -46,7 +46,7 @@ $this->beginBody() ?>
             <div class="nav-wrapper">
                 <ul class="nav-list">
                     <li class="list-item list-item--active">
-                        <a class="link link--nav">Новое</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl('task')?>" class="link link--nav">Новое</a>
                     </li>
                     <li class="list-item">
                         <a href="#" class="link link--nav">Мои задания</a>
