@@ -16,13 +16,15 @@ class LoginController extends AnonymousController
         $this->layout = 'landing';
         $loginForm = new LoginForm();
 
-        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isPost) {
             $loginForm->load(Yii::$app->request->post());
             if ($loginForm->validate()) {
-                $user = $loginForm->getUser();
-                Yii::$app->user->login($user);
+                if (!Yii::$app->request->isAjax) {
+                    $user = $loginForm->getUser();
+                    Yii::$app->user->login($user);
 
-                return $this->goHome();
+                    return $this->goHome();
+                }
             }
         }
 
