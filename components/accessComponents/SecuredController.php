@@ -1,11 +1,11 @@
 <?php
 
-namespace app\controllers\AccessControllers;
+namespace app\components\AccessComponents;
 
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-class SecuredController extends Controller
+abstract class SecuredController extends Controller
 {
     public function behaviors()
     {

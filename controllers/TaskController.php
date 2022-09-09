@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\controllers\AccessControllers\SecuredController;
+use app\components\AccessComponents\SecuredController;
 use app\models\forms\FilterForm;
 use app\models\Task;
 use Yii;

@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\controllers\AccessControllers\AnonymousController;
+use app\components\AccessComponents\AnonymousController;
 use app\models\forms\LoginForm;
 use Yii;
 use yii\web\Response;
@@ -16,7 +16,7 @@ class LoginController extends AnonymousController
         $this->layout = 'landing';
         $loginForm = new LoginForm();
 
-        if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost && Yii::$app->request->isAjax) {
             $loginForm->load(Yii::$app->request->post());
             if ($loginForm->validate()) {
                 $user = $loginForm->getUser();
