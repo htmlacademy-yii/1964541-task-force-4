@@ -16,7 +16,8 @@ class LoginController extends AnonymousController
         $this->layout = 'landing';
         $loginForm = new LoginForm();
 
-        if ($loginForm->load(Yii::$app->request->post())) {
+        if (Yii::$app->request->isPost) {
+            $loginForm->load(Yii::$app->request->post());
             if ($loginForm->validate()) {
                 $user = $loginForm->getUser();
                 Yii::$app->user->login($user);
@@ -25,18 +26,11 @@ class LoginController extends AnonymousController
             }
         }
 
-        return $this->render('landing', ['model' => $loginForm]);
-    }
-
-    public function actionValidation()
-    {
-        $this->layout = 'landing';
-        $loginForm = new LoginForm();
-
         if (Yii::$app->request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
-            ActiveForm::validate($loginForm);
+            return ActiveForm::validate($loginForm);
         }
-    }
 
+        return $this->render('landing', ['model' => $loginForm]);
+    }
 }

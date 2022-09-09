@@ -102,7 +102,7 @@ use yii\widgets\ActiveForm;
     <?php
     $form = ActiveForm::begin([
         'id' => 'loginForm',
-        'enableAjaxValidation' => true
+        'enableAjaxValidation' => true,
     ]) ?>
     <?= $form->field($model, 'email')->textInput(['class' => 'form-modal-description']) ?>
     <?= $form->field($model, 'password')->passwordInput(['class' => 'form-modal-description']) ?>
