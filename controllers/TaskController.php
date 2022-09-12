@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\AccessControllers\SecuredController;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
+use app\models\Response;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
@@ -57,12 +58,25 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionAccept($id, $executor_id)
+    public function actionAccept($id, $executor_id, $response_id)
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_IN_WORK;
         $task->executor_id = $executor_id;
         $task->save();
+
+        $response = Response::findOne($response_id);
+        $response->status = Response::STATUS_ACCEPTED;
+        $response->save();
+
+        return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
+    }
+
+    public function actionCancel($id, $response_id)
+    {
+        $response = Response::findOne($response_id);
+        $response->status = Response::STATUS_CANCELED;
+        $response->save();
 
         return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
