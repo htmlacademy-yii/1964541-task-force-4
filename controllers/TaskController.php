@@ -56,4 +56,14 @@ class TaskController extends SecuredController
 
         return $this->render('add', ['model' => $addTaskForm]);
     }
+
+    public function actionAccept($id, $executor_id)
+    {
+        $task = Task::findOne($id);
+        $task->status = task::STATUS_IN_WORK;
+        $task->executor_id = $executor_id;
+        $task->save();
+
+        return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
+    }
 }

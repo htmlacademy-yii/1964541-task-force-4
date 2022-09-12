@@ -1,3 +1,7 @@
+<?php
+
+
+use app\models\Task; ?>
 <div class="left-column">
     <div class="head-wrapper">
         <h3 class="head-main"><?= $task->title ?></h3>
@@ -17,7 +21,7 @@
     <div class="response-card">
         <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
         <div class="feedback-wrapper">
-            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>" class="link link--block link--big"><?= $response->customer->login ?></a>
+            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>" class="link link--block link--big"><?= $response->executor->login ?></a>
             <div class="response-wrapper">
                 <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
                 <p class="reviews">2 отзыва</p>
@@ -31,10 +35,12 @@
             <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
             <p class="price price--small"><?= $response->price ?></p>
         </div>
+        <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_IN_WORK): ?>
         <div class="button-popup">
-            <a href="#" class="button button--blue button--small">Принять</a>
+            <a href="<?= Yii::$app->urlManager->createUrl(['task/accept', 'id' => $task->id, 'executor_id' => $response->executor_id]) ?>" class="button button--blue button--small">Принять</a>
             <a href="#" class="button button--orange button--small">Отказать</a>
         </div>
+        <?php endif; ?>
     </div>
     <?php endforeach; ?>
 </div>
