@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
-use app\controllers\AccessControllers\SecuredController;
+use app\components\AccessComponents\SecuredController;
 use app\models\forms\addTaskForm;
 use app\models\forms\FilterForm;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
-use yii\web\GoneHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
