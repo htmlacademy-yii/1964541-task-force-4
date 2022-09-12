@@ -39,7 +39,7 @@ use app\models\Task; ?>
         <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
         <div class="button-popup">
             <a href="<?= Yii::$app->urlManager->createUrl(['task/accept', 'id' => $task->id, 'executor_id' => $response->executor_id, 'response_id' => $response->id]) ?>" class="button button--blue button--small">Принять</a>
-            <a href="<?= Yii::$app->urlManager->createUrl(['task/cancel', 'id' => $task->id, 'response_id' => $response->id])?>" class="button button--orange button--small">Отказать</a>
+            <a href="<?= Yii::$app->urlManager->createUrl(['task/refuse', 'id' => $task->id, 'response_id' => $response->id])?>" class="button button--orange button--small">Отказать</a>
         </div>
         <?php endif; ?>
     </div>

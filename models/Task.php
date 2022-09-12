@@ -71,10 +71,34 @@ class Task extends \yii\db\ActiveRecord
             [['deadline', 'dt_add'], 'safe'],
             [['title'], 'string', 'max' => 128],
             [['file'], 'string', 'max' => 320],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['executor_id' => 'id']
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['customer_id' => 'id']
+            ],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -170,16 +194,22 @@ class Task extends \yii\db\ActiveRecord
     {
         switch ($this->status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'] : ['<a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>', '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
+                return $id === $this->customer_id ? ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'] : [
+                    '<a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>',
+                    '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'
+                ];
             case self::STATUS_IN_WORK:
                 if ($id === $this->customer_id) {
-                    return ['<a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>', '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
+                    return [
+                        '<a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>',
+                        '<a href="#" class="button button--orange cancel-btn" data-action="cancel">Отмена задания</a>'
+                    ];
                 }
                 if ($id === $this->executor_id) {
                     return ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
-                } else {
-                    return [null];
                 }
+
+                return [null];
             default:
                 return [null];
         }

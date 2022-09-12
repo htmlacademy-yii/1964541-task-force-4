@@ -72,7 +72,7 @@ class TaskController extends SecuredController
         return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
-    public function actionCancel($id, $response_id)
+    public function actionRefuse($id, $response_id)
     {
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_CANCELED;
@@ -80,4 +80,5 @@ class TaskController extends SecuredController
 
         return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
+
 }
