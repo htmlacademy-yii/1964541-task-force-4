@@ -194,7 +194,7 @@ class Task extends \yii\db\ActiveRecord
     {
         switch ($this->status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'] : [
+                return $id === $this->customer_id ? ['<a href="#" class="button button--orange cancel-btn" data-action="cancel">Отмена задания</a>'] : [
                     '<a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>',
                     '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'
                 ];
