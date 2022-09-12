@@ -69,7 +69,17 @@ class TaskController extends SecuredController
         $response->status = Response::STATUS_ACCEPTED;
         $response->save();
 
-        return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+    }
+
+    public function actionReject()
+    {
+
+    }
+
+    public function actionAccept()
+    {
+
     }
 
     public function actionRefuse($id, $response_id)
@@ -78,7 +88,7 @@ class TaskController extends SecuredController
         $response->status = Response::STATUS_CANCELED;
         $response->save();
 
-        return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
     public function actionCancel($id)
