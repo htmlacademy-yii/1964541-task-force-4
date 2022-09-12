@@ -1,11 +1,11 @@
 <?php
 
-namespace app\components\AccessComponents;
+namespace app\components\AccessControllers;
 
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
-abstract class SecuredController extends Controller
+abstract class AnonymousController extends Controller
 {
     public function behaviors()
     {
@@ -15,11 +15,10 @@ abstract class SecuredController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => ['?']
                     ]
                 ]
             ]
         ];
     }
-
 }

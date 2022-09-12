@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\AccessComponents\SecuredController;
+use app\components\AccessControllers\SecuredController;
 use app\models\forms\addTaskForm;
 use app\models\forms\FilterForm;
 use app\models\Task;

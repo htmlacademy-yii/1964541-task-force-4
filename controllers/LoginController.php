@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\AccessComponents\AnonymousController;
+use app\components\AccessControllers\AnonymousController;
 use app\models\forms\LoginForm;
 use Yii;
 use yii\web\Response;

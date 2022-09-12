@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\AccessComponents\SecuredController;
+use app\components\AccessControllers\SecuredController;
 use app\models\User;
 use Yii;
 use yii\web\NotFoundHttpException;
