@@ -12,12 +12,16 @@ use Yii;
  * @property int $executor_id
  * @property string $content
  * @property int|null $price
+ * @property string|null $status
  *
  * @property User $executor
  * @property Task $task
  */
 class Response extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 'new';
+    const STATUS_ACCEPTED = 'accepted';
+    const STATUS_CANCELED = 'canceled';
     /**
      * {@inheritdoc}
      */
