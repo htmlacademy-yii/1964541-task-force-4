@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
-use app\models\forms\addTaskForm;
+use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
@@ -42,7 +42,7 @@ class TaskController extends SecuredController
 
     public function actionAdd()
     {
-        $addTaskForm = new addTaskForm();
+        $addTaskForm = new AddTaskForm();
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());
             $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');

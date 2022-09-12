@@ -9,7 +9,7 @@ use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\base\Model;
 
-class addTaskForm extends Model
+class AddTaskForm extends Model
 {
     public $title;
     public $description;
@@ -18,6 +18,9 @@ class addTaskForm extends Model
     public $deadline;
     public $file;
     public $filePath;
+    const TITLE_MIN_LENGTH = 10;
+    const TITLE_MAX_LENGTH = 128;
+    const DESCRIPTION_MIN_LENGTH = 30;
 
     public function attributeLabels()
     {
@@ -35,22 +38,23 @@ class addTaskForm extends Model
     {
         return [
             [['title', 'description', 'category', 'price'], 'required'],
-            [['title'], 'string', 'length' => ['10', '128']],
-            [['description'], 'string', 'length' => ['30']],
+            [['title'], 'string', 'length' => [self::TITLE_MIN_LENGTH, self::TITLE_MAX_LENGTH]],
+            [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
             [['file'], 'file'],
-            [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number']
+            [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
+            [['deadline'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date']
         ];
     }
 
     private function uploadFile()
     {
         if ($this->file && $this->validate()) {
-            $newname = uniqid('upload') . '.' . $this->file->getExtension();
-            $this->file->saveAs('@webroot/uploads/' . $newname);
+            $newName = uniqid('upload') . '.' . $this->file->getExtension();
+            $this->file->saveAs('@webroot/uploads/' . $newName);
 
-            $this->filePath = $newname;
+            $this->filePath = $newName;
             return true;
         }
         return false;
