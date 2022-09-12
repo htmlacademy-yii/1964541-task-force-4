@@ -44,7 +44,7 @@ class AddTaskForm extends Model
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
             [['file'], 'file'],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
-            [['deadline'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date']
+            [['deadline'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date', 'message' => 'Срок исполнения не может быть раньше текущей даты']
         ];
     }
 
