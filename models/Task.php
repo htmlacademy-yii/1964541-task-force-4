@@ -173,10 +173,10 @@ class Task extends \yii\db\ActiveRecord
                 return $id === $this->customer_id ? ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'] : ['<a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>', '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
             case self::STATUS_IN_WORK:
                 if ($id === $this->customer_id) {
-                    return ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
+                    return ['<a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>', '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
                 }
                 if ($id === $this->executor_id) {
-                    return ['<a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>', '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
+                    return ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
                 } else {
                     return [null];
                 }
