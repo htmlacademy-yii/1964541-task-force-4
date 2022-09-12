@@ -2,11 +2,12 @@
 
 namespace app\controllers;
 
+use app\components\AccessComponents\SecuredController;
 use app\models\User;
-use yii\web\Controller;
+use Yii;
 use yii\web\NotFoundHttpException;
 
-class UserController extends Controller
+class UserController extends SecuredController
 {
     public function actionView($id)
     {
@@ -15,6 +16,14 @@ class UserController extends Controller
         if (!$user) {
             throw new NotFoundHttpException("Юзер с ID $id не найден");
         }
+
         return $this->render('view', ['user' => $user]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
     }
 }

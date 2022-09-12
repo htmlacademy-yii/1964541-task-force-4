@@ -8,6 +8,8 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'ru-RU',
+    'homeUrl' => '/task',
+    'defaultRoute' => 'login',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -21,7 +23,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            //'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\User',
+            'loginUrl' => 'login',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [

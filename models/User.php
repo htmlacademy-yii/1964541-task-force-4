@@ -4,8 +4,10 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -30,10 +32,21 @@ use yii\helpers\ArrayHelper;
  * @property Task[] $tasks0
  * @property UserCategory[] $userCategories
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
     public const CUSTOMER_STATUS = 'customer';
     public const EXECUTOR_STATUS = 'executor';
+
     /**
      * {@inheritdoc}
      */
@@ -177,5 +190,25 @@ class User extends \yii\db\ActiveRecord
     public function getUserCategories()
     {
         return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
+    }
+
+    public function validatePassword($password)
+    {
+        return \Yii::$app->security->validatePassword($password, $this->password);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
     }
 }

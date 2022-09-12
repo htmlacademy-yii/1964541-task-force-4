@@ -35,8 +35,8 @@ $this->beginPage() ?>
 <body>
 <?php
 $this->beginBody() ?>
-
-<div <?= $hidden = Yii::$app->request->pathInfo === 'registration' ? 'hidden' : ''  ?>>
+<?php if (!Yii::$app->user->isGuest): ?>
+<div class="<?= $hidden = 'hidden' ?>">
     <header class="page-header">
         <nav class="main-nav">
             <a href='#' class="header-logo">
@@ -61,12 +61,12 @@ $this->beginBody() ?>
             </div>
         </nav>
         <div class="user-block">
-            <a href="#">
+            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
                 <img class="user-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55"
                      height="55" alt="Аватар">
             </a>
             <div class="user-menu">
-                <p class="user-name">Василий</p>
+                <p class="user-name"><?= Yii::$app->user->identity->login ?></p>
                 <div class="popup-head">
                     <ul class="popup-menu">
                         <li class="menu-item">
@@ -76,15 +76,16 @@ $this->beginBody() ?>
                             <a href="#" class="link">Связаться с нами</a>
                         </li>
                         <li class="menu-item">
-                            <a href="#" class="link">Выход из системы</a>
+                            <a href="<?= Yii::$app->urlManager->createUrl('user/logout') ?>" class="link">Выход из
+                                системы</a>
                         </li>
-
                     </ul>
                 </div>
             </div>
         </div>
     </header>
 </div>
+<?php endif; ?>
 
 <main>
     <div class="main-content container">
