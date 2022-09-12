@@ -58,7 +58,7 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionAccept($id, $executor_id, $response_id)
+    public function actionApprove($id, $executor_id, $response_id)
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_IN_WORK;

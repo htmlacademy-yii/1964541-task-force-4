@@ -192,7 +192,7 @@ class Task extends \yii\db\ActiveRecord
 
     public function getAvailableActions(int $id): ?array
     {
-        switch ($this->current_status) {
+        switch ($this->status) {
             case self::STATUS_NEW:
                 return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
             case self::STATUS_IN_WORK:
