@@ -198,7 +198,7 @@ class Task extends \yii\db\ActiveRecord
             case self::STATUS_IN_WORK:
                 return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
             default:
-                throw new StatusNotExistsException('Статус не существует');
+                return [null];
         }
     }
 }

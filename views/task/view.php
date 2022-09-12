@@ -11,7 +11,7 @@ use app\models\Task; ?>
     </div>
     <p class="task-description"><?= $task->description ?></p>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $action): ?>
-    <?= ActionsWidget::widget(['input' => $action]); ?>
+    <?= ActionsWidget::widget(['input' => $action, 'task_id' => $task->id]); ?>
     <?php endforeach; ?>
     <div class="task-map">
         <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
@@ -37,7 +37,7 @@ use app\models\Task; ?>
             <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
             <p class="price price--small"><?= $response->price ?></p>
         </div>
-        <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
+        <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_CANCELED && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
         <div class="button-popup">
             <a href="<?= Yii::$app->urlManager->createUrl(['task/approve', 'id' => $task->id, 'executor_id' => $response->executor_id, 'response_id' => $response->id]) ?>" class="button button--blue button--small">Принять</a>
             <a href="<?= Yii::$app->urlManager->createUrl(['task/refuse', 'id' => $task->id, 'response_id' => $response->id])?>" class="button button--orange button--small">Отказать</a>

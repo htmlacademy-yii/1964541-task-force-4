@@ -84,7 +84,7 @@ class TaskController extends SecuredController
     public function actionCancel($id)
     {
         $task = Task::findOne($id);
-        $task->status = task::STATUS_IN_WORK;
+        $task->status = task::STATUS_CANCELED;
         $task->save();
 
         return $this->goHome();

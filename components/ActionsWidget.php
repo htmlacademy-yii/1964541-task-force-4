@@ -16,6 +16,7 @@ class ActionsWidget extends Widget
     public $output;
     public $link;
     public $class;
+    public $task_id;
 
     public function init()
     {
@@ -24,7 +25,7 @@ class ActionsWidget extends Widget
         switch ($this->input) {
             case ActionCancel::class:
                 $this->output = 'Отменить задание';
-                $this->link = Yii::$app->urlManager->createUrl('task/accept');
+                $this->link = Yii::$app->urlManager->createUrl(['task/cancel', 'id' => $this->task_id]);
                 $this->class = 'button button--orange action-btn';
                 break;
             case ActionRefuse::class:
@@ -41,6 +42,7 @@ class ActionsWidget extends Widget
                 $this->output = 'Завершить задание';
                 $this->link = Yii::$app->urlManager->createUrl('task/execute');
                 $this->class = 'button button--pink action-btn';
+                break;
         }
 
     }
