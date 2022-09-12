@@ -192,26 +192,13 @@ class Task extends \yii\db\ActiveRecord
 
     public function getAvailableActions(int $id): ?array
     {
-        switch ($this->status) {
+        switch ($this->current_status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? ['<a href="#" class="button button--orange cancel-btn" data-action="cancel">Отмена задания</a>'] : [
-                    '<a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>',
-                    '<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'
-                ];
+                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
             case self::STATUS_IN_WORK:
-                if ($id === $this->customer_id) {
-                    return [
-                        '<a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>',
-                        '<a href="#" class="button button--orange cancel-btn" data-action="cancel">Отмена задания</a>'
-                    ];
-                }
-                if ($id === $this->executor_id) {
-                    return ['<a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>'];
-                }
-
-                return [null];
+                return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
             default:
-                return [null];
+                throw new StatusNotExistsException('Статус не существует');
         }
     }
 }

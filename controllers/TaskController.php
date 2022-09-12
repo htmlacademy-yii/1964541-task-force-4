@@ -81,4 +81,13 @@ class TaskController extends SecuredController
         return  Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
+    public function actionCancel($id)
+    {
+        $task = Task::findOne($id);
+        $task->status = task::STATUS_IN_WORK;
+        $task->save();
+
+        return $this->goHome();
+    }
+
 }
