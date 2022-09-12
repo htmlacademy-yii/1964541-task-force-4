@@ -16,7 +16,8 @@ class ActionsWidget extends Widget
     public $output;
     public $link;
     public $class;
-    public $task_id;
+    public $taskId;
+    public $dataAction;
 
     public function init()
     {
@@ -25,23 +26,23 @@ class ActionsWidget extends Widget
         switch ($this->input) {
             case ActionCancel::class:
                 $this->output = 'Отменить задание';
-                $this->link = Yii::$app->urlManager->createUrl(['task/cancel', 'id' => $this->task_id]);
                 $this->class = 'button button--orange action-btn';
+                $this->dataAction = 'cancel';
                 break;
             case ActionRefuse::class:
                 $this->output = 'Отказаться от задания';
-                $this->link = Yii::$app->urlManager->createUrl('task/refuse');
                 $this->class = 'button button--orange action-btn';
+                $this->dataAction = 'refusal';
                 break;
             case ActionAccept::class:
                 $this->output = 'Откликнуться на задание';
-                $this->link = Yii::$app->urlManager->createUrl('task/accept');
                 $this->class = 'button button--blue action-btn';
+                $this->dataAction = 'act_response';
                 break;
             case ActionExecute::class:
                 $this->output = 'Завершить задание';
-                $this->link = Yii::$app->urlManager->createUrl('task/execute');
                 $this->class = 'button button--pink action-btn';
+                $this->dataAction = 'completion';
                 break;
         }
 
@@ -49,6 +50,6 @@ class ActionsWidget extends Widget
 
     public function run()
     {
-        return "<a href='$this->link' class='$this->class'>" . Html::encode($this->output) . '<a>';
+        return "<a class='$this->class' data-action='$this->dataAction'>" . Html::encode($this->output) . '<a>';
     }
 }

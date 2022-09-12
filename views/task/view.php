@@ -11,7 +11,7 @@ use app\models\Task; ?>
     </div>
     <p class="task-description"><?= $task->description ?></p>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $action): ?>
-    <?= ActionsWidget::widget(['input' => $action, 'task_id' => $task->id]); ?>
+    <?= ActionsWidget::widget(['input' => $action, 'taskId' => $task->id]); ?>
     <?php endforeach; ?>
     <div class="task-map">
         <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
