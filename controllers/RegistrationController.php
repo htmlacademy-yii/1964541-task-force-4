@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\AccessComponents\AnonymousController;
+use app\components\AccessControllers\AnonymousController;
 use app\models\forms\RegistrationForm;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
