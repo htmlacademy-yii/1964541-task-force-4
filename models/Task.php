@@ -194,9 +194,15 @@ class Task extends \yii\db\ActiveRecord
     {
         switch ($this->status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
+                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class];
             case self::STATUS_IN_WORK:
-                return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
+                if ($id === $this->executor_id) {
+                    return [ActionRefuse::class];
+                }
+                if ($id === $this->customer_id) {
+                    return [ActionExecute::class, ActionCancel::class];
+                }
+                return [null];
             default:
                 return [null];
         }
