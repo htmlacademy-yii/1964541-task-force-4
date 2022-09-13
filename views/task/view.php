@@ -90,7 +90,7 @@ use yii\widgets\ActiveForm; ?>
             Вы собираетесь отказаться от выполнения этого задания.<br>
             Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
         </p>
-        <a class="button button--pop-up button--orange">Отказаться</a>
+        <a href="<?=Yii::$app->urlManager->createUrl(['task/cancel', 'id' => $task->id])?>" class="button button--pop-up button--orange">Отказаться</a>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
         </div>
@@ -132,7 +132,7 @@ use yii\widgets\ActiveForm; ?>
             <?php $form = ActiveForm::begin(['id' => 'response-form']) ?>
             <?= $form->field($model, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
             <?= $form->field($model, 'price')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
-            <input type="submit" class="button button--pop-up button--blue" value="Завершить">
+            <input type="submit" class="button button--pop-up button--blue" value="Принять">
             <?php ActiveForm::end() ?>
         </div>
         <div class="button-container">

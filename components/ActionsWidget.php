@@ -28,7 +28,7 @@ class ActionsWidget extends Widget
                 $this->output = 'Отменить задание';
                 $this->class = 'button button--orange action-btn';
                 $this->dataAction = 'cancel';
-                $this->link = "href='" . Yii::$app->urlManager->createUrl(['task/cancel', 'id' => $this->taskId]) . "'";
+                $this->link = "href='" . Yii::$app->urlManager->createUrl(['task/reject', 'id' => $this->taskId]) . "'";
                 break;
             case ActionRefuse::class:
                 $this->output = 'Отказаться от задания';

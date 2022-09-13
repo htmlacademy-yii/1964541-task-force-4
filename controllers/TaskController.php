@@ -71,7 +71,7 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionApprove($id, $executor_id, $response_id)
+    public function actionApprove($id, $executor_id, $response_id) #Заказчик назначает исполнителя на работу
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_IN_WORK;
@@ -85,9 +85,13 @@ class TaskController extends SecuredController
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
-    public function actionReject()
+    public function actionReject() #Заказчик отменяет заказ
     {
+        $task = Task::findOne($id);
+        $task->status = task::STATUS_CANCELED;
+        $task->save();
 
+        return $this->goHome();
     }
 
     public function actionAccept()
@@ -97,7 +101,7 @@ class TaskController extends SecuredController
 
     }
 
-    public function actionRefuse($id, $response_id)
+    public function actionRefuse($id, $response_id) #Заказчик отказывает исполнителю
     {
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_CANCELED;
@@ -106,10 +110,10 @@ class TaskController extends SecuredController
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
-    public function actionCancel($id)
+    public function actionCancel($id) #Исполнитель отказывается от задания
     {
         $task = Task::findOne($id);
-        $task->status = task::STATUS_CANCELED;
+        $task->status = task::STATUS_FAILED;
         $task->save();
 
         return $this->goHome();
