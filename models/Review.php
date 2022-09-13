@@ -83,4 +83,13 @@ class Review extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
+
+    public function loadForm($responseForm)
+    {
+        $this->content = $responseForm->content;
+        $this->grade = $responseForm->grade;
+        $this->executor_id = $responseForm->executorId;
+        $this->task_id = $responseForm->taskId;
+        $this->customer_id = $responseForm->customerId;
+    }
 }

@@ -6,7 +6,9 @@ use app\components\AccessControllers\SecuredController;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
+use app\models\forms\ReviewForm;
 use app\models\Response;
+use app\models\Review;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
@@ -36,6 +38,20 @@ class TaskController extends SecuredController
     {
         $task = Task::findOne($id);
         $responseForm = new ResponseForm();
+        $reviewForm = new ReviewForm();
+
+        if (Yii::$app->request->getIsPost() && $task->customer_id === Yii::$app->user->id) {
+            $reviewForm->load(Yii::$app->request->post());
+            $reviewForm->getIdsData($task);
+
+            if ($reviewForm->validate()) {
+                $review = new Review();
+                $review->loadForm($reviewForm);
+                if ($review->save()) {
+                    $task->status = Task::STATUS_EXECUTED;
+                }
+            }
+        }
 
         if (Yii::$app->request->getIsPost()) {
             $responseForm->load(Yii::$app->request->post());
@@ -51,7 +67,7 @@ class TaskController extends SecuredController
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
-        return $this->render('view', ['task' => $task, 'model' => $responseForm]);
+        return $this->render('view', ['task' => $task, 'responseForm' => $responseForm, 'reviewForm' => $reviewForm]);
     }
 
     public function actionAdd()
@@ -85,7 +101,7 @@ class TaskController extends SecuredController
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
-    public function actionReject() #Заказчик отменяет заказ
+    public function actionReject($id) #Заказчик отменяет заказ
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_CANCELED;
@@ -94,10 +110,8 @@ class TaskController extends SecuredController
         return $this->goHome();
     }
 
-    public function actionAccept()
+    public function actionExecute()
     {
-
-
 
     }
 

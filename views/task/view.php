@@ -43,7 +43,7 @@ use yii\widgets\ActiveForm; ?>
                             class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
                 <p class="price price--small"><?= $response->price ?></p>
             </div>
-            <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_CANCELED && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
+            <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_CANCELED && $task->status !== Task::STATUS_EXECUTED && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
                 <div class="button-popup">
                     <a href="<?= Yii::$app->urlManager->createUrl(['task/approve', 'id' => $task->id, 'executor_id' => $response->executor_id, 'response_id' => $response->id]) ?>"
                        class="button button--blue button--small">Принять</a>
@@ -104,17 +104,15 @@ use yii\widgets\ActiveForm; ?>
             Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
         </p>
         <div class="completion-form pop-up--form regular-form">
-            <form>
-                <div class="form-group">
-                    <label class="control-label" for="completion-comment">Ваш комментарий</label>
-                    <textarea id="completion-comment"></textarea>
-                </div>
+            <?php $form = ActiveForm::begin(['id' => 'review-form']) ?>
+                <?= $form->field($reviewForm, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
+                <?= $form->field($reviewForm, 'grade')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
                 <p class="completion-head control-label">Оценка работы</p>
                 <div class="stars-rating big active-stars">
                     <span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span>
                 </div>
                 <input type="submit" class="button button--pop-up button--blue" value="Завершить">
-            </form>
+                <?php ActiveForm::end() ?>
         </div>
         <div class="button-container">
             <button class="button--close" type="button">Закрыть окно</button>
@@ -130,8 +128,8 @@ use yii\widgets\ActiveForm; ?>
         </p>
         <div class="addition-form pop-up--form regular-form">
             <?php $form = ActiveForm::begin(['id' => 'response-form']) ?>
-            <?= $form->field($model, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
-            <?= $form->field($model, 'price')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
+            <?= $form->field($responseForm, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
+            <?= $form->field($responseForm, 'price')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
             <input type="submit" class="button button--pop-up button--blue" value="Принять">
             <?php ActiveForm::end() ?>
         </div>
