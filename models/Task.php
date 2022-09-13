@@ -175,6 +175,14 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasMany(Response::className(), ['task_id' => 'id']);
     }
 
+    public function checkUserResponse($id)
+    {
+        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id])) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Gets query for [[Reviews]].
      *

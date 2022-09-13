@@ -11,9 +11,11 @@ use yii\widgets\ActiveForm; ?>
         <p class="price price--big"><?= $task->price ?></p>
     </div>
     <p class="task-description"><?= $task->description ?></p>
+    <?php if (!$task->checkUserResponse(Yii::$app->user->id)):?>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $action): ?>
         <?= ActionsWidget::widget(['input' => $action, 'taskId' => $task->id]); ?>
     <?php endforeach; ?>
+    <?php endif; ?>
     <div class="task-map">
         <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
         <p class="map-address town"><?= $task->city->name ?></p>
