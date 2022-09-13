@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\components\AccessControllers\SecuredController;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
+use app\models\forms\ResponseForm;
 use app\models\Response;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
@@ -34,11 +35,23 @@ class TaskController extends SecuredController
     public function actionView($id)
     {
         $task = Task::findOne($id);
+        $responseForm = new ResponseForm();
+
+        if (Yii::$app->request->getIsPost()) {
+            $responseForm->load(Yii::$app->request->post());
+            $responseForm->getIdsData($task);
+
+            if ($responseForm->validate()) {
+                $response = new Response();
+                $response->loadForm($responseForm);
+                $response->save();
+            }
+        }
 
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
-        return $this->render('view', ['task' => $task]);
+        return $this->render('view', ['task' => $task, 'model' => $responseForm]);
     }
 
     public function actionAdd()
@@ -79,6 +92,8 @@ class TaskController extends SecuredController
 
     public function actionAccept()
     {
+
+
 
     }
 

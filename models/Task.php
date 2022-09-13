@@ -190,7 +190,7 @@ class Task extends \yii\db\ActiveRecord
         return self::$statusMap[$this->status];
     }
 
-    public function getAvailableActions(int $id): ?array
+    public function getAvailableActions(int $id): array
     {
         switch ($this->status) {
             case self::STATUS_NEW:

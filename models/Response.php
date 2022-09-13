@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property int $task_id
  * @property int $executor_id
+ * @property int $customer_id
  * @property string $content
  * @property int|null $price
  * @property string|null $status
@@ -81,5 +82,14 @@ class Response extends \yii\db\ActiveRecord
     public function getTask()
     {
         return $this->hasOne(Task::className(), ['id' => 'task_id']);
+    }
+
+    public function loadForm($responseForm)
+    {
+        $this->content = $responseForm->content;
+        $this->price = $responseForm->price;
+        $this->executor_id = $responseForm->executorId;
+        $this->task_id = $responseForm->taskId;
+        $this->customer_id = $responseForm->customerId;
     }
 }
