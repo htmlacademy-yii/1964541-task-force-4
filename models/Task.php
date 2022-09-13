@@ -177,7 +177,7 @@ class Task extends \yii\db\ActiveRecord
 
     public function checkUserResponse($id)
     {
-        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id])) {
+        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id])->one()) {
             return true;
         }
         return false;
