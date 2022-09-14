@@ -106,7 +106,7 @@ use yii\widgets\ActiveForm; ?>
             Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
         </p>
         <div class="completion-form pop-up--form regular-form">
-            <?php $form = ActiveForm::begin(['id' => 'review-form']) ?>
+            <?php $form = ActiveForm::begin(['id' => 'review-form', 'action' => Yii::$app->urlManager->createUrl(['task/review', 'id' => $task->id])]) ?>
                 <?= $form->field($reviewForm, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
                 <?= $form->field($reviewForm, 'grade')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
                 <p class="completion-head control-label">Оценка работы</p>
@@ -129,7 +129,7 @@ use yii\widgets\ActiveForm; ?>
             Пожалуйста, укажите стоимость работы и добавьте комментарий, если необходимо.
         </p>
         <div class="addition-form pop-up--form regular-form">
-            <?php $form = ActiveForm::begin(['id' => 'response-form']) ?>
+            <?php $form = ActiveForm::begin(['id' => 'response-form', 'action' => Yii::$app->urlManager->createUrl(['task/response', 'id' => $task->id])]) ?>
             <?= $form->field($responseForm, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
             <?= $form->field($responseForm, 'price')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
             <input type="submit" class="button button--pop-up button--blue" value="Принять">

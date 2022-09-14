@@ -40,30 +40,6 @@ class TaskController extends SecuredController
         $responseForm = new ResponseForm();
         $reviewForm = new ReviewForm();
 
-        if (Yii::$app->request->getIsPost() && $task->customer_id === Yii::$app->user->id) {
-            $reviewForm->load(Yii::$app->request->post());
-            $reviewForm->getIdsData($task);
-
-            if ($reviewForm->validate()) {
-                $review = new Review();
-                $review->loadForm($reviewForm);
-                if ($review->save()) {
-                    $task->status = Task::STATUS_EXECUTED;
-                }
-            }
-        }
-
-        if (Yii::$app->request->getIsPost()) {
-            $responseForm->load(Yii::$app->request->post());
-            $responseForm->getIdsData($task);
-
-            if ($responseForm->validate()) {
-                $response = new Response();
-                $response->loadForm($responseForm);
-                $response->save();
-            }
-        }
-
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
@@ -110,9 +86,41 @@ class TaskController extends SecuredController
         return $this->goHome();
     }
 
-    public function actionExecute()
+    public function actionResponse($id) # Исполнитель принимает заказ
     {
+        $task = Task::findOne($id);
+        $responseForm = new ResponseForm();
 
+        $responseForm->load(Yii::$app->request->post());
+        $responseForm->getIdsData($task);
+
+        if ($responseForm->validate()) {
+            $response = new Response();
+            $response->loadForm($responseForm);
+            $response->save();
+
+            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        }
+    }
+
+    public function actionReview($id)
+    {
+        $task = Task::findOne($id);
+        $reviewForm = new ReviewForm();
+
+        $reviewForm->load(Yii::$app->request->post());
+        $reviewForm->getIdsData($task);
+
+        if ($reviewForm->validate()) {
+            $review = new Review();
+            $review->loadForm($reviewForm);
+            if ($review->save()) {
+                $task->status = Task::STATUS_EXECUTED;
+                $task->save();
+
+                return Yii::$app->response->redirect(['task']);
+            }
+        }
     }
 
     public function actionRefuse($id, $response_id) #Заказчик отказывает исполнителю
