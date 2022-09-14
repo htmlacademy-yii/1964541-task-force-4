@@ -111,7 +111,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionReview($id)
+    public function actionReview($id) #Заказчик завершает заказ
     {
         $task = Task::findOne($id);
         $reviewForm = new ReviewForm();
