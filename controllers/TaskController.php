@@ -68,11 +68,15 @@ class TaskController extends SecuredController
         $task = Task::findOne($id);
         $task->status = task::STATUS_IN_WORK;
         $task->executor_id = $executor_id;
-        $task->save();
+        if (!$task->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
 
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_ACCEPTED;
-        $response->save();
+        if (!$response->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
@@ -81,7 +85,9 @@ class TaskController extends SecuredController
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_CANCELED;
-        $task->save();
+        if (!$task->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
 
         return $this->goHome();
     }
@@ -97,7 +103,9 @@ class TaskController extends SecuredController
         if ($responseForm->validate()) {
             $response = new Response();
             $response->loadForm($responseForm);
-            $response->save();
+            if (!$response->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
 
             return Yii::$app->response->redirect(['task/view', 'id' => $id]);
         }
@@ -120,6 +128,7 @@ class TaskController extends SecuredController
 
                 return Yii::$app->response->redirect(['task']);
             }
+                throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
@@ -127,7 +136,9 @@ class TaskController extends SecuredController
     {
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_CANCELED;
-        $response->save();
+        if (!$response->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
@@ -136,7 +147,9 @@ class TaskController extends SecuredController
     {
         $task = Task::findOne($id);
         $task->status = task::STATUS_FAILED;
-        $task->save();
+        if (!$task->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
 
         return $this->goHome();
     }
