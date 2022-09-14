@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
             <div class="footer-task">
                 <p class="info-text town-text"><?= $task->city->name ?></p>
                 <p class="info-text category-text"><?= $task->category->name ?></p>
-                <a href="#" class="button button--black">Смотреть Задание</a>
+                <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id])?>" class="button button--black">Смотреть Задание</a>
             </div>
         </div>
     <?php endforeach; ?>
