@@ -4,6 +4,7 @@
 use app\components\ActionsWidget;
 use app\models\Response;
 use app\models\Task;
+use TaskForce\actions\ActionAccept;
 use yii\widgets\ActiveForm; ?>
 <div class="left-column">
     <div class="head-wrapper">
@@ -11,7 +12,7 @@ use yii\widgets\ActiveForm; ?>
         <p class="price price--big"><?= $task->price ?></p>
     </div>
     <p class="task-description"><?= $task->description ?></p>
-    <?php if (!$task->checkUserResponse(Yii::$app->user->id && $task->status === Task::STATUS_NEW)):?>
+    <?php if (!$task->checkUserResponse(Yii::$app->user->id)): ?>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $action): ?>
         <?= ActionsWidget::widget(['input' => $action, 'taskId' => $task->id]); ?>
     <?php endforeach; ?>
