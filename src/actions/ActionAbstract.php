@@ -4,12 +4,12 @@ namespace TaskForce\actions;
 
 abstract class ActionAbstract
 {
-    protected string $name;
-    protected string $internal_name;
-    protected int $executor_id;
-    protected int $customer_id;
+    protected $name;
+    protected $internal_name;
+    protected $executor_id;
+    protected $customer_id;
 
-    public function __construct(int $customer_id, int $executor_id)
+    public function __construct($customer_id, $executor_id)
     {
         $this->customer_id = $customer_id;
         $this->executor_id = $executor_id;
@@ -25,5 +25,5 @@ abstract class ActionAbstract
         return $this->internal_name;
     }
 
-    abstract protected function rightsCheck(int $user_id): bool;
+    abstract protected function rightsCheck($user_id): bool;
 }
