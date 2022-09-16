@@ -2,6 +2,8 @@
 
 namespace TaskForce\actions;
 
+use TaskForce\exceptions\ActionUnavailableException;
+
 class ActionExecute extends ActionAbstract
 {
     protected string $name = 'Выполнить';
@@ -9,12 +11,12 @@ class ActionExecute extends ActionAbstract
 
     const ACTION_EXECUTE = 'action_execute';
 
-    protected function rightsCheck(int $executor_id, int $customer_id, int $user_id): bool
+    public function rightsCheck(int $user_id): bool
     {
-        if ($customer_id === $user_id) {
+        if ($this->customer_id === $user_id) {
             return true;
         }
-        return false;
+        throw new ActionUnavailableException('Действие вам недоступно');
     }
 }
 
