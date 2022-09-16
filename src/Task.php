@@ -2,9 +2,9 @@
 namespace TaskForce;
 
 use TaskForce\actions\ActionAccept;
-use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionReject;
 use TaskForce\actions\ActionExecute;
-use TaskForce\actions\ActionRefuse;
+use TaskForce\actions\ActionCancel;
 use TaskForce\exceptions\ActionNotExistsException;
 use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\StatusNotExistsException;
@@ -36,9 +36,9 @@ class Task
     {
         return match ($action) {
             ActionAccept::class => self::STATUS_IN_WORK,
-            ActionCancel::class => self::STATUS_CANCELED,
+            ActionReject::class => self::STATUS_CANCELED,
             ActionExecute::class => self::STATUS_EXECUTED,
-            ActionRefuse::class => self::STATUS_FAILED,
+            ActionCancel::class => self::STATUS_FAILED,
             default => throw new ActionNotExistsException('Данное действие не предусмотрено'),
         };
     }
@@ -47,9 +47,9 @@ class Task
     {
         switch ($this->current_status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class, ActionRefuse::class];
+                return $id === $this->customer_id ? [ActionReject::class] : [ActionAccept::class, ActionCancel::class];
             case self::STATUS_IN_WORK:
-                return $id === $this->customer_id ? [ActionExecute::class, ActionCancel::class] : [ActionRefuse::class];
+                return $id === $this->customer_id ? [ActionExecute::class, ActionReject::class] : [ActionCancel::class];
             default:
                 throw new StatusNotExistsException('Статус не существует');
         }
@@ -66,7 +66,7 @@ class Task
 
     public function actionRefuse(int $id): void
     {
-        if (in_array(ActionRefuse::class, $this->getAvailableActions($id))) {
+        if (in_array(ActionCancel::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_FAILED;
         } else {
             throw new ActionUnavailableException('Совершить данное действие невозможно');
@@ -84,7 +84,7 @@ class Task
 
     public function actionCancel(int $id): void
     {
-        if (in_array(ActionCancel::class, $this->getAvailableActions($id))) {
+        if (in_array(ActionReject::class, $this->getAvailableActions($id))) {
             $this->current_status = self::STATUS_CANCELED;
         } else {
             throw new ActionUnavailableException('Совершить данное действие невозможно');
@@ -94,9 +94,9 @@ class Task
     public function getStatusMap(): array
     {
         return [
-            ActionCancel::class => 'отменить',
+            ActionReject::class => 'отменить',
             ActionExecute::class => 'выполнить',
-            ActionRefuse::class => 'отказаться',
+            ActionCancel::class => 'отказаться',
             ActionAccept::class => 'принять',
             self::STATUS_CANCELED => 'отменено',
             self::STATUS_EXECUTED => 'выполнено',

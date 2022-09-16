@@ -3,9 +3,9 @@
 namespace app\models;
 
 use TaskForce\actions\ActionAccept;
-use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionReject;
 use TaskForce\actions\ActionExecute;
-use TaskForce\actions\ActionRefuse;
+use TaskForce\actions\ActionCancel;
 use TaskForce\exceptions\StatusNotExistsException;
 use Yii;
 
@@ -202,13 +202,13 @@ class Task extends \yii\db\ActiveRecord
     {
         switch ($this->status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? [ActionCancel::class] : [ActionAccept::class];
+                return $id === $this->customer_id ? [ActionReject::class] : [ActionAccept::class];
             case self::STATUS_IN_WORK:
                 if ($id === $this->executor_id) {
-                    return [ActionRefuse::class];
+                    return [ActionCancel::class];
                 }
                 if ($id === $this->customer_id) {
-                    return [ActionExecute::class, ActionCancel::class];
+                    return [ActionExecute::class, ActionReject::class];
                 }
                 return [null];
             default:

@@ -6,14 +6,14 @@ use TaskForce\exceptions\ActionUnavailableException;
 
 class ActionCancel extends ActionAbstract
 {
-    protected $name = 'Отменить';
-    protected $internal_name = self::ACTION_CANCEL;
+    protected $name = 'Отказаться';
+    protected $internal_name = self::ACTION_REFUSE;
 
-    const ACTION_CANCEL = 'action_cancel';
+    const ACTION_REFUSE = 'action_refuse';
 
-    protected function rightsCheck($user_id): bool
+    public function rightsCheck($user_id): bool
     {
-        if ($this->customer_id === $user_id) {
+        if ($this->executor_id === $user_id) {
             return true;
         }
         throw new ActionUnavailableException('Действие вам недоступно');

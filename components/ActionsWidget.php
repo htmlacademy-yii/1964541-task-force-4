@@ -3,9 +3,9 @@
 namespace app\components;
 
 use TaskForce\actions\ActionAccept;
-use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionReject;
 use TaskForce\actions\ActionExecute;
-use TaskForce\actions\ActionRefuse;
+use TaskForce\actions\ActionCancel;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Html;
@@ -24,13 +24,13 @@ class ActionsWidget extends Widget
         parent::init();
 
         switch ($this->input) {
-            case ActionCancel::class:
+            case ActionReject::class:
                 $this->output = 'Отменить задание';
                 $this->class = 'button button--orange action-btn';
                 $this->dataAction = 'cancel';
                 $this->link = "href='" . Yii::$app->urlManager->createUrl(['task/reject', 'id' => $this->taskId]) . "'";
                 break;
-            case ActionRefuse::class:
+            case ActionCancel::class:
                 $this->output = 'Отказаться от задания';
                 $this->class = 'button button--orange action-btn';
                 $this->dataAction = 'refusal';

@@ -25,5 +25,5 @@ abstract class ActionAbstract
         return $this->internal_name;
     }
 
-    abstract protected function rightsCheck($user_id): bool;
+    abstract public function rightsCheck($user_id): bool;
 }

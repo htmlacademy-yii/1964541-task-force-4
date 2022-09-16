@@ -10,7 +10,12 @@ use app\models\forms\ReviewForm;
 use app\models\Response;
 use app\models\Review;
 use app\models\Task;
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionApprove;
 use TaskForce\actions\ActionCancel;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionRefuse;
+use TaskForce\actions\ActionReject;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -64,104 +69,126 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionApprove($id, $executor_id, $response_id) #Заказчик назначает исполнителя на работу
+    public function actionApprove($id, $executor_id, $response_id) #Заказчик назначает исполнителя на работу ПРОВЕРКА ЕСТЬ
     {
         $task = Task::findOne($id);
-        $task->status = Task::STATUS_IN_WORK;
-        $task->executor_id = $executor_id;
+        $actionApprove = new ActionApprove($task->customer_id, $task->executor_id);
 
-        $response = Response::findOne($response_id);
-        $response->status = Response::STATUS_ACCEPTED;
+        if ($actionApprove->rightsCheck(Yii::$app->user->id)) {
+            $task->status = Task::STATUS_IN_WORK;
+            $task->executor_id = $executor_id;
 
-        $transaction = Yii::$app->db->beginTransaction();
-
-        if ($task->save() && $response->save()) {
-            $transaction->commit();
-
-            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-        }
-        $transaction->rollback();
-        throw new ModelSaveException('Не удалось сохранить данные');
-    }
-
-    public function actionReject($id) #Заказчик отменяет заказ
-    {
-        $task = Task::findOne($id);
-        $task->status = task::STATUS_CANCELED;
-        if (!$task->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
-
-        return $this->goHome();
-    }
-
-    public function actionResponse() # Исполнитель принимает заказ
-    {
-        $responseForm = new ResponseForm();
-        $responseForm->load(Yii::$app->request->post());
-
-        if ($responseForm->validate()) {
-            $task = Task::findOne($responseForm->taskId);
-            $response = new Response();
-
-            $response->customer_id = $task->customer_id;
-            $response->executor_id = Yii::$app->user->id;
-            $responseForm->loadToResponseModel($response);
-
-            if (!$response->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return Yii::$app->response->redirect(['task/view', 'id' => $task->id]);
-        }
-    }
-
-    public function actionReview() #Заказчик завершает заказ
-    {
-        $reviewForm = new ReviewForm();
-        $reviewForm->load(Yii::$app->request->post());
-
-        if ($reviewForm->validate()) {
-            $task = Task::findOne($reviewForm->taskId);
-            $review = new Review();
-
-            $review->executor_id = $task->executor_id;
-            $review->customer_id = Yii::$app->user->id;
-            $reviewForm->loadToReviewModel($review);
-            $task->status = Task::STATUS_EXECUTED;
+            $response = Response::findOne($response_id);
+            $response->status = Response::STATUS_ACCEPTED;
 
             $transaction = Yii::$app->db->beginTransaction();
 
-            if ($review->save() && $task->save()) {
+            if ($task->save() && $response->save()) {
                 $transaction->commit();
 
-                return Yii::$app->response->redirect(['task']);
+                return Yii::$app->response->redirect(['task/view', 'id' => $id]);
             }
             $transaction->rollback();
             throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
-    public function actionRefuse($id, $response_id) #Заказчик отказывает исполнителю
-    {
-        $response = Response::findOne($response_id);
-        $response->status = Response::STATUS_CANCELED;
-        if (!$response->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
-
-        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-    }
-
-    public function actionCancel($id) #Исполнитель отказывается от задания
+    public function actionReject($id) #Заказчик отменяет заказ ПРОВЕРКА ЕСТЬ
     {
         $task = Task::findOne($id);
-        $task->status = task::STATUS_FAILED;
-        if (!$task->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
+        $actionReject = new ActionReject($task->customer_id, $task->executor_id);
 
-        return $this->goHome();
+        if ($actionReject->rightsCheck(Yii::$app->user->id)) {
+            $task->status = task::STATUS_CANCELED;
+            if (!$task->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
+
+            return $this->goHome();
+        }
+    }
+
+    public function actionResponse() # Исполнитель принимает заказ ПРОВЕРКА ЕСТЬ
+    {
+        $responseForm = new ResponseForm();
+        $responseForm->load(Yii::$app->request->post());
+
+        if ($responseForm->validate()) {
+            $task = Task::findOne($responseForm->taskId);
+            $actionAccept = new ActionAccept($task->customer_id, $task->executor_id);
+
+            if ($actionAccept->rightsCheck(Yii::$app->user->id)) {
+                $response = new Response();
+                $response->customer_id = $task->customer_id;
+                $response->executor_id = Yii::$app->user->id;
+                $responseForm->loadToResponseModel($response);
+
+                if (!$response->save()) {
+                    throw new ModelSaveException('Не удалось сохранить данные');
+                }
+
+                return Yii::$app->response->redirect(['task/view', 'id' => $task->id]);
+            }
+        }
+    }
+
+    public function actionReview() #Заказчик завершает заказ ПРОВЕРКА ЕСТЬ
+    {
+        $reviewForm = new ReviewForm();
+        $reviewForm->load(Yii::$app->request->post());
+
+        if ($reviewForm->validate()) {
+            $task = Task::findOne($reviewForm->taskId);
+            $actionExecute = new ActionExecute($task->customer_id, $task->executor_id);
+
+            if ($actionExecute->rightsCheck(Yii::$app->user->id)) {
+                $review = new Review();
+                $review->executor_id = $task->executor_id;
+                $review->customer_id = Yii::$app->user->id;
+                $reviewForm->loadToReviewModel($review);
+                $task->status = Task::STATUS_EXECUTED;
+
+                $transaction = Yii::$app->db->beginTransaction();
+
+                if ($review->save() && $task->save()) {
+                    $transaction->commit();
+
+                    return Yii::$app->response->redirect(['task']);
+                }
+                $transaction->rollback();
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
+        }
+    }
+
+    public function actionRefuse($id, $response_id) #Заказчик отказывает исполнителю ПРОВЕРКА ЕСТЬ
+    {
+        $response = Response::findOne($response_id);
+        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id);
+
+        if ($actionRefuse->rightsCheck(Yii::$app->user->id)) {
+            $response->status = Response::STATUS_CANCELED;
+            if (!$response->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
+
+            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        }
+    }
+
+    public function actionCancel($id) #Исполнитель отказывается от задания ПРОВЕРКА ЕСТЬ
+    {
+        $task = Task::findOne($id);
+        $actionCancel = new ActionCancel($task->customer_id, $task->executor_id);
+
+        if ($actionCancel->rightsCheck(Yii::$app->user->id)) {
+            $task->status = task::STATUS_FAILED;
+            if (!$task->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
+
+            return $this->goHome();
+        }
     }
 
 }
