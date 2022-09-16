@@ -69,7 +69,7 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionApprove($id, $executor_id, $response_id) #Заказчик назначает исполнителя на работу ПРОВЕРКА ЕСТЬ
+    public function actionApprove($id, $executor_id, $response_id)
     {
         $task = Task::findOne($id);
         $actionApprove = new ActionApprove($task->customer_id, $task->executor_id);
@@ -93,7 +93,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionReject($id) #Заказчик отменяет заказ ПРОВЕРКА ЕСТЬ
+    public function actionReject($id)
     {
         $task = Task::findOne($id);
         $actionReject = new ActionReject($task->customer_id, $task->executor_id);
@@ -108,7 +108,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionResponse() # Исполнитель принимает заказ ПРОВЕРКА ЕСТЬ
+    public function actionResponse()
     {
         $responseForm = new ResponseForm();
         $responseForm->load(Yii::$app->request->post());
@@ -132,7 +132,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionReview() #Заказчик завершает заказ ПРОВЕРКА ЕСТЬ
+    public function actionReview()
     {
         $reviewForm = new ReviewForm();
         $reviewForm->load(Yii::$app->request->post());
@@ -161,7 +161,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionRefuse($id, $response_id) #Заказчик отказывает исполнителю ПРОВЕРКА ЕСТЬ
+    public function actionRefuse($id, $response_id)
     {
         $response = Response::findOne($response_id);
         $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id);
@@ -176,7 +176,7 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionCancel($id) #Исполнитель отказывается от задания ПРОВЕРКА ЕСТЬ
+    public function actionCancel($id)
     {
         $task = Task::findOne($id);
         $actionCancel = new ActionCancel($task->customer_id, $task->executor_id);
