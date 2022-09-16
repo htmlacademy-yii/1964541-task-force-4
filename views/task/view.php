@@ -86,6 +86,7 @@ use yii\widgets\ActiveForm; ?>
     </div>
 </div>
 <?php
-echo $this->render('modalForms', ['task' => $task, 'reviewForm' => $reviewForm, 'responseForm' => $responseForm]);
+echo $this->render('cancelPopup', ['task' => $task]);
 echo $this->render('responseForm', ['task' => $task, 'responseForm' => $responseForm]);
+echo $this->render('reviewForm', ['task' => $task, 'reviewForm' => $reviewForm]);
 ?>

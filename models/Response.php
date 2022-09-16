@@ -83,13 +83,4 @@ class Response extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
-
-    public function loadForm($responseForm)
-    {
-        $this->content = $responseForm->content;
-        $this->price = $responseForm->price;
-        $this->executor_id = $responseForm->executorId;
-        $this->task_id = $responseForm->taskId;
-        $this->customer_id = $responseForm->customerId;
-    }
 }

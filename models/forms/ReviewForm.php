@@ -2,6 +2,8 @@
 
 namespace app\models\forms;
 
+use app\models\Review;
+use app\models\Task;
 use Yii;
 use yii\base\Model;
 
@@ -9,14 +11,13 @@ class ReviewForm extends Model
 {
     public $content;
     public $taskId;
-    public $customerId;
-    public $executorId;
     public $grade;
 
     public function rules()
     {
         return [
-            [['taskId', 'executorId', 'customerId', 'content'], 'required'],
+            [['taskId', 'grade', 'content'], 'required'],
+            [['taskId'], 'exist', 'targetClass' => Task::class, 'targetAttribute' => ['taskId' => 'id']],
             [['grade'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number']
         ];
     }
@@ -29,10 +30,12 @@ class ReviewForm extends Model
         ];
     }
 
-    public function getIdsData($task)
+    public function loadToReviewModel($review)
     {
-        $this->taskId = $task->id;
-        $this->customerId = $task->customer_id;
-        $this->executorId = Yii::$app->user->id;
+        $review->task_id = $this->taskId;
+        $review->grade = $this->grade;
+        $review->content = $this->content;
+
+        return $review;
     }
 }

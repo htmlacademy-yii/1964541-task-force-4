@@ -76,6 +76,7 @@ class TaskController extends SecuredController
 
         if ($task->save() && $response->save()) {
             $transaction->commit();
+
             return Yii::$app->response->redirect(['task/view', 'id' => $id]);
         }
         $transaction->rollback();
@@ -96,15 +97,16 @@ class TaskController extends SecuredController
     public function actionResponse() # Исполнитель принимает заказ
     {
         $responseForm = new ResponseForm();
-
         $responseForm->load(Yii::$app->request->post());
 
         if ($responseForm->validate()) {
             $task = Task::findOne($responseForm->taskId);
             $response = new Response();
+
             $response->customer_id = $task->customer_id;
             $response->executor_id = Yii::$app->user->id;
             $responseForm->loadToResponseModel($response);
+
             if (!$response->save()) {
                 throw new ModelSaveException('Не удалось сохранить данные');
             }
@@ -113,24 +115,29 @@ class TaskController extends SecuredController
         }
     }
 
-    public function actionReview($id) #Заказчик завершает заказ
+    public function actionReview() #Заказчик завершает заказ
     {
-        $task = Task::findOne($id);
         $reviewForm = new ReviewForm();
-
         $reviewForm->load(Yii::$app->request->post());
-        $reviewForm->getIdsData($task);
 
         if ($reviewForm->validate()) {
+            $task = Task::findOne($reviewForm->taskId);
             $review = new Review();
-            $review->loadForm($reviewForm);
-            if ($review->save()) {
-                $task->status = Task::STATUS_EXECUTED;
-                $task->save();
+
+            $review->executor_id = $task->executor_id;
+            $review->customer_id = Yii::$app->user->id;
+            $reviewForm->loadToReviewModel($review);
+            $task->status = Task::STATUS_EXECUTED;
+
+            $transaction = Yii::$app->db->beginTransaction();
+
+            if ($review->save() && $task->save()) {
+                $transaction->commit();
 
                 return Yii::$app->response->redirect(['task']);
             }
-                throw new ModelSaveException('Не удалось сохранить данные');
+            $transaction->rollback();
+            throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
