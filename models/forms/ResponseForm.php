@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\models\Task;
 use Yii;
 use yii\base\Model;
 
@@ -10,14 +11,14 @@ class ResponseForm extends Model
     public $content;
     public $price;
     public $taskId;
-    public $customerId;
-    public $executorId;
+
 
     public function rules()
     {
         return [
-            [['taskId', 'executorId', 'customerId', 'content'], 'required'],
-            [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number']
+            [['taskId', 'price', 'content'], 'required'],
+            [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
+            [['taskId'], 'exist', 'targetClass' => Task::class, 'targetAttribute' => ['taskId' => 'id']]
         ];
     }
 
@@ -29,10 +30,12 @@ class ResponseForm extends Model
         ];
     }
 
-    public function getIdsData($task)
+    public function loadToResponseModel($response)
     {
-        $this->taskId = $task->id;
-        $this->customerId = $task->customer_id;
-        $this->executorId = Yii::$app->user->id;
+        $response->task_id = $this->taskId;
+        $response->price = $this->price;
+        $response->content = $this->content;
+
+        return $response;
     }
 }

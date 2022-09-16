@@ -93,22 +93,23 @@ class TaskController extends SecuredController
         return $this->goHome();
     }
 
-    public function actionResponse($id) # Исполнитель принимает заказ
+    public function actionResponse() # Исполнитель принимает заказ
     {
-        $task = Task::findOne($id);
         $responseForm = new ResponseForm();
 
         $responseForm->load(Yii::$app->request->post());
-        $responseForm->getIdsData($task);
 
         if ($responseForm->validate()) {
+            $task = Task::findOne($responseForm->taskId);
             $response = new Response();
-            $response->loadForm($responseForm);
+            $response->customer_id = $task->customer_id;
+            $response->executor_id = Yii::$app->user->id;
+            $responseForm->loadToResponseModel($response);
             if (!$response->save()) {
                 throw new ModelSaveException('Не удалось сохранить данные');
             }
 
-            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+            return Yii::$app->response->redirect(['task/view', 'id' => $task->id]);
         }
     }
 
