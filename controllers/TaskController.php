@@ -66,19 +66,20 @@ class TaskController extends SecuredController
     public function actionApprove($id, $executor_id, $response_id) #Заказчик назначает исполнителя на работу
     {
         $task = Task::findOne($id);
-        $task->status = task::STATUS_IN_WORK;
+        $task->status = Task::STATUS_IN_WORK;
         $task->executor_id = $executor_id;
-        if (!$task->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
 
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_ACCEPTED;
-        if (!$response->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
 
-        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        $transaction = Yii::$app->db->beginTransaction();
+
+        if ($task->save() && $response->save()) {
+            $transaction->commit();
+            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+        }
+        $transaction->rollback();
+        throw new ModelSaveException('Не удалось сохранить данные');
     }
 
     public function actionReject($id) #Заказчик отменяет заказ
