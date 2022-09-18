@@ -18,7 +18,8 @@ class ReviewForm extends Model
         return [
             [['taskId', 'grade', 'content'], 'required'],
             [['taskId'], 'exist', 'targetClass' => Task::class, 'targetAttribute' => ['taskId' => 'id']],
-            [['grade'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number']
+            [['grade'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
+            [['grade'], 'compare', 'compareValue' => 5, 'operator' => '<=', 'type' => 'number']
         ];
     }
 
