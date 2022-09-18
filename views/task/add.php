@@ -11,11 +11,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'title')->textInput(['labelOptions' => 'control-label']) ?>
     <?= $form->field($model, 'description')->textarea(['labelOptions' => 'control-label']) ?>
     <?= $form->field($model, 'category')->dropDownList(Category::getCategoriesList(), ['labelOptions' => 'control-label']) ?>
-    <div class="form-group">
-        <label class="control-label" for="location">Локация</label>
-        <input class="location-icon" id="location" type="text">
-        <span class="help-block">Error description is here</span>
-    </div>
+    <?= $form->field($model, 'address')->textInput(['labelOptions' => 'control-label'])?>
     <div class="half-wrapper">
         <?= $form->field($model, 'price')->input('number', ['class' => 'budget-icon', 'labelOptions' => 'control-label']) ?>
         <?= $form->field($model, 'deadline')->input('date', ['labelOptions' => 'control-label'])?>

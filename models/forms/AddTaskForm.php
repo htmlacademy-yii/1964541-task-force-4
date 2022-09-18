@@ -18,6 +18,7 @@ class AddTaskForm extends Model
     public $deadline;
     public $file;
     public $filePath;
+    public $address;
     const TITLE_MIN_LENGTH = 10;
     const TITLE_MAX_LENGTH = 128;
     const DESCRIPTION_MIN_LENGTH = 30;
@@ -29,6 +30,7 @@ class AddTaskForm extends Model
             'description' => 'Подробности задания',
             'category' => 'Категория',
             'price' => 'Бюджет',
+            'address' => 'Локация',
             'deadline' => 'Срок исполнения',
             'file' => 'Файлы',
         ];
@@ -37,7 +39,7 @@ class AddTaskForm extends Model
     public function rules()
     {
         return [
-            [['title', 'description', 'category', 'price'], 'required'],
+            [['title', 'description', 'category', 'price', 'address'], 'required'],
             [['title'], 'string', 'length' => [self::TITLE_MIN_LENGTH, self::TITLE_MAX_LENGTH]],
             [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
@@ -76,6 +78,7 @@ class AddTaskForm extends Model
         $task->deadline = $this->deadline;
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
+        $task->address = $this->address;
 
         return $task;
     }

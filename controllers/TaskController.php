@@ -20,6 +20,7 @@ use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
+use GuzzleHttp\Client;
 
 class TaskController extends SecuredController
 {
@@ -59,10 +60,16 @@ class TaskController extends SecuredController
             $addTaskForm->load(Yii::$app->request->post());
             $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
             if ($addTaskForm->validate()) {
-                if (!$addTaskForm->loadToTask()->save()) {
+                $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/']);
+                $response = $client->request('POST', '1.x', ['query' => ['apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a', 'geocode' => $addTaskForm->address]]);
+                echo $response->getStatusCode();
+
+
+
+                /*if (!$addTaskForm->loadToTask()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
                 }
-                return $this->goHome();
+                return $this->goHome();*/
             }
         }
 
