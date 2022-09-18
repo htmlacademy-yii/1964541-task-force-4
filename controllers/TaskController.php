@@ -61,7 +61,7 @@ class TaskController extends SecuredController
             $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
             if ($addTaskForm->validate()) {
                 $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/']);
-                $response = $client->request('POST', '1.x', ['query' => ['apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a', 'geocode' => $addTaskForm->address]]);
+                $response = $client->request('GET', '1.x', ['query' => ['apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a', 'geocode' => $addTaskForm->address]]);
                 echo $response->getStatusCode();
 
 
