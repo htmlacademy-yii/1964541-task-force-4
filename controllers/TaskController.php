@@ -164,7 +164,7 @@ class TaskController extends SecuredController
     public function actionRefuse($id, $response_id)
     {
         $response = Response::findOne($response_id);
-        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id, $task->id);
+        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id, $response->task_id);
 
         if ($actionRefuse->rightsCheck(Yii::$app->user->id)) {
             $response->status = Response::STATUS_CANCELED;
