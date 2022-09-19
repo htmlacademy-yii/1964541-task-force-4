@@ -74,7 +74,7 @@ class TaskController extends SecuredController
     {
         $taskService = new TaskService($id);
         $taskService->actionApprove($response_id, Yii::$app->user->id);
-        $taskService->saveActionApprove();
+        $taskService->saveTransaction();
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
@@ -83,7 +83,7 @@ class TaskController extends SecuredController
     {
         $taskService = new TaskService($id);
         $taskService->actionReject(Yii::$app->user->id);
-        $taskService->saveActionReject();
+        $taskService->saveTaskChanges();
 
         return $this->goHome();
     }
@@ -96,7 +96,7 @@ class TaskController extends SecuredController
         if ($responseForm->validate()) {
             $taskService = new TaskService($responseForm->taskId);
             $taskService->actionResponse(Yii::$app->user->id, $responseForm);
-            $taskService->saveActionResponse();
+            $taskService->saveAnswerChanges();
 
             return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
         }
@@ -108,30 +108,11 @@ class TaskController extends SecuredController
         $reviewForm->load(Yii::$app->request->post());
 
         if ($reviewForm->validate()) {
-            $task = Task::findOne($reviewForm->taskId);
-            $actionExecute = new ActionExecute($task->customer_id, $task->executor_id, $task->id);
+            $taskService = new TaskService($reviewForm->taskId);
+            $taskService->actionReview(Yii::$app->user->id, $reviewForm);
+            $taskService->saveTransaction();
 
-            if ($actionExecute->rightsCheck(Yii::$app->user->id)) {
-                $review = new Review();
-                $review->executor_id = $task->executor_id;
-                $review->customer_id = Yii::$app->user->id;
-                $reviewForm->loadToReviewModel($review);
-                $task->status = Task::STATUS_EXECUTED;
-
-                $transaction = Yii::$app->db->beginTransaction();
-
-                try {
-                    if ($review->save() && $task->save()) {
-                        $transaction->commit();
-
-                        return Yii::$app->response->redirect(['task']);
-                    }
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                } catch (ModelSaveException $exception) {
-                    $transaction->rollback();
-                    error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
-                }
-            }
+            return Yii::$app->response->redirect(['task']);
         }
     }
 
@@ -139,7 +120,7 @@ class TaskController extends SecuredController
     {
         $taskService = new TaskService($id);
         $taskService->actionRefuse($response_id, Yii::$app->user->id);
-        $taskService->saveActionRefuse();
+        $taskService->saveAnswerChanges();
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
@@ -148,7 +129,7 @@ class TaskController extends SecuredController
     {
         $taskService = new TaskService($id);
         $taskService->actionCancel(Yii::$app->user->id);
-        $taskService->saveActionCancel();
+        $taskService->saveTaskChanges();
 
         return $this->goHome();
     }
