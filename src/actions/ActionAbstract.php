@@ -29,7 +29,7 @@ abstract class ActionAbstract
         return $this->internal_name;
     }
 
-    abstract public function rightsCheck($user_id): bool;
+    abstract public function rightsCheck(int $user_id): bool;
 
     abstract public function getLink();
 }
