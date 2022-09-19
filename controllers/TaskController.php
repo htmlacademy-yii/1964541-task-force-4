@@ -17,6 +17,7 @@ use TaskForce\actions\ActionExecute;
 use TaskForce\actions\ActionRefuse;
 use TaskForce\actions\ActionReject;
 use TaskForce\exceptions\ModelSaveException;
+use TaskForce\TaskService;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -71,29 +72,13 @@ class TaskController extends SecuredController
 
     public function actionApprove($id, $executor_id, $response_id)
     {
-        $task = Task::findOne($id);
-        $actionApprove = new ActionApprove($task->customer_id, $task->executor_id, $task->id);
+        $taskService = new TaskService($id);
 
-        if ($actionApprove->rightsCheck(Yii::$app->user->id)) {
-            $task->status = Task::STATUS_IN_WORK;
-            $task->executor_id = $executor_id;
+        if ($taskService->createApproveAction()->rightsCheck(Yii::$app->user->id)) {
+            $taskService->actionApprove($executor_id, $response_id);
+            $taskService->saveActionApprove();
 
-            $response = Response::findOne($response_id);
-            $response->status = Response::STATUS_ACCEPTED;
-
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try {
-                if ($task->save() && $response->save()) {
-                    $transaction->commit();
-
-                    return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-                }
-                throw new ModelSaveException('Не удалось сохранить данные');
-            } catch (ModelSaveException $exception) {
-                $transaction->rollback();
-                error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
-            }
+            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
         }
     }
 
