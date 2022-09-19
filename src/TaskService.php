@@ -7,6 +7,7 @@ use app\models\Task;
 use TaskForce\actions\ActionApprove;
 use TaskForce\actions\ActionCancel;
 use TaskForce\actions\ActionRefuse;
+use TaskForce\actions\ActionReject;
 use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
@@ -59,6 +60,22 @@ class TaskService
         }
 
         $this->task->status = task::STATUS_FAILED;
+    }
+
+    public function actionReject($user_id)
+    {
+        $this->actionObject = new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id);
+
+        if ($this->actionObject->rightsCheck($user_id)) {
+            $this->task->status = Task::STATUS_CANCELED;
+        }
+    }
+
+    public function saveActionReject()
+    {
+        if (!$this->task->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
     }
 
     public function saveActionCancel()

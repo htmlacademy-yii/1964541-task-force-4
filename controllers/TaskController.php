@@ -81,17 +81,11 @@ class TaskController extends SecuredController
 
     public function actionReject($id)
     {
-        $task = Task::findOne($id);
-        $actionReject = new ActionReject($task->customer_id, $task->executor_id, $task->id);
+        $taskService = new TaskService($id);
+        $taskService->actionReject(Yii::$app->user->id);
+        $taskService->saveActionReject();
 
-        if ($actionReject->rightsCheck(Yii::$app->user->id)) {
-            $task->status = task::STATUS_CANCELED;
-            if (!$task->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return $this->goHome();
-        }
+        return $this->goHome();
     }
 
     public function actionResponse()
