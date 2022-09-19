@@ -83,13 +83,17 @@ class TaskController extends SecuredController
 
             $transaction = Yii::$app->db->beginTransaction();
 
-            if ($task->save() && $response->save()) {
-                $transaction->commit();
+            try {
+                if ($task->save() && $response->save()) {
+                    $transaction->commit();
 
-                return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+                    return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+                }
+                throw new ModelSaveException('Не удалось сохранить данные');
+            } catch (ModelSaveException $exception) {
+                $transaction->rollback();
+                error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
             }
-            $transaction->rollback();
-            throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
@@ -150,13 +154,17 @@ class TaskController extends SecuredController
 
                 $transaction = Yii::$app->db->beginTransaction();
 
-                if ($review->save() && $task->save()) {
-                    $transaction->commit();
+                try {
+                    if ($review->save() && $task->save()) {
+                        $transaction->commit();
 
-                    return Yii::$app->response->redirect(['task']);
+                        return Yii::$app->response->redirect(['task']);
+                    }
+                    throw new ModelSaveException('Не удалось сохранить данные');
+                } catch (ModelSaveException $exception) {
+                    $transaction->rollback();
+                    error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
                 }
-                $transaction->rollback();
-                throw new ModelSaveException('Не удалось сохранить данные');
             }
         }
     }
