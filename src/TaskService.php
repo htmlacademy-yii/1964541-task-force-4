@@ -4,6 +4,7 @@ namespace TaskForce;
 
 use app\models\Response;
 use app\models\Task;
+use TaskForce\actions\ActionAccept;
 use TaskForce\actions\ActionApprove;
 use TaskForce\actions\ActionCancel;
 use TaskForce\actions\ActionRefuse;
@@ -37,6 +38,27 @@ class TaskService
         $this->task->status = Task::STATUS_IN_WORK;
         $this->task->executor_id = $this->response->executor_id;
 
+    }
+
+    public function actionResponse($user_id, $responseForm)
+    {
+        $this->actionObject = new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id);
+
+        if (!$this->actionObject->rightsCheck($user_id)) {
+            throw new ActionUnavailableException('Данное действие недоступно');
+        }
+
+        $this->response = new Response();
+        $this->response->customer_id = $this->task->customer_id;
+        $this->response->executor_id = Yii::$app->user->id;
+        $responseForm->loadToResponseModel($this->response);
+    }
+
+    public function saveActionResponse()
+    {
+        if (!$this->response->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
     }
 
     public function actionRefuse($response_id, $user_id)

@@ -94,21 +94,11 @@ class TaskController extends SecuredController
         $responseForm->load(Yii::$app->request->post());
 
         if ($responseForm->validate()) {
-            $task = Task::findOne($responseForm->taskId);
-            $actionAccept = new ActionAccept($task->customer_id, $task->executor_id, $task->id);
+            $taskService = new TaskService($responseForm->taskId);
+            $taskService->actionResponse(Yii::$app->user->id, $responseForm);
+            $taskService->saveActionResponse();
 
-            if ($actionAccept->rightsCheck(Yii::$app->user->id)) {
-                $response = new Response();
-                $response->customer_id = $task->customer_id;
-                $response->executor_id = Yii::$app->user->id;
-                $responseForm->loadToResponseModel($response);
-
-                if (!$response->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
-
-                return Yii::$app->response->redirect(['task/view', 'id' => $task->id]);
-            }
+            return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
         }
     }
 
