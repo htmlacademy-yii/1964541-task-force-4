@@ -70,16 +70,13 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionApprove($id, $executor_id, $response_id)
+    public function actionApprove($id, $response_id)
     {
         $taskService = new TaskService($id);
+        $taskService->actionApprove($response_id, Yii::$app->user->id);
+        $taskService->saveActionApprove();
 
-        if ($taskService->createApproveAction()->rightsCheck(Yii::$app->user->id)) {
-            $taskService->actionApprove($executor_id, $response_id);
-            $taskService->saveActionApprove();
-
-            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-        }
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
     public function actionReject($id)
@@ -156,17 +153,11 @@ class TaskController extends SecuredController
 
     public function actionRefuse($id, $response_id)
     {
-        $response = Response::findOne($response_id);
-        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id, $response->task_id);
+        $taskService = new TaskService($id);
+        $taskService->actionRefuse($response_id, Yii::$app->user->id);
+        $taskService->saveActionRefuse();
 
-        if ($actionRefuse->rightsCheck(Yii::$app->user->id)) {
-            $response->status = Response::STATUS_CANCELED;
-            if (!$response->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-        }
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
     public function actionCancel($id)

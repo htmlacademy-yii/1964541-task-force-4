@@ -5,6 +5,8 @@ namespace TaskForce;
 use app\models\Response;
 use app\models\Task;
 use TaskForce\actions\ActionApprove;
+use TaskForce\actions\ActionRefuse;
+use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
 
@@ -20,18 +22,38 @@ class TaskService
         $this->task = Task::findOne($taskId);
     }
 
-    public function createApproveAction()
+    public function actionApprove($response_id, $user_id)
     {
-        return $this->actionObject = new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id);
-    }
+        $this->actionObject = new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id);
 
-    public function actionApprove($executor_id, $response_id)
-    {
-        $this->task->status = Task::STATUS_IN_WORK;
-        $this->task->executor_id = $executor_id;
-
+        if (!$this->actionObject->rightsCheck($user_id)) {
+            throw new ActionUnavailableException('Данное действие недоступно');
+        }
         $this->response = Response::findOne($response_id);
         $this->response->status = Response::STATUS_ACCEPTED;
+
+        $this->task->status = Task::STATUS_IN_WORK;
+        $this->task->executor_id = $this->response->executor_id;
+
+    }
+
+    public function actionRefuse($response_id, $user_id)
+    {
+        $this->response = Response::findOne($response_id);
+        $this->actionObject = new ActionRefuse($this->response->customer_id, $this->response->executor_id, $this->response->task_id);
+
+        if (!$this->actionObject->rightsCheck($user_id)) {
+            throw new ActionUnavailableException('Данное действие недоступно');
+        }
+
+        $this->response->status = Response::STATUS_CANCELED;
+    }
+
+    public function saveActionRefuse()
+    {
+        if (!$this->response->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
     }
 
     public function saveActionApprove()
