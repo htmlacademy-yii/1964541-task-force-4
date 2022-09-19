@@ -27,26 +27,18 @@ class TaskService
 
     public function actionApprove($response_id, $user_id)
     {
-        $this->actionObject = new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id);
+        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
 
-        if (!$this->actionObject->rightsCheck($user_id)) {
-            throw new ActionUnavailableException('Данное действие недоступно');
-        }
         $this->response = Response::findOne($response_id);
         $this->response->status = Response::STATUS_ACCEPTED;
 
         $this->task->status = Task::STATUS_IN_WORK;
         $this->task->executor_id = $this->response->executor_id;
-
     }
 
     public function actionResponse($user_id, $responseForm)
     {
-        $this->actionObject = new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id);
-
-        if (!$this->actionObject->rightsCheck($user_id)) {
-            throw new ActionUnavailableException('Данное действие недоступно');
-        }
+        $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
 
         $this->response = new Response();
         $this->response->customer_id = $this->task->customer_id;
@@ -54,42 +46,31 @@ class TaskService
         $responseForm->loadToResponseModel($this->response);
     }
 
-    public function saveActionResponse()
-    {
-        if (!$this->response->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
-    }
-
     public function actionRefuse($response_id, $user_id)
     {
         $this->response = Response::findOne($response_id);
-        $this->actionObject = new ActionRefuse($this->response->customer_id, $this->response->executor_id, $this->response->task_id);
 
-        if (!$this->actionObject->rightsCheck($user_id)) {
-            throw new ActionUnavailableException('Данное действие недоступно');
-        }
+        $this->actionCheckRights(new ActionRefuse($this->response->customer_id, $this->response->executor_id, $this->response->task_id), $user_id);
 
         $this->response->status = Response::STATUS_CANCELED;
     }
 
     public function actionCancel($user_id)
     {
-        $this->actionObject = new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id);
-
-        if (!$this->actionObject->rightsCheck($user_id)) {
-            throw new ActionUnavailableException('Данное действие недоступно');
-        }
-
+        $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
         $this->task->status = task::STATUS_FAILED;
     }
 
     public function actionReject($user_id)
     {
-        $this->actionObject = new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id);
+        $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->task->status = Task::STATUS_CANCELED;
+    }
 
-        if ($this->actionObject->rightsCheck($user_id)) {
-            $this->task->status = Task::STATUS_CANCELED;
+    public function saveActionResponse()
+    {
+        if (!$this->response->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
@@ -129,7 +110,11 @@ class TaskService
         }
     }
 
-
-
-
+    private function actionCheckRights($actionObject, $user_id)
+    {
+        $this->actionObject = $actionObject;
+        if (!$this->actionObject->rightsCheck($user_id)) {
+            throw new ActionUnavailableException('Данное действие недоступно');
+        }
+    }
 }
