@@ -20,16 +20,18 @@ class TaskService
     private $task;
     private $actionObject;
     private $activeRecordModel;
+    private $userId;
     private $transaction;
 
-    public function __construct($taskId)
+    public function __construct($taskId, $userId)
     {
         $this->task = Task::findOne($taskId);
+        $this->userId = $userId;
     }
 
-    public function actionApprove($response_id, $user_id)
+    public function actionApprove($response_id)
     {
-        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
 
         $this->activeRecordModel = Response::findOne($response_id);
         $this->activeRecordModel->status = Response::STATUS_ACCEPTED;
@@ -38,45 +40,45 @@ class TaskService
         $this->task->executor_id = $this->activeRecordModel->executor_id;
     }
 
-    public function actionReview($user_id, $reviewForm)
+    public function actionReview($reviewForm)
     {
-        $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
 
         $this->activeRecordModel = new Review();
         $this->activeRecordModel->executor_id = $this->task->executor_id;
-        $this->activeRecordModel->customer_id = $user_id;
+        $this->activeRecordModel->customer_id = $this->userId;
         $reviewForm->loadToReviewModel($this->activeRecordModel);
         $this->task->status = Task::STATUS_EXECUTED;
     }
 
-    public function actionResponse($user_id, $responseForm)
+    public function actionResponse($responseForm)
     {
-        $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
 
         $this->activeRecordModel = new Response();
         $this->activeRecordModel->customer_id = $this->task->customer_id;
-        $this->activeRecordModel->executor_id = $user_id;
+        $this->activeRecordModel->executor_id = $this->userId;
         $responseForm->loadToResponseModel($this->activeRecordModel);
     }
 
-    public function actionRefuse($response_id, $user_id)
+    public function actionRefuse($response_id)
     {
         $this->activeRecordModel = Response::findOne($response_id);
 
-        $this->actionCheckRights(new ActionRefuse($this->activeRecordModel->customer_id, $this->activeRecordModel->executor_id, $this->activeRecordModel->task_id), $user_id);
+        $this->actionCheckRights(new ActionRefuse($this->activeRecordModel->customer_id, $this->activeRecordModel->executor_id, $this->activeRecordModel->task_id), $this->userId);
 
         $this->activeRecordModel->status = Response::STATUS_CANCELED;
     }
 
-    public function actionCancel($user_id)
+    public function actionCancel()
     {
-        $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
         $this->task->status = task::STATUS_FAILED;
     }
 
-    public function actionReject($user_id)
+    public function actionReject()
     {
-        $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id), $user_id);
+        $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
         $this->task->status = Task::STATUS_CANCELED;
     }
 
@@ -109,10 +111,10 @@ class TaskService
         }
     }
 
-    private function actionCheckRights($actionObject, $user_id)
+    private function actionCheckRights($actionObject)
     {
         $this->actionObject = $actionObject;
-        if (!$this->actionObject->rightsCheck($user_id)) {
+        if (!$this->actionObject->rightsCheck($this->userId)) {
             throw new ActionUnavailableException('Данное действие недоступно');
         }
     }

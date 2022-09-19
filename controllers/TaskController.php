@@ -72,8 +72,8 @@ class TaskController extends SecuredController
 
     public function actionApprove($id, $response_id)
     {
-        $taskService = new TaskService($id);
-        $taskService->actionApprove($response_id, Yii::$app->user->id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionApprove($response_id);
         $taskService->saveTransaction();
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
@@ -81,8 +81,8 @@ class TaskController extends SecuredController
 
     public function actionReject($id)
     {
-        $taskService = new TaskService($id);
-        $taskService->actionReject(Yii::$app->user->id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionReject();
         $taskService->saveTaskChanges();
 
         return $this->goHome();
@@ -94,8 +94,8 @@ class TaskController extends SecuredController
         $responseForm->load(Yii::$app->request->post());
 
         if ($responseForm->validate()) {
-            $taskService = new TaskService($responseForm->taskId);
-            $taskService->actionResponse(Yii::$app->user->id, $responseForm);
+            $taskService = new TaskService($responseForm->taskId, Yii::$app->user->id);
+            $taskService->actionResponse($responseForm);
             $taskService->saveAnswerChanges();
 
             return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
@@ -108,8 +108,8 @@ class TaskController extends SecuredController
         $reviewForm->load(Yii::$app->request->post());
 
         if ($reviewForm->validate()) {
-            $taskService = new TaskService($reviewForm->taskId);
-            $taskService->actionReview(Yii::$app->user->id, $reviewForm);
+            $taskService = new TaskService($reviewForm->taskId, Yii::$app->user->id);
+            $taskService->actionReview($reviewForm);
             $taskService->saveTransaction();
 
             return Yii::$app->response->redirect(['task']);
@@ -118,8 +118,8 @@ class TaskController extends SecuredController
 
     public function actionRefuse($id, $response_id)
     {
-        $taskService = new TaskService($id);
-        $taskService->actionRefuse($response_id, Yii::$app->user->id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionRefuse($response_id);
         $taskService->saveAnswerChanges();
 
         return Yii::$app->response->redirect(['task/view', 'id' => $id]);
@@ -127,8 +127,8 @@ class TaskController extends SecuredController
 
     public function actionCancel($id)
     {
-        $taskService = new TaskService($id);
-        $taskService->actionCancel(Yii::$app->user->id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionCancel();
         $taskService->saveTaskChanges();
 
         return $this->goHome();
