@@ -72,7 +72,7 @@ class TaskController extends SecuredController
     public function actionApprove($id, $executor_id, $response_id)
     {
         $task = Task::findOne($id);
-        $actionApprove = new ActionApprove($task->customer_id, $task->executor_id);
+        $actionApprove = new ActionApprove($task->customer_id, $task->executor_id, $task->id);
 
         if ($actionApprove->rightsCheck(Yii::$app->user->id)) {
             $task->status = Task::STATUS_IN_WORK;
@@ -96,7 +96,7 @@ class TaskController extends SecuredController
     public function actionReject($id)
     {
         $task = Task::findOne($id);
-        $actionReject = new ActionReject($task->customer_id, $task->executor_id);
+        $actionReject = new ActionReject($task->customer_id, $task->executor_id, $task->id);
 
         if ($actionReject->rightsCheck(Yii::$app->user->id)) {
             $task->status = task::STATUS_CANCELED;
@@ -115,7 +115,7 @@ class TaskController extends SecuredController
 
         if ($responseForm->validate()) {
             $task = Task::findOne($responseForm->taskId);
-            $actionAccept = new ActionAccept($task->customer_id, $task->executor_id);
+            $actionAccept = new ActionAccept($task->customer_id, $task->executor_id, $task->id);
 
             if ($actionAccept->rightsCheck(Yii::$app->user->id)) {
                 $response = new Response();
@@ -139,7 +139,7 @@ class TaskController extends SecuredController
 
         if ($reviewForm->validate()) {
             $task = Task::findOne($reviewForm->taskId);
-            $actionExecute = new ActionExecute($task->customer_id, $task->executor_id);
+            $actionExecute = new ActionExecute($task->customer_id, $task->executor_id, $task->id);
 
             if ($actionExecute->rightsCheck(Yii::$app->user->id)) {
                 $review = new Review();
@@ -164,7 +164,7 @@ class TaskController extends SecuredController
     public function actionRefuse($id, $response_id)
     {
         $response = Response::findOne($response_id);
-        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id);
+        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id, $task->id);
 
         if ($actionRefuse->rightsCheck(Yii::$app->user->id)) {
             $response->status = Response::STATUS_CANCELED;
@@ -179,7 +179,7 @@ class TaskController extends SecuredController
     public function actionCancel($id)
     {
         $task = Task::findOne($id);
-        $actionCancel = new ActionCancel($task->customer_id, $task->executor_id);
+        $actionCancel = new ActionCancel($task->customer_id, $task->executor_id, $task->id);
 
         if ($actionCancel->rightsCheck(Yii::$app->user->id)) {
             $task->status = task::STATUS_FAILED;

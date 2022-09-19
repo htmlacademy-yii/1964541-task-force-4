@@ -6,10 +6,14 @@ use TaskForce\exceptions\ActionUnavailableException;
 
 class ActionRefuse extends ActionAbstract
 {
-    protected $name = 'Отказать';
+    public $name = 'Отказать';
     protected $internal_name = self::ACTION_REFUSE;
 
     const ACTION_REFUSE = 'action_refuse';
+
+    public function getLink()
+    {
+    }
 
     public function rightsCheck($user_id): bool
     {

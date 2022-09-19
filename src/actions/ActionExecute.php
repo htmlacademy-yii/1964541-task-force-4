@@ -6,10 +6,16 @@ use TaskForce\exceptions\ActionUnavailableException;
 
 class ActionExecute extends ActionAbstract
 {
-    protected $name = 'Выполнить';
+    public $name = 'Завершить задание';
+    public $class = 'button button--pink action-btn';
+    public $dataAction = 'completion';
     protected $internal_name = self::ACTION_EXECUTE;
 
     const ACTION_EXECUTE = 'action_execute';
+
+    public function getLink()
+    {
+    }
 
     public function rightsCheck($user_id): bool
     {

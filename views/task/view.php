@@ -13,8 +13,8 @@ use yii\widgets\ActiveForm; ?>
     </div>
     <p class="task-description"><?= $task->description ?></p>
     <?php if (!$task->checkUserResponse(Yii::$app->user->id)): ?>
-    <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $action): ?>
-        <?= ActionsWidget::widget(['input' => $action, 'taskId' => $task->id]); ?>
+    <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $actionObject): ?>
+        <?= ActionsWidget::widget(['actionObject' => $actionObject]); ?>
     <?php endforeach; ?>
     <?php endif; ?>
     <div class="task-map">
