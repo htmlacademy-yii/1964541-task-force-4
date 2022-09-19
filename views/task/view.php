@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm; ?>
     <p class="task-description"><?= $task->description ?></p>
     <?php if (!$task->checkUserResponse(Yii::$app->user->id)): ?>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $actionObject): ?>
-        <?= ActionsWidget::widget(['actionObject' => $actionObject]); ?>
+        <?= $actionObject !== null ? ActionsWidget::widget(['actionObject' => $actionObject]) : ''; ?>
     <?php endforeach; ?>
     <?php endif; ?>
     <div class="task-map">

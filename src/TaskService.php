@@ -5,6 +5,7 @@ namespace TaskForce;
 use app\models\Response;
 use app\models\Task;
 use TaskForce\actions\ActionApprove;
+use TaskForce\actions\ActionCancel;
 use TaskForce\actions\ActionRefuse;
 use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\ModelSaveException;
@@ -47,6 +48,24 @@ class TaskService
         }
 
         $this->response->status = Response::STATUS_CANCELED;
+    }
+
+    public function actionCancel($user_id)
+    {
+        $this->actionObject = new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id);
+
+        if (!$this->actionObject->rightsCheck($user_id)) {
+            throw new ActionUnavailableException('Данное действие недоступно');
+        }
+
+        $this->task->status = task::STATUS_FAILED;
+    }
+
+    public function saveActionCancel()
+    {
+        if (!$this->task->save()) {
+            throw new ModelSaveException('Не удалось сохранить данные');
+        }
     }
 
     public function saveActionRefuse()

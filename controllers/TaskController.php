@@ -162,17 +162,10 @@ class TaskController extends SecuredController
 
     public function actionCancel($id)
     {
-        $task = Task::findOne($id);
-        $actionCancel = new ActionCancel($task->customer_id, $task->executor_id, $task->id);
+        $taskService = new TaskService($id);
+        $taskService->actionCancel(Yii::$app->user->id);
+        $taskService->saveActionCancel();
 
-        if ($actionCancel->rightsCheck(Yii::$app->user->id)) {
-            $task->status = task::STATUS_FAILED;
-            if (!$task->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return $this->goHome();
-        }
+        return $this->goHome();
     }
-
 }
