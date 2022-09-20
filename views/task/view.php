@@ -1,9 +1,9 @@
 <?php
 
 
-use app\components\ActionsWidget;
 use app\models\Response;
 use app\models\Task;
+use app\widgets\ActionsWidget;
 use TaskForce\actions\ActionAccept;
 use yii\widgets\ActiveForm; ?>
 <div class="left-column">
