@@ -6,10 +6,16 @@ use TaskForce\exceptions\ActionUnavailableException;
 
 class ActionAccept extends ActionAbstract
 {
-    protected $name = 'Принять';
+    public $name = 'Откликнуться на задание';
+    public $class ='button button--blue action-btn';
+    public $dataAction = 'act_response';
     protected $internal_name = self::ACTION_ACCEPT;
 
     const ACTION_ACCEPT = 'action_accept';
+
+    public function getLink()
+    {
+    }
 
     public function rightsCheck($user_id): bool
     {

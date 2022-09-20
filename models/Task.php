@@ -178,7 +178,7 @@ class Task extends \yii\db\ActiveRecord
 
     public function checkUserResponse($id)
     {
-        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id, 'status' => Response::STATUS_NEW])->one()) {
+        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id, 'status' => Response::STATUS_NEW])->orFilterWhere(['task_id' => $this->id, 'executor_id' => $id, 'status' => Response::STATUS_CANCELED])->one()) {
             return true;
         }
         return false;
@@ -203,13 +203,13 @@ class Task extends \yii\db\ActiveRecord
     {
         switch ($this->status) {
             case self::STATUS_NEW:
-                return $id === $this->customer_id ? [ActionReject::class] : [ActionAccept::class];
+                return $id === $this->customer_id ? [new ActionReject($this->customer_id, $this->executor_id, $this->id)] : [new ActionAccept($this->customer_id, $this->executor_id, $this->id)];
             case self::STATUS_IN_WORK:
                 if ($id === $this->executor_id) {
-                    return [ActionCancel::class];
+                    return [new ActionCancel($this->customer_id, $this->executor_id, $this->id)];
                 }
                 if ($id === $this->customer_id) {
-                    return [ActionExecute::class, ActionReject::class];
+                    return [new ActionExecute($this->customer_id, $this->executor_id, $this->id), new ActionReject($this->customer_id, $this->executor_id, $this->id)];
                 }
                 return [null];
             default:

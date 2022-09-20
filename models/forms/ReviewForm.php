@@ -18,7 +18,8 @@ class ReviewForm extends Model
         return [
             [['taskId', 'grade', 'content'], 'required'],
             [['taskId'], 'exist', 'targetClass' => Task::class, 'targetAttribute' => ['taskId' => 'id']],
-            [['grade'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number']
+            [['grade'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
+            [['grade'], 'compare', 'compareValue' => 5, 'operator' => '<=', 'type' => 'number']
         ];
     }
 
@@ -28,14 +29,5 @@ class ReviewForm extends Model
             'content' => 'Ваш комментарий',
             'price' => 'Оценка работы',
         ];
-    }
-
-    public function loadToReviewModel($review)
-    {
-        $review->task_id = $this->taskId;
-        $review->grade = $this->grade;
-        $review->content = $this->content;
-
-        return $review;
     }
 }

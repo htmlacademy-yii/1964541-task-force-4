@@ -7,23 +7,12 @@ use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
 use app\models\forms\ReviewForm;
-use app\models\Response;
-use app\models\Review;
 use app\models\Task;
-use Faker\Provider\Address;
-use TaskForce\actions\ActionAccept;
-use TaskForce\actions\ActionApprove;
-use TaskForce\actions\ActionCancel;
-use TaskForce\actions\ActionExecute;
-use TaskForce\actions\ActionRefuse;
-use TaskForce\actions\ActionReject;
-use TaskForce\AddressTransformer;
 use TaskForce\exceptions\ModelSaveException;
+use TaskForce\TaskService;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
-use GuzzleHttp\Client;
 
 class TaskController extends SecuredController
 {
@@ -75,43 +64,20 @@ class TaskController extends SecuredController
         return $this->render('add', ['model' => $addTaskForm]);
     }
 
-    public function actionApprove($id, $executor_id, $response_id)
+    public function actionApprove($id, $response_id)
     {
-        $task = Task::findOne($id);
-        $actionApprove = new ActionApprove($task->customer_id, $task->executor_id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionApprove($response_id);
 
-        if ($actionApprove->rightsCheck(Yii::$app->user->id)) {
-            $task->status = Task::STATUS_IN_WORK;
-            $task->executor_id = $executor_id;
-
-            $response = Response::findOne($response_id);
-            $response->status = Response::STATUS_ACCEPTED;
-
-            $transaction = Yii::$app->db->beginTransaction();
-
-            if ($task->save() && $response->save()) {
-                $transaction->commit();
-
-                return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-            }
-            $transaction->rollback();
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
     public function actionReject($id)
     {
-        $task = Task::findOne($id);
-        $actionReject = new ActionReject($task->customer_id, $task->executor_id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionReject();
 
-        if ($actionReject->rightsCheck(Yii::$app->user->id)) {
-            $task->status = task::STATUS_CANCELED;
-            if (!$task->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return $this->goHome();
-        }
+        return $this->goHome();
     }
 
     public function actionResponse()
@@ -120,21 +86,10 @@ class TaskController extends SecuredController
         $responseForm->load(Yii::$app->request->post());
 
         if ($responseForm->validate()) {
-            $task = Task::findOne($responseForm->taskId);
-            $actionAccept = new ActionAccept($task->customer_id, $task->executor_id);
+            $taskService = new TaskService($responseForm->taskId, Yii::$app->user->id);
+            $taskService->actionResponse($responseForm);
 
-            if ($actionAccept->rightsCheck(Yii::$app->user->id)) {
-                $response = new Response();
-                $response->customer_id = $task->customer_id;
-                $response->executor_id = Yii::$app->user->id;
-                $responseForm->loadToResponseModel($response);
-
-                if (!$response->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
-
-                return Yii::$app->response->redirect(['task/view', 'id' => $task->id]);
-            }
+            return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
         }
     }
 
@@ -144,57 +99,26 @@ class TaskController extends SecuredController
         $reviewForm->load(Yii::$app->request->post());
 
         if ($reviewForm->validate()) {
-            $task = Task::findOne($reviewForm->taskId);
-            $actionExecute = new ActionExecute($task->customer_id, $task->executor_id);
+            $taskService = new TaskService($reviewForm->taskId, Yii::$app->user->id);
+            $taskService->actionReview($reviewForm);
 
-            if ($actionExecute->rightsCheck(Yii::$app->user->id)) {
-                $review = new Review();
-                $review->executor_id = $task->executor_id;
-                $review->customer_id = Yii::$app->user->id;
-                $reviewForm->loadToReviewModel($review);
-                $task->status = Task::STATUS_EXECUTED;
-
-                $transaction = Yii::$app->db->beginTransaction();
-
-                if ($review->save() && $task->save()) {
-                    $transaction->commit();
-
-                    return Yii::$app->response->redirect(['task']);
-                }
-                $transaction->rollback();
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
+            return Yii::$app->response->redirect(['task']);
         }
     }
 
     public function actionRefuse($id, $response_id)
     {
-        $response = Response::findOne($response_id);
-        $actionRefuse = new ActionRefuse($response->customer_id, $response->executor_id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionRefuse($response_id);
 
-        if ($actionRefuse->rightsCheck(Yii::$app->user->id)) {
-            $response->status = Response::STATUS_CANCELED;
-            if (!$response->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return Yii::$app->response->redirect(['task/view', 'id' => $id]);
-        }
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
     }
 
     public function actionCancel($id)
     {
-        $task = Task::findOne($id);
-        $actionCancel = new ActionCancel($task->customer_id, $task->executor_id);
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionCancel();
 
-        if ($actionCancel->rightsCheck(Yii::$app->user->id)) {
-            $task->status = task::STATUS_FAILED;
-            if (!$task->save()) {
-                throw new ModelSaveException('Не удалось сохранить данные');
-            }
-
-            return $this->goHome();
-        }
+        return $this->goHome();
     }
-
 }
