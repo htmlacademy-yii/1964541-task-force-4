@@ -10,12 +10,14 @@ use app\models\forms\ReviewForm;
 use app\models\Response;
 use app\models\Review;
 use app\models\Task;
+use Faker\Provider\Address;
 use TaskForce\actions\ActionAccept;
 use TaskForce\actions\ActionApprove;
 use TaskForce\actions\ActionCancel;
 use TaskForce\actions\ActionExecute;
 use TaskForce\actions\ActionRefuse;
 use TaskForce\actions\ActionReject;
+use TaskForce\AddressTransformer;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\helpers\ArrayHelper;
@@ -61,7 +63,7 @@ class TaskController extends SecuredController
             $addTaskForm->load(Yii::$app->request->post());
             $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
             if ($addTaskForm->validate()) {
-                $addTaskForm->getLocation();
+
 
                 if (!$addTaskForm->loadToTask()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');

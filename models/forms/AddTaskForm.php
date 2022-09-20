@@ -5,6 +5,7 @@ namespace app\models\forms;
 use app\models\Category;
 use app\models\Task;
 use GuzzleHttp\Client;
+use TaskForce\AddressTransformer;
 use TaskForce\exceptions\FileUploadException;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
@@ -21,7 +22,6 @@ class AddTaskForm extends Model
     public $file;
     public $filePath;
     public $address;
-    private $location;
     const TITLE_MIN_LENGTH = 10;
     const TITLE_MAX_LENGTH = 128;
     const DESCRIPTION_MIN_LENGTH = 30;
@@ -65,21 +65,14 @@ class AddTaskForm extends Model
         return false;
     }
 
-    public function getLocation()
-    {
-        $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/']);
-        $response = $client->request('GET', '1.x', ['query' => ['apikey' => 'e666f398-c983-4bde-8f14-e3fec900592a', 'geocode' => $this->address, 'format' => 'json']]);
-        $content = $response->getBody()->getContents();
-        $responseData = json_decode($content, true);
-
-        $this->location = explode(' ', ArrayHelper::getValue($responseData, 'response.GeoObjectCollection.featureMember.0.GeoObject.Point.pos'));
-    }
-
     public function loadToTask()
     {
         if (!$this->uploadFile() && $this->file) {
             throw new FileUploadException('Загрузить файл не удалось');
         }
+
+        $addressTransformer = new AddressTransformer($this->address);
+        $addressTransformer->getLocation();
 
         $task = new Task();
         $task->title = $this->title;
@@ -92,8 +85,8 @@ class AddTaskForm extends Model
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
         $task->address = $this->address;
-        $task->long = $this->location[0];
-        $task->lat = $this->location[1];
+        $task->lat = $addressTransformer->lat;
+        $task->long = $addressTransformer->long;
 
         return $task;
     }
