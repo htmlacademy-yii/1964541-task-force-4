@@ -34,7 +34,7 @@ class TaskService
      * Назначает исполнителя на заказ
      * @param int $response_id Id отклика на задание
      * @return void
-     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ActionUnavailableException|\yii\db\Exception Пользователь не прошел проверку прав|Транзакция не удалась
      */
     public function actionApprove(int $response_id)
     {
@@ -53,7 +53,7 @@ class TaskService
      * Завершает задание и сохраняет отзыв о его выполнении
      * @param ReviewForm $reviewForm Форма отзыва на выполнение задания
      * @return void
-     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ActionUnavailableException|\yii\db\Exception Пользователь не прошел проверку прав|Транзакция не удалась
      */
     public function actionReview(ReviewForm $reviewForm)
     {
@@ -155,7 +155,7 @@ class TaskService
      * @param object $task Задание, которое участвует в действии
      * @param object $form Форма отклика или отзыва
      * @return void
-     * @throws \yii\db\Exception Не удолось провести транзакцию
+     * @throws \yii\db\Exception Не удалось провести транзакцию
      */
     private function saveTransaction(object $task, object $form)
     {
