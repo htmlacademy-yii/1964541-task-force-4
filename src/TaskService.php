@@ -2,6 +2,8 @@
 
 namespace TaskForce;
 
+use app\models\forms\ResponseForm;
+use app\models\forms\ReviewForm;
 use app\models\Response;
 use app\models\Review;
 use app\models\Task;
@@ -19,16 +21,22 @@ class TaskService
 {
     private object $task;
     private object $actionObject;
-    private $userId;
-    private $transaction;
+    private int $userId;
+    private object $transaction;
 
-    public function __construct($taskId, $userId)
+    public function __construct(int $taskId, int $userId)
     {
         $this->task = Task::findOne($taskId);
         $this->userId = $userId;
     }
 
-    public function actionApprove($response_id)
+    /**
+     * Назначает исполнителя на заказ
+     * @param int $response_id Id отклика на задание
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     */
+    public function actionApprove(int $response_id)
     {
         $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
@@ -41,7 +49,13 @@ class TaskService
         $this->saveTransaction($this->task, $response);
     }
 
-    public function actionReview($reviewForm)
+    /**
+     * Завершает задание и сохраняет отзыв о его выполнении
+     * @param ReviewForm $reviewForm Форма отзыва на выполнение задания
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     */
+    public function actionReview(ReviewForm $reviewForm)
     {
         $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
@@ -56,7 +70,14 @@ class TaskService
         $this->saveTransaction($this->task, $review);
     }
 
-    public function actionResponse($responseForm)
+    /**
+     * Принимает задание и сохраняет отклик
+     * @param ResponseForm $responseForm Форма отклика на задание
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ModelSaveException Сохранение модели не удалось
+     */
+    public function actionResponse(ResponseForm $responseForm)
     {
         $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
@@ -70,7 +91,14 @@ class TaskService
         $this->saveChanges($response);
     }
 
-    public function actionRefuse($response_id)
+    /**
+     * Отклоняет отклик исполнителя
+     * @param int $response_id Id исполнителя
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ModelSaveException Сохранение модели не удалось
+     */
+    public function actionRefuse(int $response_id)
     {
         $response = Response::findOne($response_id);
 
@@ -81,6 +109,12 @@ class TaskService
         $this->saveChanges($response);
     }
 
+    /**
+     * Исполнитель отказывается от выполнения уже принятого задания
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ModelSaveException Сохранение модели не удалось
+     */
     public function actionCancel()
     {
         $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id));
@@ -89,6 +123,12 @@ class TaskService
         $this->saveChanges($this->task);
     }
 
+    /**
+     * Заказчик отменяет заказ
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     * @throws ModelSaveException Сохранение модели не удалось
+     */
     public function actionReject()
     {
         $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id));
@@ -97,14 +137,27 @@ class TaskService
         $this->saveChanges($this->task);
     }
 
-    private function saveChanges($object)
+    /**
+     * Сохраняет изменения внутри объектов
+     * @param object $object Принимает объект, который требуется сохранить
+     * @return void
+     * @throws ModelSaveException Сохранение модели не удалось
+     */
+    private function saveChanges(object $object)
     {
         if (!$object->save()) {
             throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
-    private function saveTransaction($task, $form)
+    /**
+     * Сохраняет данные в задании и форме
+     * @param object $task Задание, которое участвует в действии
+     * @param object $form Форма отклика или отзыва
+     * @return void
+     * @throws \yii\db\Exception Не удолось провести транзакцию
+     */
+    private function saveTransaction(object $task, object $form)
     {
         $this->transaction = Yii::$app->db->beginTransaction();
 
@@ -119,7 +172,13 @@ class TaskService
         }
     }
 
-    private function actionCheckRights($actionObject)
+    /**
+     * Проверяет наличие прав у пользователя на совершение действия
+     * @param object $actionObject Объект действия
+     * @return void
+     * @throws ActionUnavailableException Пользователь не прошел проверку прав
+     */
+    private function actionCheckRights(object $actionObject)
     {
         $this->actionObject = $actionObject;
         if (!$this->actionObject->rightsCheck($this->userId)) {
