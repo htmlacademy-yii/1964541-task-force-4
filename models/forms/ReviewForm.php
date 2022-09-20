@@ -30,13 +30,4 @@ class ReviewForm extends Model
             'price' => 'Оценка работы',
         ];
     }
-
-    public function loadToReviewModel($review)
-    {
-        $review->task_id = $this->taskId;
-        $review->grade = $this->grade;
-        $review->content = $this->content;
-
-        return $review;
-    }
 }

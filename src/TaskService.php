@@ -17,9 +17,8 @@ use Yii;
 
 class TaskService
 {
-    private $task;
-    private $actionObject;
-    private $activeRecordModel;
+    private object $task;
+    private object $actionObject;
     private $userId;
     private $transaction;
 
@@ -31,77 +30,86 @@ class TaskService
 
     public function actionApprove($response_id)
     {
-        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
+        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
-        $this->activeRecordModel = Response::findOne($response_id);
-        $this->activeRecordModel->status = Response::STATUS_ACCEPTED;
+        $response = Response::findOne($response_id);
+        $response->status = Response::STATUS_ACCEPTED;
 
         $this->task->status = Task::STATUS_IN_WORK;
-        $this->task->executor_id = $this->activeRecordModel->executor_id;
+        $this->task->executor_id = $response->executor_id;
+
+        $this->saveTransaction($this->task, $response);
     }
 
     public function actionReview($reviewForm)
     {
-        $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
+        $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
-        $this->activeRecordModel = new Review();
-        $this->activeRecordModel->executor_id = $this->task->executor_id;
-        $this->activeRecordModel->customer_id = $this->userId;
-        $reviewForm->loadToReviewModel($this->activeRecordModel);
+        $review = new Review();
+        $review->executor_id = $this->task->executor_id;
+        $review->customer_id = $this->userId;
+        $review->task_id = $this->task->id;
+        $review->grade = $reviewForm->grade;
+        $review->content = $reviewForm->content;
         $this->task->status = Task::STATUS_EXECUTED;
+
+        $this->saveTransaction($this->task, $review);
     }
 
     public function actionResponse($responseForm)
     {
-        $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
+        $this->actionCheckRights(new ActionAccept($this->task->customer_id, $this->task->executor_id, $this->task->id));
 
-        $this->activeRecordModel = new Response();
-        $this->activeRecordModel->customer_id = $this->task->customer_id;
-        $this->activeRecordModel->executor_id = $this->userId;
-        $responseForm->loadToResponseModel($this->activeRecordModel);
+        $response = new Response();
+        $response->customer_id = $this->task->customer_id;
+        $response->executor_id = $this->userId;
+        $response->task_id = $responseForm->taskId;
+        $response->price = $responseForm->price;
+        $response->content = $responseForm->content;
+
+        $this->saveChanges($response);
     }
 
     public function actionRefuse($response_id)
     {
-        $this->activeRecordModel = Response::findOne($response_id);
+        $response = Response::findOne($response_id);
 
-        $this->actionCheckRights(new ActionRefuse($this->activeRecordModel->customer_id, $this->activeRecordModel->executor_id, $this->activeRecordModel->task_id), $this->userId);
+        $this->actionCheckRights(new ActionRefuse($response->customer_id, $response->executor_id, $response->task_id));
 
-        $this->activeRecordModel->status = Response::STATUS_CANCELED;
+        $response->status = Response::STATUS_CANCELED;
+
+        $this->saveChanges($response);
     }
 
     public function actionCancel()
     {
-        $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
+        $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id));
         $this->task->status = task::STATUS_FAILED;
+
+        $this->saveChanges($this->task);
     }
 
     public function actionReject()
     {
-        $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id), $this->userId);
+        $this->actionCheckRights(new ActionReject($this->task->customer_id, $this->task->executor_id, $this->task->id));
         $this->task->status = Task::STATUS_CANCELED;
+
+        $this->saveChanges($this->task);
     }
 
-    public function saveAnswerChanges()
+    private function saveChanges($object)
     {
-        if (!$this->activeRecordModel->save()) {
+        if (!$object->save()) {
             throw new ModelSaveException('Не удалось сохранить данные');
         }
     }
 
-    public function saveTaskChanges()
-    {
-        if (!$this->task->save()) {
-            throw new ModelSaveException('Не удалось сохранить данные');
-        }
-    }
-
-    public function saveTransaction()
+    private function saveTransaction($task, $form)
     {
         $this->transaction = Yii::$app->db->beginTransaction();
 
         try {
-            if ($this->task->save() && $this->activeRecordModel->save()) {
+            if ($task->save() && $form->save()) {
                 $this->transaction->commit();
             }
             throw new ModelSaveException('Не удалось сохранить данные');
