@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm; ?>
     <div class="task-map">
         <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
         <p class="map-address town"><?= $task->city->name ?></p>
-        <p class="map-address">Новый арбат, 23, к. 1</p>
+        <p class="map-address"><?= $task->address ?></p>
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($task->responses as $response): ?>
