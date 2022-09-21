@@ -1,6 +1,6 @@
 <?php
 
-namespace TaskForce;
+namespace app\components;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
@@ -17,6 +17,8 @@ class Geocoder extends Component
     public string $address;
     public string $lat;
     public string $long;
+    public string $apiKey;
+    public string $apiUrl;
     const RESPONSE_CODE_OK = 200;
     const GEOCODE_BASE_URL = 'https://geocode-maps.yandex.ru/';
     const GEOCODE_API_KEY = 'e666f398-c983-4bde-8f14-e3fec900592a';
@@ -46,15 +48,5 @@ class Geocoder extends Component
 
         $this->long = $location[self::GEOCODE_LONGITUDE];
         $this->lat = $location[self::GEOCODE_LATITUDE];
-    }
-
-    public function getLat()
-    {
-        return $this->lat;
-    }
-
-    public function getLong()
-    {
-        return $this->long;
     }
 }

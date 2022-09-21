@@ -20,7 +20,7 @@ $config = [
             'cookieValidationKey' => 's-gA3qNNeKWvuwcJYoWLzovfC4nQfamv',
         ],
         'geocoder' => [
-            'class' => 'TaskForce\Geocoder'
+            'class' => 'app\components\Geocoder'
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm; ?>
     <?php endforeach; ?>
     <?php endif; ?>
     <div class="task-map">
-        <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
+        <div id="map" class="map"></div>
         <p class="map-address town"><?= $task->city->name ?></p>
         <p class="map-address"><?= $task->address ?></p>
     </div>
@@ -85,6 +85,24 @@ use yii\widgets\ActiveForm; ?>
         </ul>
     </div>
 </div>
+    <script type="text/javascript">
+        // Функция ymaps.ready() будет вызвана, когда
+        // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
+        ymaps.ready(init);
+        function init(){
+            // Создание карты.
+            var myMap = new ymaps.Map("map", {
+                // Координаты центра карты.
+                // Порядок по умолчанию: «широта, долгота».
+                // Чтобы не определять координаты центра карты вручную,
+                // воспользуйтесь инструментом Определение координат.
+                center: [<?= $task->lat ?>, <?= $task->long ?>],
+                // Уровень масштабирования. Допустимые значения:
+                // от 0 (весь мир) до 19.
+                zoom: 14
+            });
+        }
+    </script>
 <?php
 echo $this->render('cancelPopup', ['task' => $task]);
 echo $this->render('responseForm', ['task' => $task, 'responseForm' => $responseForm]);
