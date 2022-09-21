@@ -8,12 +8,13 @@ use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use TaskForce\exceptions\BadRequestException;
 use TaskForce\exceptions\WrongAnswerFormatException;
+use yii\base\Component;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 
-class AddressTransformer
+class Geocoder extends Component
 {
-    private string $address;
+    public string $address;
     public string $lat;
     public string $long;
     const RESPONSE_CODE_OK = 200;
@@ -23,13 +24,9 @@ class AddressTransformer
     const GEOCODE_LONGITUDE = 0;
     const GEOCODE_LATITUDE = 1;
 
-    public function __construct(string $address)
+    public function getLocation($address)
     {
         $this->address = $address;
-    }
-
-    public function getLocation()
-    {
         $client = new Client(['base_uri' => self::GEOCODE_BASE_URL]);
         $request = new Request('GET', '1.x');
         $response = $client->send($request,
@@ -49,5 +46,15 @@ class AddressTransformer
 
         $this->long = $location[self::GEOCODE_LONGITUDE];
         $this->lat = $location[self::GEOCODE_LATITUDE];
+    }
+
+    public function getLat()
+    {
+        return $this->lat;
+    }
+
+    public function getLong()
+    {
+        return $this->long;
     }
 }

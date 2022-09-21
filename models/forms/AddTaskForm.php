@@ -71,8 +71,7 @@ class AddTaskForm extends Model
             throw new FileUploadException('Загрузить файл не удалось');
         }
 
-        $addressTransformer = new AddressTransformer($this->address);
-        $addressTransformer->getLocation();
+        Yii::$app->geocoder->getLocation($this->address);
 
         $task = new Task();
         $task->title = $this->title;
@@ -85,8 +84,8 @@ class AddTaskForm extends Model
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
         $task->address = $this->address;
-        $task->lat = $addressTransformer->lat;
-        $task->long = $addressTransformer->long;
+        $task->lat = Yii::$app->geocoder->lat;
+        $task->long = Yii::$app->geocoder->long;
 
         return $task;
     }

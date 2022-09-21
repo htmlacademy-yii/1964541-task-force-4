@@ -19,6 +19,9 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 's-gA3qNNeKWvuwcJYoWLzovfC4nQfamv',
         ],
+        'geocoder' => [
+            'class' => 'TaskForce\Geocoder'
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
