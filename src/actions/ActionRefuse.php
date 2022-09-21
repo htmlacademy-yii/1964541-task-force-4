@@ -11,8 +11,9 @@ class ActionRefuse extends ActionAbstract
 
     const ACTION_REFUSE = 'action_refuse';
 
-    public function getLink()
+    public function getLink(): ?string
     {
+        return null;
     }
 
     public function rightsCheck($user_id): bool

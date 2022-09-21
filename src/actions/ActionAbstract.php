@@ -31,5 +31,5 @@ abstract class ActionAbstract
 
     abstract public function rightsCheck(int $user_id): bool;
 
-    abstract public function getLink();
+    abstract public function getLink(): ?string;
 }
