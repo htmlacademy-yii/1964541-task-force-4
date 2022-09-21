@@ -13,9 +13,9 @@ use yii\helpers\ArrayHelper;
 
 class AddressTransformer
 {
-    private $address;
-    public $lat;
-    public $long;
+    private string $address;
+    public string $lat;
+    public string $long;
     const RESPONSE_CODE_OK = 200;
     const GEOCODE_BASE_URL = 'https://geocode-maps.yandex.ru/';
     const GEOCODE_API_KEY = 'e666f398-c983-4bde-8f14-e3fec900592a';
@@ -23,7 +23,7 @@ class AddressTransformer
     const GEOCODE_LONGITUDE = 0;
     const GEOCODE_LATITUDE = 1;
 
-    public function __construct($address)
+    public function __construct(string $address)
     {
         $this->address = $address;
     }
