@@ -7,6 +7,7 @@ use app\models\forms\ReviewForm;
 use app\models\Response;
 use app\models\Review;
 use app\models\Task;
+use TaskForce\actions\ActionAbstract;
 use TaskForce\actions\ActionAccept;
 use TaskForce\actions\ActionApprove;
 use TaskForce\actions\ActionCancel;
@@ -19,10 +20,9 @@ use Yii;
 
 class TaskService
 {
-    private object $task;
-    private object $actionObject;
+    private Task $task;
+    private ActionAbstract $actionObject;
     private int $userId;
-    private object $transaction;
 
     public function __construct(int $taskId, int $userId)
     {
@@ -159,15 +159,15 @@ class TaskService
      */
     private function saveTransaction(object $task, object $form)
     {
-        $this->transaction = Yii::$app->db->beginTransaction();
+        $transaction = Yii::$app->db->beginTransaction();
 
         try {
             if ($task->save() && $form->save()) {
-                $this->transaction->commit();
+                $transaction->commit();
             }
             throw new ModelSaveException('Не удалось сохранить данные');
         } catch (ModelSaveException $exception) {
-            $this->transaction->rollback();
+            $transaction->rollback();
             error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
         }
     }
@@ -178,7 +178,7 @@ class TaskService
      * @return void
      * @throws ActionUnavailableException Пользователь не прошел проверку прав
      */
-    private function actionCheckRights(object $actionObject)
+    private function actionCheckRights(ActionAbstract $actionObject)
     {
         $this->actionObject = $actionObject;
         if (!$this->actionObject->rightsCheck($this->userId)) {

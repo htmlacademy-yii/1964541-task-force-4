@@ -13,8 +13,9 @@ class ActionExecute extends ActionAbstract
 
     const ACTION_EXECUTE = 'action_execute';
 
-    public function getLink()
+    public function getLink(): ?string
     {
+        return null;
     }
 
     public function rightsCheck($user_id): bool

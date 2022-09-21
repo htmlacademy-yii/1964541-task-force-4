@@ -11,8 +11,9 @@ class ActionApprove extends ActionAbstract
 
     const ACTION_APPROVE = 'action_approve';
 
-    public function getLink()
+    public function getLink(): ?string
     {
+        return null;
     }
 
     public function rightsCheck($user_id): bool

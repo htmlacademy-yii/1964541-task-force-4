@@ -14,7 +14,7 @@ class ActionReject extends ActionAbstract
 
     const ACTION_CANCEL = 'action_cancel';
 
-    public function getLink()
+    public function getLink(): ?string
     {
         return Yii::$app->urlManager->createUrl(['task/reject', 'id' => $this->taskId]);
     }
