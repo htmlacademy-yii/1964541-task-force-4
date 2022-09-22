@@ -65,11 +65,14 @@ use yii\widgets\ActiveForm;
             ); ?>
             <h4 class="head-card">Дополнительно</h4>
             <?php
-            echo $form->field($model, 'noExecutor', [])->checkbox([
+            echo $form->field($model, 'noResponse', [])->checkbox([
                 'labelOptions' => [
                     'class' => 'control-label',
                 ]
             ]);
+            ?>
+            <?php
+            echo $form->field($model, 'noAddress', [])->checkbox([]);
             ?>
             <h4 class="head-card">Период</h4>
             <?php
