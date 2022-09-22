@@ -6,6 +6,7 @@
 
 use app\assets\AppAsset;
 use app\assets\MainAsset;
+use app\models\Task;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
@@ -49,7 +50,7 @@ $this->beginBody() ?>
                         <a href="<?= Yii::$app->urlManager->createUrl('task')?>" class="link link--nav">Новое</a>
                     </li>
                     <li class="list-item">
-                        <a href="#" class="link link--nav">Мои задания</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => Task::STATUS_NEW])?>" class="link link--nav">Мои задания</a>
                     </li>
                     <li class="list-item">
                         <a href="<?= Yii::$app->urlManager->createUrl('task/add')?>" class="link link--nav">Создать задание</a>
