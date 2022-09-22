@@ -29,13 +29,4 @@ class ResponseForm extends Model
             'price' => 'Стоимость',
         ];
     }
-
-    public function loadToResponseModel($response)
-    {
-        $response->task_id = $this->taskId;
-        $response->price = $this->price;
-        $response->content = $this->content;
-
-        return $response;
-    }
 }
