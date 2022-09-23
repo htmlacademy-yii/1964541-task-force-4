@@ -3,24 +3,25 @@
 namespace TaskForce\actions;
 
 use TaskForce\exceptions\ActionUnavailableException;
+use Yii;
 
-class ActionCancel extends ActionAbstract
+class ActionReject extends ActionAbstract
 {
-    public $name = 'Отказаться от задания';
+    public $name = 'Отменить задание';
     public $class = 'button button--orange action-btn';
-    public $dataAction = 'refusal';
-    protected $internal_name = self::ACTION_REFUSE;
+    public $dataAction = 'cancel';
+    protected $internal_name = self::ACTION_CANCEL;
 
-    const ACTION_REFUSE = 'action_refuse';
+    const ACTION_CANCEL = 'action_cancel';
 
     public function getLink(): ?string
     {
-        return null;
+        return Yii::$app->urlManager->createUrl(['task/reject', 'id' => $this->taskId]);
     }
 
     public function rightsCheck($user_id): bool
     {
-        if ($this->executor_id === $user_id) {
+        if ($this->customer_id === $user_id) {
             return true;
         }
         throw new ActionUnavailableException('Действие вам недоступно');

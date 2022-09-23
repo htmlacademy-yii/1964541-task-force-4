@@ -2,18 +2,25 @@
 
 namespace TaskForce\actions;
 
+use TaskForce\exceptions\ActionUnavailableException;
+
 class ActionRefuse extends ActionAbstract
 {
-    protected string $name = 'Отказаться';
-    protected string $internal_name = self::ACTION_REFUSE;
+    public $name = 'Отказать';
+    protected $internal_name = self::ACTION_REFUSE;
 
     const ACTION_REFUSE = 'action_refuse';
 
-    protected function rightsCheck(int $executor_id, int $customer_id, int $user_id): bool
+    public function getLink(): ?string
     {
-        if ($executor_id === $user_id) {
+        return null;
+    }
+
+    public function rightsCheck($user_id): bool
+    {
+        if ($this->customer_id === $user_id) {
             return true;
         }
-        return false;
+        throw new ActionUnavailableException('Действие вам недоступно');
     }
 }

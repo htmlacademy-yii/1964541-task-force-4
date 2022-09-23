@@ -2,6 +2,11 @@
 
 namespace app\models;
 
+use TaskForce\actions\ActionAccept;
+use TaskForce\actions\ActionReject;
+use TaskForce\actions\ActionExecute;
+use TaskForce\actions\ActionCancel;
+use TaskForce\exceptions\StatusNotExistsException;
 use Yii;
 
 /**
@@ -66,10 +71,34 @@ class Task extends \yii\db\ActiveRecord
             [['deadline', 'dt_add'], 'safe'],
             [['title'], 'string', 'max' => 128],
             [['file'], 'string', 'max' => 320],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['executor_id' => 'id']
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['customer_id' => 'id']
+            ],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::className(),
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -146,6 +175,14 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasMany(Response::className(), ['task_id' => 'id']);
     }
 
+    public function checkUserResponse($id)
+    {
+        if (Response::find()->andFilterWhere(['task_id' => $this->id, 'executor_id' => $id, 'status' => Response::STATUS_NEW])->orFilterWhere(['task_id' => $this->id, 'executor_id' => $id, 'status' => Response::STATUS_CANCELED])->one()) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Gets query for [[Reviews]].
      *
@@ -159,5 +196,23 @@ class Task extends \yii\db\ActiveRecord
     public function getStatusLabel(): string
     {
         return self::$statusMap[$this->status];
+    }
+
+    public function getAvailableActions(int $id): array
+    {
+        switch ($this->status) {
+            case self::STATUS_NEW:
+                return $id === $this->customer_id ? [new ActionReject($this->customer_id, $this->executor_id, $this->id)] : [new ActionAccept($this->customer_id, $this->executor_id, $this->id)];
+            case self::STATUS_IN_WORK:
+                if ($id === $this->executor_id) {
+                    return [new ActionCancel($this->customer_id, $this->executor_id, $this->id)];
+                }
+                if ($id === $this->customer_id) {
+                    return [new ActionExecute($this->customer_id, $this->executor_id, $this->id), new ActionReject($this->customer_id, $this->executor_id, $this->id)];
+                }
+                return [null];
+            default:
+                return [null];
+        }
     }
 }

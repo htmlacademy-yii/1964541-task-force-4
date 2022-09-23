@@ -5,8 +5,11 @@ namespace app\controllers;
 use app\components\AccessControllers\SecuredController;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
+use app\models\forms\ResponseForm;
+use app\models\forms\ReviewForm;
 use app\models\Task;
 use TaskForce\exceptions\ModelSaveException;
+use TaskForce\TaskService;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -33,11 +36,13 @@ class TaskController extends SecuredController
     public function actionView($id)
     {
         $task = Task::findOne($id);
+        $responseForm = new ResponseForm();
+        $reviewForm = new ReviewForm();
 
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
-        return $this->render('view', ['task' => $task]);
+        return $this->render('view', ['task' => $task, 'responseForm' => $responseForm, 'reviewForm' => $reviewForm]);
     }
 
     public function actionAdd()
@@ -55,5 +60,63 @@ class TaskController extends SecuredController
         }
 
         return $this->render('add', ['model' => $addTaskForm]);
+    }
+
+    public function actionApprove($id, $response_id)
+    {
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionApprove($response_id);
+
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+    }
+
+    public function actionReject($id)
+    {
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionReject();
+
+        return $this->goHome();
+    }
+
+    public function actionResponse()
+    {
+        $responseForm = new ResponseForm();
+        $responseForm->load(Yii::$app->request->post());
+
+        if ($responseForm->validate()) {
+            $taskService = new TaskService($responseForm->taskId, Yii::$app->user->id);
+            $taskService->actionResponse($responseForm);
+
+            return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
+        }
+    }
+
+    public function actionReview()
+    {
+        $reviewForm = new ReviewForm();
+        $reviewForm->load(Yii::$app->request->post());
+
+        if ($reviewForm->validate()) {
+            $taskService = new TaskService($reviewForm->taskId, Yii::$app->user->id);
+            $taskService->actionReview($reviewForm);
+
+            return Yii::$app->response->redirect(['task']);
+        }
+    }
+
+    public function actionRefuse($id, $response_id)
+    {
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionRefuse($response_id);
+
+        return Yii::$app->response->redirect(['task/view', 'id' => $id]);
+    }
+
+    public function actionCancel($id)
+    {
+        $taskService = new TaskService($id, Yii::$app->user->id);
+        $taskService->actionCancel();
+
+        return $this->goHome();
     }
 }

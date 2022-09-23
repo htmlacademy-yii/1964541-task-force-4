@@ -1,12 +1,22 @@
+<?php
+
+
+use app\models\Response;
+use app\models\Task;
+use app\widgets\ActionsWidget;
+use TaskForce\actions\ActionAccept;
+use yii\widgets\ActiveForm; ?>
 <div class="left-column">
     <div class="head-wrapper">
         <h3 class="head-main"><?= $task->title ?></h3>
         <p class="price price--big"><?= $task->price ?></p>
     </div>
     <p class="task-description"><?= $task->description ?></p>
-    <a href="#" class="button button--blue action-btn" data-action="act_response">Откликнуться на задание</a>
-    <a href="#" class="button button--orange action-btn" data-action="refusal">Отказаться от задания</a>
-    <a href="#" class="button button--pink action-btn" data-action="completion">Завершить задание</a>
+    <?php if (!$task->checkUserResponse(Yii::$app->user->id)): ?>
+    <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $actionObject): ?>
+        <?= $actionObject !== null ? ActionsWidget::widget(['actionObject' => $actionObject]) : ''; ?>
+    <?php endforeach; ?>
+    <?php endif; ?>
     <div class="task-map">
         <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
         <p class="map-address town"><?= $task->city->name ?></p>
@@ -14,28 +24,37 @@
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($task->responses as $response): ?>
-    <div class="response-card">
-        <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146" height="156" alt="Фото заказчиков">
-        <div class="feedback-wrapper">
-            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>" class="link link--block link--big"><?= $response->customer->login ?></a>
-            <div class="response-wrapper">
-                <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-                <p class="reviews">2 отзыва</p>
-            </div>
-            <p class="response-message">
-                <?= $response->content ?>
-            </p>
+        <div class="response-card">
+            <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146"
+                 height="156" alt="Фото заказчиков">
+            <div class="feedback-wrapper">
+                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>"
+                   class="link link--block link--big"><?= $response->executor->login ?></a>
+                <div class="response-wrapper">
+                    <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
+                                class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span
+                                class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
+                    <p class="reviews">2 отзыва</p>
+                </div>
+                <p class="response-message">
+                    <?= $response->content ?>
+                </p>
 
+            </div>
+            <div class="feedback-wrapper">
+                <p class="info-text"><span
+                            class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
+                <p class="price price--small"><?= $response->price ?></p>
+            </div>
+            <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_CANCELED && $task->status !== Task::STATUS_EXECUTED && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
+                <div class="button-popup">
+                    <a href="<?= Yii::$app->urlManager->createUrl(['task/approve', 'id' => $task->id, 'response_id' => $response->id]) ?>"
+                       class="button button--blue button--small">Принять</a>
+                    <a href="<?= Yii::$app->urlManager->createUrl(['task/refuse', 'id' => $task->id, 'response_id' => $response->id]) ?>"
+                       class="button button--orange button--small">Отказать</a>
+                </div>
+            <?php endif; ?>
         </div>
-        <div class="feedback-wrapper">
-            <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
-            <p class="price price--small"><?= $response->price ?></p>
-        </div>
-        <div class="button-popup">
-            <a href="#" class="button button--blue button--small">Принять</a>
-            <a href="#" class="button button--orange button--small">Отказать</a>
-        </div>
-    </div>
     <?php endforeach; ?>
 </div>
 <div class="right-column">
@@ -66,3 +85,8 @@
         </ul>
     </div>
 </div>
+<?php
+echo $this->render('cancelPopup', ['task' => $task]);
+echo $this->render('responseForm', ['task' => $task, 'responseForm' => $responseForm]);
+echo $this->render('reviewForm', ['task' => $task, 'reviewForm' => $reviewForm]);
+?>
