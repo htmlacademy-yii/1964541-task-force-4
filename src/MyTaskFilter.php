@@ -2,12 +2,14 @@
 namespace TaskForce;
 
 use app\models\Task;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 class MyTaskFilter
 {
-    public $type;
-    public $userId;
+    public string $type;
+    public int $userId;
 
     public function __construct(string $type, int $userId)
     {
@@ -15,7 +17,7 @@ class MyTaskFilter
         $this->type = $type;
     }
 
-    public function getFilteredCustomerTasks()
+    public function getFilteredCustomerTasks(): array
     {
         $taskQuery = Task::find()
             ->joinWith('city')
@@ -35,7 +37,7 @@ class MyTaskFilter
         return $taskQuery->all();
     }
 
-    public function getFilteredExecutorTasks()
+    public function getFilteredExecutorTasks(): array
     {
         $taskQuery = Task::find()
             ->joinWith('city')
