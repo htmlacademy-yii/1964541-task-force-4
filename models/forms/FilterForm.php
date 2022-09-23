@@ -38,11 +38,11 @@ class FilterForm extends Model
             $activeQuery->andFilterWhere(['category.id' => $this->category]);
         }
         if ($this->noResponse) {
-            $activeQuery->andFilterWhere(['is', 'response.id', new \yii\db\Expression('null')]);
+            $activeQuery->andFilterWhere(['is', 'response.id', new Expression('null')]);
         }
-        /*if ($this->noAddress) {
-            $activeQuery->andFilterWhere(['address' => null]);
-        }*/
+        if ($this->noAddress) {
+            $activeQuery->andFilterWhere(['is', 'address', new Expression('null')]);
+        }
         if ($this->period) {
             $this->chooseRightPeriod($activeQuery);
         }
