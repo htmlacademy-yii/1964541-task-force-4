@@ -12,7 +12,8 @@ use yii\db\Expression;
 class FilterForm extends Model
 {
     public $category = [];
-    public $noExecutor = false;
+    public $noResponse = false;
+    public $noAddress = false;
     public $period = '';
 
     const ONE_HOUR = '1 hour';
@@ -24,7 +25,8 @@ class FilterForm extends Model
         $activeQuery = Task::find();
         $activeQuery->joinWith('city');
         $activeQuery->joinWith('category');
-        $activeQuery->where(['status' => Task::STATUS_NEW]);
+        $activeQuery->leftJoin('response', 'task.id = response.task_id');
+        $activeQuery->where(['task.status' => Task::STATUS_NEW]);
         return $activeQuery;
     }
 
@@ -35,9 +37,12 @@ class FilterForm extends Model
         if (isset($this->category)) {
             $activeQuery->andFilterWhere(['category.id' => $this->category]);
         }
-        if ($this->noExecutor) {
-            $activeQuery->andWhere(['executor_id' => null]);
+        if ($this->noResponse) {
+            $activeQuery->andFilterWhere(['is', 'response.id', new \yii\db\Expression('null')]);
         }
+        /*if ($this->noAddress) {
+            $activeQuery->andFilterWhere(['address' => null]);
+        }*/
         if ($this->period) {
             $this->chooseRightPeriod($activeQuery);
         }
@@ -63,14 +68,16 @@ class FilterForm extends Model
     {
         return [
             'category' => 'Категории',
-            'noExecutor' => 'Без исполнителя',
+            'noResponse' => 'Без откликов',
+            'noAddress' => 'Удаленная работа',
             'period' => 'Период'
         ];
     }
 
     public function rules() {
         return [
-            [['noExecutor'], 'boolean'],
+            [['noResponse'], 'boolean'],
+            [['noAddress'], 'boolean'],
             [['category'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']]],
             ['period', 'in', 'range' => [self::ONE_HOUR, self::TWELVE_HOURS, self::TWENTY_FOUR_HOURS]]
         ];

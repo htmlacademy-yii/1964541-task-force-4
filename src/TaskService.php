@@ -21,7 +21,6 @@ use Yii;
 class TaskService
 {
     private Task $task;
-    private ActionAbstract $actionObject;
     private int $userId;
 
     public function __construct(int $taskId, int $userId)
@@ -38,7 +37,9 @@ class TaskService
      */
     public function actionApprove(int $response_id)
     {
-        $this->actionCheckRights(new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id));
+        $this->actionCheckRights(
+            new ActionApprove($this->task->customer_id, $this->task->executor_id, $this->task->id)
+        );
 
         $response = Response::findOne($response_id);
         $response->status = Response::STATUS_ACCEPTED;
@@ -57,7 +58,9 @@ class TaskService
      */
     public function actionReview(ReviewForm $reviewForm)
     {
-        $this->actionCheckRights(new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id));
+        $this->actionCheckRights(
+            new ActionExecute($this->task->customer_id, $this->task->executor_id, $this->task->id)
+        );
 
         $review = new Review();
         $review->executor_id = $this->task->executor_id;
@@ -118,7 +121,7 @@ class TaskService
     public function actionCancel()
     {
         $this->actionCheckRights(new ActionCancel($this->task->customer_id, $this->task->executor_id, $this->task->id));
-        $this->task->status = task::STATUS_FAILED;
+        $this->task->status = Task::STATUS_FAILED;
 
         $this->saveChanges($this->task);
     }
@@ -139,11 +142,11 @@ class TaskService
 
     /**
      * Сохраняет изменения внутри объектов
-     * @param object $object Принимает объект, который требуется сохранить
+     * @param Response|Task $object Принимает объект, который требуется сохранить
      * @return void
      * @throws ModelSaveException Сохранение модели не удалось
      */
-    private function saveChanges(object $object)
+    private function saveChanges(Response|Task $object)
     {
         if (!$object->save()) {
             throw new ModelSaveException('Не удалось сохранить данные');
@@ -152,36 +155,35 @@ class TaskService
 
     /**
      * Сохраняет данные в задании и форме
-     * @param object $task Задание, которое участвует в действии
-     * @param object $form Форма отклика или отзыва
+     * @param Task $task Задание, которое участвует в действии
+     * @param Response|Review $form Форма отклика или отзыва
      * @return void
      * @throws \yii\db\Exception Не удалось провести транзакцию
      */
-    private function saveTransaction(object $task, object $form)
+    private function saveTransaction(Task $task, Response|Review $form)
     {
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            if ($task->save() && $form->save()) {
-                $transaction->commit();
+            if (!$task->save() && !$form->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
             }
-            throw new ModelSaveException('Не удалось сохранить данные');
+            $transaction->commit();
         } catch (ModelSaveException $exception) {
             $transaction->rollback();
-            error_log("Не удалось записать данные. Ошибка: " . $exception->getMessage());
+            throw new ModelSaveException($exception->getMessage());
         }
     }
 
     /**
      * Проверяет наличие прав у пользователя на совершение действия
-     * @param object $actionObject Объект действия
+     * @param ActionAbstract $actionObject Объект действия
      * @return void
      * @throws ActionUnavailableException Пользователь не прошел проверку прав
      */
     private function actionCheckRights(ActionAbstract $actionObject)
     {
-        $this->actionObject = $actionObject;
-        if (!$this->actionObject->rightsCheck($this->userId)) {
+        if (!$actionObject->rightsCheck($this->userId)) {
             throw new ActionUnavailableException('Данное действие недоступно');
         }
     }
