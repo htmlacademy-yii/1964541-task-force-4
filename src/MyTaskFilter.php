@@ -17,7 +17,9 @@ class MyTaskFilter
 
     public function getFilteredCustomerTasks()
     {
-        $taskQuery = Task::find()->andFilterWhere(['customer_id' => $this->userId]);
+        $taskQuery = Task::find()
+            ->joinWith('city')
+            ->andFilterWhere(['customer_id' => $this->userId]);
 
         switch ($this->type) {
             case Task::STATUS_NEW:
@@ -35,7 +37,9 @@ class MyTaskFilter
 
     public function getFilteredExecutorTasks()
     {
-        $taskQuery = Task::find()->andFilterWhere(['customer_id' => $this->userId]);
+        $taskQuery = Task::find()
+            ->joinWith('city')
+            ->andFilterWhere(['executor_id' => $this->userId]);
 
         switch ($this->type) {
             case Task::STATUS_NEW:

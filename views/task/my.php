@@ -39,10 +39,10 @@ use app\models\User; ?>
             <a  href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id]) ?>" class="link link--block link--big"><?= $task->title ?></a>
             <p class="price price--task"><?= $task->price ?></p>
         </div>
-        <p class="info-text"><span class="current-time">4 часа </span>назад</p>
+        <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></p>
         <p class="task-text"><?= $task->description ?></p>
         <div class="footer-task">
-            <p class="info-text town-text">Санкт-Петербург, Центральный район</p>
+            <p class="info-text town-text"><?= $task->city->name ?></p>
             <p class="info-text category-text"><?= $task->category->name ?></p>
             <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id]) ?>" class="button button--black">Смотреть Задание</a>
         </div>
