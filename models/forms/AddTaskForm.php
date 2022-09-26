@@ -83,7 +83,6 @@ class AddTaskForm extends Model
         $task->deadline = $this->deadline;
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
-        $task->address = $this->address;
         $task->lat = Yii::$app->geocoder->lat;
         $task->long = Yii::$app->geocoder->long;
 
