@@ -39,4 +39,4 @@ tests/_support/_generated
 /web/uploads
 
 #node
-node_modules
+/node_modules
