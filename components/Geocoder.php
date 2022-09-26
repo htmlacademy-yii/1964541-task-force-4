@@ -23,21 +23,33 @@ class Geocoder extends Component
     public Client $client;
     const RESPONSE_CODE_OK = 200;
     const GEOCODE_COORDINATES_KEY = 'response.GeoObjectCollection.featureMember.0.GeoObject.Point.pos';
+    const GEOCODER_ADDRESS_KEY = 'response.GeoObjectCollection.featureMember.0.GeoObject.name';
     const GEOCODE_LONGITUDE = 0;
     const GEOCODE_LATITUDE = 1;
 
     public function __construct($config = [])
     {
         parent::__construct($config);
+        $this->client = new Client(['base_uri' => $this->baseUri]);
     }
 
-    public function getLocation($address)
+    public function addLatLong($address)
     {
-        $this->address = $address;
-        $this->client = new Client(['base_uri' => $this->baseUri]);
-        $request = new Request('GET', '1.x');
-        $response = $this->client->send($request,
-            ['query' => ['apikey' => $this->apiKey, 'geocode' => $this->address, 'format' => 'json']]);
+        $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
+
+        $this->long = $location[self::GEOCODE_LONGITUDE];
+        $this->lat = $location[self::GEOCODE_LATITUDE];
+    }
+
+    public function getAddress($address)
+    {
+        return ArrayHelper::getValue($this->loadLocation($address), self::GEOCODER_ADDRESS_KEY);
+    }
+
+    private function loadLocation($address)
+    {
+        $response = $this->client->request('GET', '1.x',
+            ['query' => ['apikey' => $this->apiKey, 'geocode' => $address, 'format' => 'json']]);
 
         if ($response->getStatusCode() !== self::RESPONSE_CODE_OK) {
             throw new BadRequestException('Ошибка запроса');
@@ -49,9 +61,7 @@ class Geocoder extends Component
             throw new WrongAnswerFormatException('Ошибка формата ответа');
         }
 
-        $location = explode(' ', ArrayHelper::getValue($responseData, self::GEOCODE_COORDINATES_KEY));
+        return $responseData;
 
-        $this->long = $location[self::GEOCODE_LONGITUDE];
-        $this->lat = $location[self::GEOCODE_LATITUDE];
     }
 }
