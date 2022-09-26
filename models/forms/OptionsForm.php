@@ -3,6 +3,8 @@
 namespace app\models\forms;
 
 use app\models\Category;
+use app\models\User;
+use TaskForce\exceptions\FileUploadException;
 use yii\base\Model;
 use yii\behaviors\AttributeBehavior;
 
@@ -16,6 +18,7 @@ class OptionsForm extends Model
     public $description;
     public $userCategory;
     public $file;
+    private $filePath;
     const PHONE_NUM_LENGTH = 11;
     const TELEGRAM_LENGTH = 64;
 
@@ -43,5 +46,33 @@ class OptionsForm extends Model
             'userCategory' => 'Выбор специализации',
             'file' => 'Сменить аватар'
         ];
+    }
+
+    public function loadToUser()
+    {
+        if (!$this->uploadFile() && $this->file) {
+            throw new FileUploadException('Загрузить файл не удалось');
+        }
+
+        $user = new User();
+        $user->email = $this->email;
+        $user->login = $this->login;
+        //$user->birthDate = $this->birthDate;
+        $user->phone = $this->phone;
+        $user->telegram = $this->telegram;
+        $user->description = $this->description;
+        $user->avatar = $this->filePath;
+    }
+
+    private function uploadFile()
+    {
+        if ($this->file && $this->validate()) {
+            $newName = uniqid('upload') . '.' . $this->file->getExtension();
+            $this->file->saveAs('@webroot/uploads/' . $newName);
+
+            $this->filePath = $newName;
+            return true;
+        }
+        return false;
     }
 }
