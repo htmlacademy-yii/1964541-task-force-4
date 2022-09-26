@@ -20,7 +20,9 @@ $config = [
             'cookieValidationKey' => 's-gA3qNNeKWvuwcJYoWLzovfC4nQfamv',
         ],
         'geocoder' => [
-            'class' => 'app\components\Geocoder'
+            'class' => 'app\components\Geocoder',
+            'baseUri' => 'https://geocode-maps.yandex.ru/',
+            'apiKey' => 'e666f398-c983-4bde-8f14-e3fec900592a'
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
