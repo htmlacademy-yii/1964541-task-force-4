@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
+use app\models\forms\OptionsForm;
 use app\models\User;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -25,5 +26,12 @@ class UserController extends SecuredController
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionOptions()
+    {
+        $optionsForm = new OptionsForm();
+
+        return $this->render('options', ['model' => $optionsForm]);
     }
 }
