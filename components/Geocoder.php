@@ -19,19 +19,25 @@ class Geocoder extends Component
     public string $lat;
     public string $long;
     public string $apiKey;
-    public string $apiUrl;
+    public string $baseUri;
+    public Client $client;
     const RESPONSE_CODE_OK = 200;
     const GEOCODE_COORDINATES_KEY = 'response.GeoObjectCollection.featureMember.0.GeoObject.Point.pos';
     const GEOCODE_LONGITUDE = 0;
     const GEOCODE_LATITUDE = 1;
 
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
+
     public function getLocation($address)
     {
         $this->address = $address;
-        $client = new Client(['base_uri' => Yii::$app->geocoder->baseUri]);
+        $this->client = new Client(['base_uri' => $this->baseUri]);
         $request = new Request('GET', '1.x');
-        $response = $client->send($request,
-            ['query' => ['apikey' => Yii::$app->geocoder->apiKey, 'geocode' => $this->address, 'format' => 'json']]);
+        $response = $this->client->send($request,
+            ['query' => ['apikey' => $this->apiKey, 'geocode' => $this->address, 'format' => 'json']]);
 
         if ($response->getStatusCode() !== self::RESPONSE_CODE_OK) {
             throw new BadRequestException('Ошибка запроса');
