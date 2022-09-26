@@ -1,4 +1,6 @@
 <?php
+
+use app\models\Category;
 use yii\widgets\ActiveForm;
 ?>
 <main class="main-content main-content--left container">
@@ -22,9 +24,7 @@ use yii\widgets\ActiveForm;
                     <p class="form-label">Аватар</p>
                     <img class="avatar-preview" src="../img/man-glasses.png" width="83" height="83">
                 </div>
-                <input hidden value="Сменить аватар" type="file" id="button-input">
-                <label for="button-input" class="button button--black"> Сменить аватар</label>
-                <?= $form->field($model, 'file')->fileInput(['id' => 'button-input', 'class' => 'button button--black']) ?>
+                <?= $form->field($model, 'file')->fileInput(['hidden' => ''])->label('Сменить аватар', ['class' => 'button button--black']) ?>
             </div>
             <?= $form->field($model, 'login')->textInput(['labelOptions' => ['class' => 'control-label']])?>
             <div class="half-wrapper">
@@ -37,21 +37,14 @@ use yii\widgets\ActiveForm;
             </div>
                 <?= $form->field($model, 'description')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
             <div class="form-group">
-                <p class="form-label">Выбор специализаций</p>
-                <div class="checkbox-profile">
-                    <label class="control-label" for="сourier-services">
-                        <input type="checkbox" id="сourier-services" checked>
-                        Курьерские услуги</label>
-                    <label class="control-label" for="cargo-transportation">
-                        <input id="cargo-transportation" type="checkbox">
-                        Грузоперевозки</label>
-                    <label class="control-label" for="cleaning">
-                        <input id="cleaning" type="checkbox">
-                        Клининг</label>
-                    <label class="control-label" for="computer-help">
-                        <input id="computer-help" type="checkbox" checked>
-                        Компьютерная помощь</label>
-                </div>
+                    <?= $form->field($model, 'userCategory')->checkboxList(Category::getCategoriesList(), [
+                        'class' => 'checkbox-profile',
+                        'itemOptions' => [
+                            'labelOptions' => [
+                                'class' => 'control-label',
+                            ],
+                        ],
+                    ]) ?>
             </div>
             <input type="submit" class="button button--blue" value="Сохранить">
             <?php ActiveForm::end() ?>
