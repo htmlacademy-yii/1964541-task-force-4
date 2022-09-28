@@ -49,6 +49,11 @@ class Geocoder extends Component
         return ArrayHelper::getValue($this->loadLocation($address), self::GEOCODER_ADDRESS_KEY);
     }
 
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
     private function loadLocation($address)
     {
         $response = $this->client->request('GET', '1.x',

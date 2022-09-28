@@ -42,7 +42,8 @@ class AddTaskForm extends Model
     public function rules()
     {
         return [
-            [['title', 'description', 'category', 'price', 'address'], 'required'],
+            [['title', 'description', 'category', 'price'], 'required'],
+            [['address'], 'string'],
             [['title'], 'string', 'length' => [self::TITLE_MIN_LENGTH, self::TITLE_MAX_LENGTH]],
             [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
@@ -65,6 +66,17 @@ class AddTaskForm extends Model
         return false;
     }
 
+    private function loadLocation($task)
+    {
+        if ($this->address) {
+            $task->lat = Yii::$app->geocoder->getLat($this->address);
+            $task->long = Yii::$app->geocoder->getLong($this->address);
+        } else {
+            $task->city_id = Yii::$app->user->identity->city_id;
+        }
+
+    }
+
     public function loadToTask()
     {
         if (!$this->uploadFile() && $this->file) {
@@ -75,14 +87,12 @@ class AddTaskForm extends Model
         $task->title = $this->title;
         $task->description = $this->description;
         $task->category_id = $this->category;
-        $task->city_id = Yii::$app->user->identity->city_id;
         $task->price = $this->price;
         $task->customer_id = Yii::$app->user->id;
         $task->deadline = $this->deadline;
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
-        $task->lat = Yii::$app->geocoder->getLat($this->address);
-        $task->long = Yii::$app->geocoder->getLong($this->address);
+        $this->loadLocation($task);
 
         return $task;
     }
