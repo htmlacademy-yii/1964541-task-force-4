@@ -15,9 +15,6 @@ use yii\helpers\ArrayHelper;
 
 class Geocoder extends Component
 {
-    public string $address;
-    public string $lat;
-    public string $long;
     public string $apiKey;
     public string $baseUri;
     public Client $client;
@@ -33,12 +30,18 @@ class Geocoder extends Component
         $this->client = new Client(['base_uri' => $this->baseUri]);
     }
 
-    public function addLatLong($address)
+    public function getLong($address)
     {
         $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
 
-        $this->long = $location[self::GEOCODE_LONGITUDE];
-        $this->lat = $location[self::GEOCODE_LATITUDE];
+        return $location[self::GEOCODE_LONGITUDE];
+    }
+
+    public function getLat($address)
+    {
+        $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
+
+        return $location[self::GEOCODE_LATITUDE];
     }
 
     public function getAddress($address)
