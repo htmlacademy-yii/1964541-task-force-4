@@ -52,6 +52,8 @@ class TaskController extends SecuredController
             $addTaskForm->load(Yii::$app->request->post());
             $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
             if ($addTaskForm->validate()) {
+
+
                 if (!$addTaskForm->loadToTask()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
                 }

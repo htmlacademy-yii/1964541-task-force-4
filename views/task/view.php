@@ -18,9 +18,12 @@ use yii\widgets\ActiveForm; ?>
     <?php endforeach; ?>
     <?php endif; ?>
     <div class="task-map">
-        <img class="map" src="../img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
-        <p class="map-address town"><?= $task->city->name ?></p>
-        <p class="map-address">Новый арбат, 23, к. 1</p>
+        <div id="map" class="map"></div>
+        <?php if ($task->city_id): ?>
+        <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->city->lng . ' ' . $task->city->lat) ?></p>
+        <?php else: ?>
+            <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
+        <?php endif; ?>
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($task->responses as $response): ?>
@@ -85,6 +88,24 @@ use yii\widgets\ActiveForm; ?>
         </ul>
     </div>
 </div>
+    <script type="text/javascript">
+        // Функция ymaps.ready() будет вызвана, когда
+        // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
+        ymaps.ready(init);
+        function init(){
+            // Создание карты.
+            var myMap = new ymaps.Map("map", {
+                // Координаты центра карты.
+                // Порядок по умолчанию: «широта, долгота».
+                // Чтобы не определять координаты центра карты вручную,
+                // воспользуйтесь инструментом Определение координат.
+                center: [<?= $task->lat ?>, <?= $task->long ?>],
+                // Уровень масштабирования. Допустимые значения:
+                // от 0 (весь мир) до 19.
+                zoom: 14
+            });
+        }
+    </script>
 <?php
 echo $this->render('cancelPopup', ['task' => $task]);
 echo $this->render('responseForm', ['task' => $task, 'responseForm' => $responseForm]);

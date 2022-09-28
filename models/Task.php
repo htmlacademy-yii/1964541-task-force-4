@@ -26,6 +26,7 @@ use Yii;
  * @property int $category_id
  * @property string|null $deadline
  * @property string|null $dt_add
+ * @property string|null $address
  *
  * @property Category $category
  * @property City $city

@@ -17,7 +17,9 @@ use yii\widgets\ActiveForm;
             <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></p>
             <p class="task-text"><?= $task->description ?></p>
             <div class="footer-task">
+                <?php if (isset($task->city->name)): ?>
                 <p class="info-text town-text"><?= $task->city->name ?></p>
+                <?php endif;?>
                 <p class="info-text category-text"><?= $task->category->name ?></p>
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id])?>" class="button button--black">Смотреть Задание</a>
             </div>
