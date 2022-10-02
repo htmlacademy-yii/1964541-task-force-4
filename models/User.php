@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use TaskForce\exceptions\SourceFileException;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -210,5 +211,24 @@ class User extends ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         // TODO: Implement getAuthKey() method.
+    }
+
+    public function addCityId($cityName)
+    {
+        $city = City::findOne(['name' => $cityName]);
+        if (!$city) {
+            throw new SourceFileException('Такого города нет в таблице');
+        }
+
+        return $city->id;
+    }
+
+    public function loadAuthUser($userInfo)
+    {
+        $this->email = $userInfo['email'];
+        $this->login = $userInfo['first_name'] . ' ' . $userInfo['last_name'];
+        $this->avatar = $userInfo['photo'];
+        $this->password = Yii::$app->security->generateRandomString(8);
+        //$this->city_id = $this->addCityId($userInfo['city']['title']);
     }
 }

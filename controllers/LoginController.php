@@ -15,6 +15,7 @@ use yii\authclient\clients\VKontakte;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 
 class LoginController extends AnonymousController
@@ -81,9 +82,35 @@ class LoginController extends AnonymousController
             throw new UnexpectedValueException("Пользователь с такой электронной почтой уже существует, но не связан с Vkontakte. Для начала войдите на сайт использую электронную почту, для того, что бы связать её.");
         }
 
+        $password = Yii::$app->security->generateRandomString(6);
+        $user = new User();
+        $user->loadAuthUser($attributes);
 
+        $transaction = $user->getDb()->beginTransaction();
 
+        if ($user->save()) {
+            $auth = new Auth([
+                'user_id' => $user->id,
+                'source' => $vk->getId(),
+                'source_id' => (string)$attributes['id'],
+            ]);
+            if ($auth->save()) {
+                $transaction->commit();
+                Yii::$app->user->login($user);
 
-        var_dump($attributes);
+                return $this->goHome();
+            }
+        }
+
+        var_dump($user);
+        var_dump($auth);
+        /*$transaction = $user->getDb()->beginTransaction();
+
+        if ($user->save() && $auth->save()) {
+            $transaction->commit();
+            Yii::$app->user->login($user);
+
+            return $this->goHome();
+        }*/
     }
 }
