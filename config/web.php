@@ -19,6 +19,17 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 's-gA3qNNeKWvuwcJYoWLzovfC4nQfamv',
         ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'vkontakte' => [
+                    'class' => 'yii\authclient\clients\VKontakte',
+                    'clientId' => '51433678',
+                    'clientSecret' => 'RMSSSU8DaKlSaLw7Gsj6',
+                    'scope' => 'email'
+                ],
+            ],
+        ],
         'geocoder' => [
             'class' => 'app\components\Geocoder',
             'baseUri' => 'https://geocode-maps.yandex.ru/',

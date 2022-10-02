@@ -167,7 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getExecutorTasks()
     {
         return $this->hasMany(Task::className(), ['executor_id' => 'id']);
     }
@@ -177,7 +177,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getCustomerTasks()
     {
         return $this->hasMany(Task::className(), ['customer_id' => 'id']);
     }
