@@ -26,10 +26,11 @@ class OptionsForm extends Model
     {
         return [
             [['login', 'email'], 'required'],
-            [['phone'], 'compare', 'operator' => '==', 'compareValue' => self::PHONE_NUM_LENGTH],
-            [['telegram'], 'string', 'length' => [self::TELEGRAM_LENGTH]],
-            [['birthDate'], 'date', 'format' => 'php:d.m.Y'],
-            [['userCategory'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['userCategory' => 'id']],
+            [['email'], 'email'],
+            [['phone'], 'string', 'length' => [self::PHONE_NUM_LENGTH,self::PHONE_NUM_LENGTH]],
+            [['telegram'], 'string', 'length' => [0,self::TELEGRAM_LENGTH]],
+            [['birthDate'], 'date', 'format' => 'php:Y-m-d'],
+            [['userCategory'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['userCategory' => 'id']]],
             [['file'], 'file'],
         ];
     }
@@ -57,11 +58,13 @@ class OptionsForm extends Model
         $user = new User();
         $user->email = $this->email;
         $user->login = $this->login;
-        //$user->birthDate = $this->birthDate;
+        $user->bdate = $this->birthDate;
         $user->phone = $this->phone;
         $user->telegram = $this->telegram;
         $user->description = $this->description;
         $user->avatar = $this->filePath;
+
+        return $user;
     }
 
     private function uploadFile()

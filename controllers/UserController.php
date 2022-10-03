@@ -31,6 +31,12 @@ class UserController extends SecuredController
     public function actionOptions()
     {
         $optionsForm = new OptionsForm();
+        $optionsForm->load(Yii::$app->request->post());
+
+        if ($optionsForm->validate()) {
+            var_dump($optionsForm);
+            var_dump($optionsForm->loadToUser());
+        }
 
         return $this->render('options', ['model' => $optionsForm]);
     }
