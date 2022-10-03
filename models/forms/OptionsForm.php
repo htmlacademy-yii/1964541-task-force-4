@@ -4,9 +4,13 @@ namespace app\models\forms;
 
 use app\models\Category;
 use app\models\User;
+use app\models\UserCategory;
 use TaskForce\exceptions\FileUploadException;
+use Yii;
 use yii\base\Model;
 use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveQuery;
+use yii\db\Query;
 
 class OptionsForm extends Model
 {
@@ -49,13 +53,15 @@ class OptionsForm extends Model
         ];
     }
 
-    public function loadToUser()
+    public function loadToUser($user_id)
     {
         if (!$this->uploadFile() && $this->file) {
             throw new FileUploadException('Загрузить файл не удалось');
         }
 
-        $user = new User();
+        $this->loadUserCategory($user_id);
+
+        $user = User::findOne($user_id);
         $user->email = $this->email;
         $user->login = $this->login;
         $user->bdate = $this->birthDate;
@@ -65,6 +71,20 @@ class OptionsForm extends Model
         $user->avatar = $this->filePath;
 
         return $user;
+    }
+
+    public function loadUserCategory($user_id)
+    {
+        if (UserCategory::findOne($user_id)) {
+            Yii::$app->db->createCommand()
+                ->delete('user_category', ['user_id' => $user_id])
+                ->query();
+        }
+
+        foreach ($this->userCategory as $category) {
+            Yii::$app->db->createCommand()
+                ->insert('user_category', ['user_id' => $user_id, 'category_id' => $category])->query();
+        }
     }
 
     private function uploadFile()

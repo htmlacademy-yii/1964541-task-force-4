@@ -35,7 +35,7 @@ class UserController extends SecuredController
 
         if ($optionsForm->validate()) {
             var_dump($optionsForm);
-            var_dump($optionsForm->loadToUser());
+            var_dump($optionsForm->loadToUser(Yii::$app->user->id));
         }
 
         return $this->render('options', ['model' => $optionsForm]);
