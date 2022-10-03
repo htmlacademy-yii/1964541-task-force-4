@@ -24,6 +24,7 @@ use yii\web\IdentityInterface;
  * @property int|null $city_id
  * @property int|null $phone
  * @property string|null $telegram
+ * @property string $bdate
  *
  * @property Category[] $categories
  * @property City $city
@@ -229,6 +230,8 @@ class User extends ActiveRecord implements IdentityInterface
         $this->login = $userInfo['first_name'] . ' ' . $userInfo['last_name'];
         $this->avatar = $userInfo['photo'];
         $this->password = Yii::$app->security->generateRandomString(8);
-        //$this->city_id = $this->addCityId($userInfo['city']['title']);
+        $this->city_id = $this->addCityId($userInfo['city']['title']);
+        $this->bdate = Yii::$app->formatter->asDate($userInfo['bdate'], 'php:Y-m-d');
     }
+
 }

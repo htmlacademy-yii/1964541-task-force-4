@@ -8,6 +8,7 @@ use app\models\forms\LoginForm;
 use app\models\User;
 use GuzzleHttp\Client;
 use http\Exception\UnexpectedValueException;
+use TaskForce\AuthHandler;
 use TaskForce\exceptions\BadRequestException;
 use TaskForce\exceptions\WrongAnswerFormatException;
 use Yii;
@@ -60,57 +61,18 @@ class LoginController extends AnonymousController
     public function actionVk()
     {
         $code = Yii::$app->request->get('code');
-        $vk = new VKontakte();
-        $vk->clientId = '51433678';
-        $vk->clientSecret = 'RMSSSU8DaKlSaLw7Gsj6';
-        $vk->setReturnUrl('http://localhost:8080/login/vk');
-        $accessToken = $vk->fetchAccessToken($code);
-        $attributes = $vk->getUserAttributes();
-        $attributes['email'] = ArrayHelper::getValue($accessToken->params, 'email');
+        $authHandler = new AuthHandler($code);
 
-        $auth = Auth::find()->where([
-            'source' => $vk->getId(),
-            'source_id' => $attributes['id'],
-        ])->one();
-
-        if ($auth) {
-            Yii::$app->user->login($auth->user);
-            return $this->goHome();
-        }
-
-        if (isset($attributes['email']) && User::find()->where(['email' => $attributes['email']])->exists()) {
-            throw new UnexpectedValueException("Пользователь с такой электронной почтой уже существует, но не связан с Vkontakte. Для начала войдите на сайт использую электронную почту, для того, что бы связать её.");
-        }
-
-        $password = Yii::$app->security->generateRandomString(6);
-        $user = new User();
-        $user->loadAuthUser($attributes);
-
-        $transaction = $user->getDb()->beginTransaction();
-
-        if ($user->save()) {
-            $auth = new Auth([
-                'user_id' => $user->id,
-                'source' => $vk->getId(),
-                'source_id' => (string)$attributes['id'],
-            ]);
-            if ($auth->save()) {
-                $transaction->commit();
-                Yii::$app->user->login($user);
-
-                return $this->goHome();
-            }
-        }
-
-        var_dump($user);
-        var_dump($auth);
-        /*$transaction = $user->getDb()->beginTransaction();
-
-        if ($user->save() && $auth->save()) {
-            $transaction->commit();
-            Yii::$app->user->login($user);
+        if ($authHandler->isAuthExist()) {
+            Yii::$app->user->login($authHandler->getAuth()->user);
 
             return $this->goHome();
-        }*/
+        }
+
+        if ($authHandler->saveAuthUser()) {
+            Yii::$app->user->login($authHandler->getAuth()->user);
+
+            return $this->goHome();
+        }
     }
 }
