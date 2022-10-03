@@ -26,6 +26,7 @@ $config = [
                     'class' => 'yii\authclient\clients\VKontakte',
                     'clientId' => '51433678',
                     'clientSecret' => 'RMSSSU8DaKlSaLw7Gsj6',
+                    'returnUrl' => 'http://localhost:8080/login/vk',
                     'scope' => 'email'
                 ],
             ],

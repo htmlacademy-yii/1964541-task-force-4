@@ -9,8 +9,16 @@ use Yii;
 use yii\authclient\clients\VKontakte;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Проводит авторизацию через VK
+ */
 class AuthHandler
 {
+    /**
+     * @property array $attributes Массив информации о пользователе
+     * @property VKontakte $vk клиент VK
+     * @property Auth $auth модель Auth для хранения пользователей авторизованных через VK
+     */
     public $attributes;
     public $vk;
     public $auth;
@@ -22,10 +30,7 @@ class AuthHandler
      */
     public function __construct($code)
     {
-        $this->vk = new VKontakte();
-        $this->vk->clientId = '51433678';
-        $this->vk->clientSecret = 'RMSSSU8DaKlSaLw7Gsj6';
-        $this->vk->setReturnUrl('http://localhost:8080/login/vk');
+        $this->vk = Yii::$app->authClientCollection->getClient("vkontakte");
         $accessToken = $this->vk->fetchAccessToken($code);
         $this->attributes = $this->vk->getUserAttributes();
         $this->attributes['email'] = ArrayHelper::getValue($accessToken->params, 'email');

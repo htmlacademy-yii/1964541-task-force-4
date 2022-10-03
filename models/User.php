@@ -214,23 +214,21 @@ class User extends ActiveRecord implements IdentityInterface
         // TODO: Implement getAuthKey() method.
     }
 
-    public function addCityId($cityName)
-    {
-        $city = City::findOne(['name' => $cityName]);
-        if (!$city) {
-            throw new SourceFileException('Такого города нет в таблице');
-        }
-
-        return $city->id;
-    }
-
+    /**
+     * Загружает инфу полученную от  VK в User
+     * @param array $userInfo Массив Информации о пользователе
+     * @return void
+     * @throws SourceFileException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
     public function loadAuthUser($userInfo)
     {
         $this->email = $userInfo['email'];
         $this->login = $userInfo['first_name'] . ' ' . $userInfo['last_name'];
         $this->avatar = $userInfo['photo'];
         $this->password = Yii::$app->security->generateRandomString(8);
-        $this->city_id = $this->addCityId($userInfo['city']['title']);
+        $this->city_id = City::getIdByName($userInfo['city']['title']);
         $this->bdate = Yii::$app->formatter->asDate($userInfo['bdate'], 'php:Y-m-d');
     }
 

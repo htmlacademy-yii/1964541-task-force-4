@@ -49,12 +49,7 @@ class LoginController extends AnonymousController
 
     public function actionAuth()
     {
-        $vk = new VKontakte();
-        $vk->clientId = '51433678';
-        $vk->clientSecret = 'RMSSSU8DaKlSaLw7Gsj6';
-        $vk->setReturnUrl('http://localhost:8080/login/vk');
-        $vk->scope = 'email';
-        $url = $vk->buildAuthUrl();
+        $url = Yii::$app->authClientCollection->getClient("vkontakte")->buildAuthUrl();
         Yii::$app->getResponse()->redirect($url);
     }
 
