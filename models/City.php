@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use TaskForce\exceptions\SourceFileException;
 use Yii;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
@@ -25,6 +26,16 @@ class City extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'city';
+    }
+
+    public static function getIdByName($cityName)
+    {
+        $city = City::findOne(['name' => $cityName]);
+        if (!$city) {
+            throw new SourceFileException('Такого города нет в таблице');
+        }
+
+        return $city->id;
     }
 
     /**

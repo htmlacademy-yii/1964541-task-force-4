@@ -3,16 +3,16 @@
 use yii\db\Migration;
 
 /**
- * Class m220917_114527_add_adress_column_to_task
+ * Class m221003_075829_add_bdate_to_user
  */
-class m220917_114527_add_adress_column_to_task extends Migration
+class m221003_075829_add_bdate_to_user extends Migration
 {
     /**
      * {@inheritdoc}
      */
     public function safeUp()
     {
-        $this->addColumn('task', 'address', 'CHAR(64)');
+        $this->addColumn('user', 'bdate', 'TIMESTAMP');
     }
 
     /**
@@ -20,7 +20,7 @@ class m220917_114527_add_adress_column_to_task extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('task' ,'address');
+        $this->dropColumn('user', 'bdate');
     }
 
     /*
@@ -32,7 +32,7 @@ class m220917_114527_add_adress_column_to_task extends Migration
 
     public function down()
     {
-        echo "m220917_114527_add_adress_column_to_task cannot be reverted.\n";
+        echo "m221003_075829_add_bdate_to_user cannot be reverted.\n";
 
         return false;
     }

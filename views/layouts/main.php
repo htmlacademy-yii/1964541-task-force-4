@@ -29,7 +29,7 @@ $this->beginPage() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Taskforce</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш API-ключ&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=<?= Yii::$app->geocoder->getApiKey() ?>&lang=ru_RU" type="text/javascript"></script>
     <?php
     $this->head() ?>
 </head>
@@ -63,7 +63,7 @@ $this->beginBody() ?>
         </nav>
         <div class="user-block">
             <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
-                <img class="user-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55"
+                <img class="user-photo" src="<?= isset(Yii::$app->user->identity->avatar) ? Yii::$app->user->identity->avatar : Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55"
                      height="55" alt="Аватар">
             </a>
             <div class="user-menu">

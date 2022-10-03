@@ -3,9 +3,20 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\AnonymousController;
+use app\models\Auth;
 use app\models\forms\LoginForm;
+use app\models\User;
+use GuzzleHttp\Client;
+use http\Exception\UnexpectedValueException;
+use TaskForce\AuthHandler;
+use TaskForce\exceptions\BadRequestException;
+use TaskForce\exceptions\WrongAnswerFormatException;
 use Yii;
+use yii\authclient\clients\VKontakte;
+use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 use yii\web\Response;
+use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 
 class LoginController extends AnonymousController
@@ -34,5 +45,29 @@ class LoginController extends AnonymousController
         }
 
         return $this->render('landing', ['model' => $loginForm]);
+    }
+
+    public function actionAuth()
+    {
+        $url = Yii::$app->authClientCollection->getClient("vkontakte")->buildAuthUrl();
+        Yii::$app->getResponse()->redirect($url);
+    }
+
+    public function actionVk()
+    {
+        $code = Yii::$app->request->get('code');
+        $authHandler = new AuthHandler($code);
+
+        if ($authHandler->isAuthExist()) {
+            Yii::$app->user->login($authHandler->getAuth()->user);
+
+            return $this->goHome();
+        }
+
+        if ($authHandler->saveAuthUser()) {
+            Yii::$app->user->login($authHandler->getAuth()->user);
+
+            return $this->goHome();
+        }
     }
 }

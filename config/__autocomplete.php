@@ -19,6 +19,9 @@ class Yii {
 }
 
 /**
+ * @property app\components\Geocoder $geocoder
+ * @property yii\authclient\Collection $authClientCollection
+ * @property yii\authclient\clients\VKontakte $vkontakte
  * @property yii\rbac\DbManager $authManager 
  * @property \yii\web\User|__WebUser $user
  * 
