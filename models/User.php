@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use TaskForce\exceptions\SourceFileException;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -23,6 +24,7 @@ use yii\web\IdentityInterface;
  * @property int|null $city_id
  * @property int|null $phone
  * @property string|null $telegram
+ * @property string $bdate
  *
  * @property Category[] $categories
  * @property City $city
@@ -167,7 +169,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getExecutorTasks()
     {
         return $this->hasMany(Task::className(), ['executor_id' => 'id']);
     }
@@ -177,7 +179,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getCustomerTasks()
     {
         return $this->hasMany(Task::className(), ['customer_id' => 'id']);
     }
@@ -211,4 +213,23 @@ class User extends ActiveRecord implements IdentityInterface
     {
         // TODO: Implement getAuthKey() method.
     }
+
+    /**
+     * Загружает инфу полученную от  VK в User
+     * @param array $userInfo Массив Информации о пользователе
+     * @return void
+     * @throws SourceFileException
+     * @throws \yii\base\Exception
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function loadAuthUser($userInfo)
+    {
+        $this->email = $userInfo['email'];
+        $this->login = $userInfo['first_name'] . ' ' . $userInfo['last_name'];
+        $this->avatar = $userInfo['photo'];
+        $this->password = Yii::$app->security->generateRandomString(8);
+        $this->city_id = City::getIdByName($userInfo['city']['title']);
+        $this->bdate = Yii::$app->formatter->asDate($userInfo['bdate'], 'php:Y-m-d');
+    }
+
 }
