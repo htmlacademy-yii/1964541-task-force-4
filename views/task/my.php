@@ -6,25 +6,25 @@ use app\models\User; ?>
     <h3 class="head-main head-task">Мои задания</h3>
     <?php if (Yii::$app->user->identity->user_type === User::CUSTOMER_STATUS): ?>
     <ul class="side-menu-list">
-        <li class="side-menu-item side-menu-item--active">
+        <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === Task::STATUS_NEW ? 'side-menu-item--active' : '' ?>">
             <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => Task::STATUS_NEW]) ?>" class="link link--nav">Новые</a>
         </li>
-        <li class="side-menu-item">
+        <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === Task::STATUS_IN_WORK ? 'side-menu-item--active' : '' ?>">
             <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => Task::STATUS_IN_WORK]) ?>" class="link link--nav">В процессе</a>
         </li>
-        <li class="side-menu-item">
+        <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === 'closed' ? 'side-menu-item--active' : '' ?>">
             <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => 'closed']) ?>" class="link link--nav">Закрытые</a>
         </li>
     </ul>
     <?php else: ?>
         <ul class="side-menu-list">
-            <li class="side-menu-item side-menu-item--active">
+            <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === Task::STATUS_IN_WORK ? 'side-menu-item--active' : '' ?>">
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => Task::STATUS_IN_WORK]) ?>" class="link link--nav">В процессе</a>
             </li>
-            <li class="side-menu-item">
+            <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === 'overdue' ? 'side-menu-item--active' : '' ?>">
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => 'overdue']) ?>" class="link link--nav">Просрочено</a>
             </li>
-            <li class="side-menu-item">
+            <li class="side-menu-item <?= $active = Yii::$app->request->get('type') === 'closed' ? 'side-menu-item--active' : '' ?>">
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/my', 'type' => 'closed']) ?>" class="link link--nav">Закрытые</a>
             </li>
         </ul>
