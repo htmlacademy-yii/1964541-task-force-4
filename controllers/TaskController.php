@@ -39,9 +39,11 @@ class TaskController extends SecuredController
     {
         $taskFilter = new MyTaskFilter($type, Yii::$app->user->id);
 
-        if (Yii::$app->user->identity->user_type === User::CUSTOMER_STATUS) {
+        if ($taskFilter->isCustomer()) {
             $tasks = $taskFilter->getFilteredCustomerTasks();
-        } else {
+        }
+
+        if ($taskFilter->isExecutor()) {
             $tasks = $taskFilter->getFilteredExecutorTasks();
         }
 

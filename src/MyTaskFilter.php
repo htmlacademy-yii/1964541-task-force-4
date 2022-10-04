@@ -2,6 +2,8 @@
 namespace TaskForce;
 
 use app\models\Task;
+use app\models\User;
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
@@ -15,6 +17,24 @@ class MyTaskFilter
     {
         $this->userId =$userId;
         $this->type = $type;
+    }
+
+    public function isExecutor(): bool
+    {
+        if (Yii::$app->user->identity->user_type === User::EXECUTOR_STATUS) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCustomer(): bool
+    {
+        if (Yii::$app->user->identity->user_type === User::CUSTOMER_STATUS) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getFilteredCustomerTasks(): array
