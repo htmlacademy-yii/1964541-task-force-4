@@ -30,7 +30,7 @@ class MyTaskFilter
             case Task::STATUS_IN_WORK:
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK]);
                 break;
-            case 'closed':
+            case Task::STATUS_CLOSED:
                 $taskQuery->orFilterWhere(['status' => Task::STATUS_EXECUTED])->orFilterWhere(['status' => Task::STATUS_CANCELED])->orFilterWhere(['status' => Task::STATUS_FAILED]);
                 break;
         }
@@ -47,10 +47,10 @@ class MyTaskFilter
             case Task::STATUS_NEW:
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_NEW]);
                 break;
-            case 'overdue':
+            case Task::STATUS_OVERDUE:
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK])->andFilterWhere(['<', 'deadline', new Expression('NOW()')]);
                 break;
-            case 'closed':
+            case Task::STATUS_CLOSED:
                 $taskQuery->orFilterWhere(['status' => Task::STATUS_EXECUTED])->orFilterWhere(['status' => Task::STATUS_FAILED]);
                 break;
         }

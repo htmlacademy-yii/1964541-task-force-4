@@ -45,6 +45,8 @@ class Task extends \yii\db\ActiveRecord
     const STATUS_IN_WORK = 'in_work';
     const STATUS_EXECUTED = 'executed';
     const STATUS_FAILED = 'failed';
+    const STATUS_OVERDUE = 'overdue';
+    const STATUS_CLOSED = 'closed';
 
     public static $statusMap = [
         self::STATUS_CANCELED => 'Отменено',

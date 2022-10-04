@@ -63,7 +63,7 @@ class UserController extends SecuredController
                     throw new ModelSaveException('Не удалось сохранить модель');
                 }
 
-                return $this->redirect('view/' . Yii::$app->user->id);
+                return $this->redirect(['view', 'id' => Yii::$app->user->id]);
             }
         }
 
