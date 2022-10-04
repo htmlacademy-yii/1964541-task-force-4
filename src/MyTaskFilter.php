@@ -25,7 +25,7 @@ class MyTaskFilter
 
         switch ($this->type) {
             case Task::STATUS_NEW:
-                $taskQuery->andFilterWhere(['status' => Task::STATUS_NEW]);
+                $taskQuery->andFilterWhere(['status' => Task::STATUS_NEW])->andFilterWhere(['executor_id' => null]);
                 break;
             case Task::STATUS_IN_WORK:
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK]);
@@ -44,8 +44,8 @@ class MyTaskFilter
             ->andFilterWhere(['executor_id' => $this->userId]);
 
         switch ($this->type) {
-            case Task::STATUS_NEW:
-                $taskQuery->andFilterWhere(['status' => Task::STATUS_NEW]);
+            case Task::STATUS_IN_WORK:
+                $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK]);
                 break;
             case Task::STATUS_OVERDUE:
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK])->andFilterWhere(['<', 'deadline', new Expression('NOW()')]);
