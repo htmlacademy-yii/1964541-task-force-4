@@ -57,14 +57,14 @@ $this->beginBody() ?>
                         <a href="<?= Yii::$app->urlManager->createUrl('task/add')?>" class="link link--nav">Создать задание</a>
                     </li>
                     <li class="list-item">
-                        <a href="#" class="link link--nav">Настройки</a>
+                        <a href="<?= Yii::$app->urlManager->createUrl('user/options') ?>" class="link link--nav">Настройки</a>
                     </li>
                 </ul>
             </div>
         </nav>
         <div class="user-block">
             <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
-                <img class="user-photo" src="<?= isset(Yii::$app->user->identity->avatar) ? Yii::$app->user->identity->avatar : Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55"
+                <img class="user-photo" src="/<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>" width="55"
                      height="55" alt="Аватар">
             </a>
             <div class="user-menu">

@@ -59,7 +59,9 @@ class OptionsForm extends Model
             throw new FileUploadException('Загрузить файл не удалось');
         }
 
-        $this->loadUserCategory($user_id);
+        if (!empty($this->userCategory)) {
+            $this->loadUserCategory($user_id);
+        }
 
         $user = User::findOne($user_id);
         $user->email = $this->email;
