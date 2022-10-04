@@ -31,6 +31,7 @@ class OptionsForm extends Model
         return [
             [['login', 'email'], 'required'],
             [['email'], 'email'],
+            [['description'], 'string'],
             [['phone'], 'string', 'length' => [self::PHONE_NUM_LENGTH,self::PHONE_NUM_LENGTH]],
             [['telegram'], 'string', 'length' => [0,self::TELEGRAM_LENGTH]],
             [['birthDate'], 'date', 'format' => 'php:Y-m-d'],

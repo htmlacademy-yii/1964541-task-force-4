@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
                 <a class="link link--nav">Мой профиль</a>
             </li>
             <li class="side-menu-item">
-                <a href="#" class="link link--nav">Безопасность</a>
+                <a href="<?= Yii::$app->urlManager->createUrl('user/security') ?>" class="link link--nav">Безопасность</a>
             </li>
         </ul>
     </div>

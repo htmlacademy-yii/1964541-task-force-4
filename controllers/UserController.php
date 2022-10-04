@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
 use app\models\forms\OptionsForm;
+use app\models\forms\PasswordForm;
 use app\models\User;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
@@ -36,13 +37,36 @@ class UserController extends SecuredController
         if (Yii::$app->request->getIsPost()) {
             $optionsForm->load(Yii::$app->request->post());
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
+
             if ($optionsForm->validate()) {
+
                 if (!$optionsForm->loadToUser(Yii::$app->user->id)->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
                 }
-                return $this->goHome();
+
+                return $this->redirect('view/' . Yii::$app->user->id);
             }
         }
         return $this->render('options', ['model' => $optionsForm]);
+    }
+
+    public function actionSecurity()
+    {
+        $passwordForm = new PasswordForm();
+
+        if (Yii::$app->request->getIsPost()) {
+            $passwordForm->load(Yii::$app->request->post());
+
+            if ($passwordForm->validate()) {
+
+                if (!$passwordForm->loadToUser()->save()) {
+                    throw new ModelSaveException('Не удалось сохранить модель');
+                }
+
+                return $this->redirect('view/' . Yii::$app->user->id);
+            }
+        }
+
+        return $this->render('security', ['model' => $passwordForm]);
     }
 }
