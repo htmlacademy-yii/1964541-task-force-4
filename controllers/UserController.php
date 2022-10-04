@@ -49,7 +49,7 @@ class UserController extends SecuredController
 
     public function actionSecurity()
     {
-        $passwordForm = new PasswordForm();
+        $passwordForm = new PasswordForm(Yii::$app->user->id);
 
         if (Yii::$app->request->getIsPost()) {
             $passwordForm->load(Yii::$app->request->post());

@@ -13,6 +13,12 @@ class PasswordForm extends Model
     public $repeatPassword;
     public $userId;
 
+    public function __construct($userId, $config = [])
+    {
+        parent::__construct($config);
+        $this->userId = $userId;
+    }
+
     public function attributeLabels()
     {
         return [
