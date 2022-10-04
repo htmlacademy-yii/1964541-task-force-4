@@ -39,12 +39,9 @@ class UserController extends SecuredController
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
 
             if ($optionsForm->validate()) {
+                $optionsForm->loadToUser(Yii::$app->user->id);
 
-                if (!$optionsForm->loadToUser(Yii::$app->user->id)->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
-
-                return $this->redirect('view/' . Yii::$app->user->id);
+                return $this->redirect(['view', 'id' => Yii::$app->user->id]);
             }
         }
         return $this->render('options', ['model' => $optionsForm]);

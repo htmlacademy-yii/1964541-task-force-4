@@ -6,6 +6,7 @@ use app\models\Category;
 use app\models\User;
 use app\models\UserCategory;
 use TaskForce\exceptions\FileUploadException;
+use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\base\Model;
 use yii\behaviors\AttributeBehavior;
@@ -32,8 +33,8 @@ class OptionsForm extends Model
             [['login', 'email'], 'required'],
             [['email'], 'email'],
             [['description'], 'string'],
-            [['phone'], 'string', 'length' => [self::PHONE_NUM_LENGTH,self::PHONE_NUM_LENGTH]],
-            [['telegram'], 'string', 'length' => [0,self::TELEGRAM_LENGTH]],
+            [['phone'], 'string', 'length' => [self::PHONE_NUM_LENGTH, self::PHONE_NUM_LENGTH]],
+            [['telegram'], 'string', 'length' => [0, self::TELEGRAM_LENGTH]],
             [['birthDate'], 'date', 'format' => 'php:Y-m-d'],
             [['userCategory'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['userCategory' => 'id']]],
             [['file'], 'file'],
@@ -60,10 +61,6 @@ class OptionsForm extends Model
             throw new FileUploadException('Загрузить файл не удалось');
         }
 
-        if (!empty($this->userCategory)) {
-            $this->loadUserCategory($user_id);
-        }
-
         $user = User::findOne($user_id);
         $user->email = $this->email;
         $user->login = $this->login;
@@ -73,7 +70,21 @@ class OptionsForm extends Model
         $user->description = $this->description;
         $user->avatar = $this->filePath;
 
-        return $user;
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            if (!empty($this->userCategory)) {
+                $this->loadUserCategory($user_id);
+            }
+            if (!$user->save()) {
+                throw new ModelSaveException('Не удалось сохранить модель User');
+            }
+            $transaction->commit();
+        } catch (ModelSaveException $exception) {
+            $transaction->rollback();
+            throw new ModelSaveException($exception->getMessage());
+        }
+
     }
 
     public function loadUserCategory($user_id)

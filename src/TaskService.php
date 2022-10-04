@@ -168,7 +168,7 @@ class TaskService
             if (!$task->save() && !$form->save()) {
                 throw new ModelSaveException('Не удалось сохранить данные');
             }
-            $transaction->commit();
+            c
         } catch (ModelSaveException $exception) {
             $transaction->rollback();
             throw new ModelSaveException($exception->getMessage());
