@@ -1,11 +1,11 @@
 <?php
 
-?>
+use yii\widgets\Menu; ?>
 <div class="left-menu left-menu--edit">
     <h3 class="head-main head-task">Настройки</h3>
-    <?=\yii\widgets\Menu::widget(['items' => [
-    ['label' => 'Мой профиль', 'url' => ['user/options']],
-    ['label' => 'Безопасность', 'url' => ['user/security']]],
+    <?= Menu::widget(['items' => [
+    ['label' => 'Мой профиль', 'url' => ['user/options'], 'template' => '<a href="{url}" class="link link--nav">{label}</a>'],
+    ['label' => 'Безопасность', 'url' => ['user/security'], 'template' => '<a href="{url}" class="link link--nav">{label}</a>']],
         'options' => [
             'class' => 'side-menu-list',
         ],
