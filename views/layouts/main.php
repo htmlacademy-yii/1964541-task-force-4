@@ -50,7 +50,7 @@ $this->beginBody() ?>
                 </a>
                 <div class="nav-wrapper">
                     <?= Menu::widget(['items' => [
-                        ['label' => 'Новое', 'url' => ['task/']],
+                        ['label' => 'Новое', 'url' => ['task/index']],
                         ['label' => 'Мои задания', 'url' => ['task/my', 'type' => Task::STATUS_NEW]],
                         ['label' => 'Создать задание', 'url' => ['task/add']],
                         ['label' => 'Настройки', 'url' => ['user/options']]],
