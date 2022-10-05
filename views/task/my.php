@@ -8,23 +8,25 @@ use yii\widgets\Menu; ?>
     <?php
     if (Yii::$app->user->identity->user_type === User::CUSTOMER_STATUS) {
         echo Menu::widget(['items' => [
-            ['label' => 'Новые', 'url' => ['task/my', 'type' => Task::STATUS_NEW], 'template' => '<a href="{url}" class="link link--nav">{label}</a>'],
-            ['label' => 'В процессе', 'url' => ['task/my', 'type' => Task::STATUS_IN_WORK], 'template' => '<a href="{url}" class="link link--nav">{label}</a>'],
-            ['label' => 'Закрытые', 'url' => ['task/my', 'type' => Task::STATUS_CLOSED], 'template' => '<a href="{url}" class="link link--nav">{label}</a>']],
+            ['label' => 'Новые', 'url' => ['task/my', 'type' => Task::STATUS_NEW]],
+            ['label' => 'В процессе', 'url' => ['task/my', 'type' => Task::STATUS_IN_WORK]],
+            ['label' => 'Закрытые', 'url' => ['task/my', 'type' => Task::STATUS_CLOSED]]],
             'options' => [
                 'class' => 'side-menu-list',
             ],
+            'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
             'activeCssClass'=>'side-menu-item--active',
             'itemOptions'=>['class'=>'side-menu-item'],
         ]);
     } else {
         echo Menu::widget(['items' => [
-            ['label' => 'В процессе', 'url' => ['task/my', 'type' => Task::STATUS_IN_WORK], 'template' => '<a href="{url}" class="link link--nav">{label}</a>'],
-            ['label' => 'Просрочено', 'url' => ['task/my', 'type' => Task::STATUS_OVERDUE], 'template' => '<a href="{url}" class="link link--nav">{label}</a>'],
-            ['label' => 'Закрытые', 'url' => ['task/my', 'type' => Task::STATUS_CLOSED], 'template' => '<a href="{url}" class="link link--nav">{label}</a>']],
+            ['label' => 'В процессе', 'url' => ['task/my', 'type' => Task::STATUS_IN_WORK]],
+            ['label' => 'Просрочено', 'url' => ['task/my', 'type' => Task::STATUS_OVERDUE]],
+            ['label' => 'Закрытые', 'url' => ['task/my', 'type' => Task::STATUS_CLOSED]]],
             'options' => [
                 'class' => 'side-menu-list',
             ],
+            'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
             'activeCssClass'=>'side-menu-item--active',
             'itemOptions'=>['class'=>'side-menu-item'],
         ]);

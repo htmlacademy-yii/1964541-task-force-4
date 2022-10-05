@@ -9,9 +9,9 @@ use yii\base\Model;
 
 class PasswordForm extends Model
 {
-    public string $oldPassword;
-    public string $newPassword;
-    public string $repeatPassword;
+    public $oldPassword;
+    public $newPassword;
+    public $repeatPassword;
 
     const PASSWORD_MAX_LENGTH = 64;
 

@@ -16,15 +16,15 @@ use yii\web\UploadedFile;
 
 class OptionsForm extends Model
 {
-    public string $login;
-    public string $email;
-    public string $birthDate;
-    public string $phone;
-    public string $telegram;
-    public string $description;
-    public array $userCategory;
-    public UploadedFile $file;
-    private string $filePath;
+    public $login;
+    public $email;
+    public $birthDate;
+    public $phone;
+    public $telegram;
+    public $description;
+    public $userCategory;
+    public $file;
+    private $filePath;
     const PHONE_NUM_LENGTH = 11;
     const TELEGRAM_LENGTH = 64;
 
