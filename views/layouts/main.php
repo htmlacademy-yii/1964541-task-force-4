@@ -51,9 +51,9 @@ $this->beginBody() ?>
                 <div class="nav-wrapper">
                     <?= Menu::widget(['items' => [
                         ['label' => 'Новое', 'url' => ['task/index']],
-                        ['label' => 'Мои задания', 'url' => ['task/my', 'type' => Task::STATUS_NEW]],
+                        ['label' => 'Мои задания', 'url' => ['task/my', 'type' => Task::STATUS_NEW], 'active' => Yii::$app->controller->action->id === 'my'],
                         ['label' => 'Создать задание', 'url' => ['task/add']],
-                        ['label' => 'Настройки', 'url' => ['user/options']]],
+                        ['label' => 'Настройки', 'url' => ['user/options'], 'active' => Yii::$app->controller->id === 'user']],
                         'options' => [
                                 'class' => 'nav-list'
                         ],
