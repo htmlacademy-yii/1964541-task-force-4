@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use app\models\User;
+use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\base\Model;
 
@@ -11,13 +12,8 @@ class PasswordForm extends Model
     public $oldPassword;
     public $newPassword;
     public $repeatPassword;
-    public $userId;
 
-    public function __construct($userId, $config = [])
-    {
-        parent::__construct($config);
-        $this->userId = $userId;
-    }
+    const PASSWORD_MAX_LENGTH = 64;
 
     public function attributeLabels()
     {
@@ -32,7 +28,7 @@ class PasswordForm extends Model
     {
         return [
             [['oldPassword', 'newPassword', 'repeatPassword', 'userId'], 'required'],
-            [['newPassword', 'repeatPassword'], 'string', 'max' => 64],
+            [['newPassword', 'repeatPassword'], 'string', 'max' => self::PASSWORD_MAX_LENGTH],
             [['repeatPassword'], 'compare', 'compareAttribute' => 'newPassword'],
             [['oldPassword'], 'validatePassword']
         ];
@@ -41,7 +37,7 @@ class PasswordForm extends Model
     public function validatePassword($attribute)
     {
         if (!$this->hasErrors()) {
-            $user = User::findOne(['id' => $this->userId]);;
+            $user = User::findOne(['id' => Yii::$app->user->id]);;
             if (!$user || !$user->validatePassword($this->oldPassword)) {
                 $this->addError($attribute, 'Неверный пароль');
             }
@@ -50,9 +46,11 @@ class PasswordForm extends Model
 
     public function loadToUser()
     {
-        $user = User::findOne($this->userId);
+        $user = User::findOne(Yii::$app->user->id);
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->newPassword);
 
-        return $user;
+        if (!$user->save()) {
+            throw new ModelSaveException('Не удалось сохранить модель User');
+        }
     }
 }

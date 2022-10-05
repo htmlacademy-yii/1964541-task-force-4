@@ -55,13 +55,13 @@ class OptionsForm extends Model
         ];
     }
 
-    public function loadToUser($user_id)
+    public function loadToUser()
     {
         if (!$this->uploadFile() && $this->file) {
             throw new FileUploadException('Загрузить файл не удалось');
         }
 
-        $user = User::findOne($user_id);
+        $user = User::findOne(Yii::$app->user->id);
         $user->email = $this->email;
         $user->login = $this->login;
         $user->bdate = $this->birthDate;
@@ -74,7 +74,7 @@ class OptionsForm extends Model
 
         try {
             if (!empty($this->userCategory)) {
-                $this->loadUserCategory($user_id);
+                $this->loadUserCategory();
             }
             if (!$user->save()) {
                 throw new ModelSaveException('Не удалось сохранить модель User');
@@ -87,17 +87,17 @@ class OptionsForm extends Model
 
     }
 
-    public function loadUserCategory($user_id)
+    public function loadUserCategory()
     {
-        if (UserCategory::findOne($user_id)) {
+        if (UserCategory::findOne(Yii::$app->user->id)) {
             Yii::$app->db->createCommand()
-                ->delete('user_category', ['user_id' => $user_id])
+                ->delete('user_category', ['user_id' => Yii::$app->user->id])
                 ->query();
         }
 
         foreach ($this->userCategory as $category) {
             Yii::$app->db->createCommand()
-                ->insert('user_category', ['user_id' => $user_id, 'category_id' => $category])->query();
+                ->insert('user_category', ['user_id' => Yii::$app->user->id, 'category_id' => $category])->query();
         }
     }
 

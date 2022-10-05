@@ -39,7 +39,7 @@ class UserController extends SecuredController
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
 
             if ($optionsForm->validate()) {
-                $optionsForm->loadToUser(Yii::$app->user->id);
+                $optionsForm->loadToUser();
 
                 return $this->redirect(['view', 'id' => Yii::$app->user->id]);
             }
@@ -49,16 +49,13 @@ class UserController extends SecuredController
 
     public function actionSecurity()
     {
-        $passwordForm = new PasswordForm(Yii::$app->user->id);
+        $passwordForm = new PasswordForm();
 
         if (Yii::$app->request->getIsPost()) {
             $passwordForm->load(Yii::$app->request->post());
 
             if ($passwordForm->validate()) {
-
-                if (!$passwordForm->loadToUser()->save()) {
-                    throw new ModelSaveException('Не удалось сохранить модель');
-                }
+                $passwordForm->loadToUser();
 
                 return $this->redirect(['view', 'id' => Yii::$app->user->id]);
             }
