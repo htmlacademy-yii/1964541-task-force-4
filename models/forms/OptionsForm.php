@@ -90,15 +90,13 @@ class OptionsForm extends Model
 
     public function loadUserCategory(): void
     {
-        if (UserCategory::findOne(Yii::$app->user->id)) {
-            Yii::$app->db->createCommand()
-                ->delete('user_category', ['user_id' => Yii::$app->user->id])
-                ->query();
-        }
+        UserCategory::deleteByUser();
 
         foreach ($this->userCategory as $category) {
-            Yii::$app->db->createCommand()
-                ->insert('user_category', ['user_id' => Yii::$app->user->id, 'category_id' => $category])->query();
+            $userCategory = new UserCategory();
+            $userCategory->user_id = Yii::$app->user->id;
+            $userCategory->category_id = $category;
+            $userCategory->save();
         }
     }
 

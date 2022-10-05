@@ -15,6 +15,15 @@ use Yii;
  */
 class UserCategory extends \yii\db\ActiveRecord
 {
+    public static function deleteByUser()
+    {
+        if (UserCategory::findOne(Yii::$app->user->id)) {
+            Yii::$app->db->createCommand()
+                ->delete('user_category', ['user_id' => Yii::$app->user->id])
+                ->query();
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
