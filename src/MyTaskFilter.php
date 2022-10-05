@@ -3,6 +3,7 @@ namespace TaskForce;
 
 use app\models\Task;
 use app\models\User;
+use TaskForce\exceptions\BadRequestException;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -16,7 +17,11 @@ class MyTaskFilter
     public function __construct(string $type, int $userId)
     {
         $this->userId =$userId;
-        $this->type = $type;
+        if ($type === Task::STATUS_IN_WORK || $type === Task::STATUS_OVERDUE || $type === Task::STATUS_CLOSED || $type === Task::STATUS_NEW) {
+            $this->type = $type;
+        } else {
+            throw new BadRequestException('Данной катеогории не существует');
+        }
     }
 
     public function isExecutor(): bool
