@@ -68,7 +68,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'task/view/<id:\d+>' => 'task/view',
-                'task/my/<type:\d+>' => 'task/my',
+                'task/my/<type:\w+>' => 'task/my',
                 'user/view/<id:\d+>' => 'user/view'
             ],
         ],
