@@ -12,22 +12,23 @@ use yii\base\Model;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveQuery;
 use yii\db\Query;
+use yii\web\UploadedFile;
 
 class OptionsForm extends Model
 {
-    public $login;
-    public $email;
-    public $birthDate;
-    public $phone;
-    public $telegram;
-    public $description;
-    public $userCategory;
-    public $file;
-    private $filePath;
+    public string $login;
+    public string $email;
+    public string $birthDate;
+    public string $phone;
+    public string $telegram;
+    public string $description;
+    public array $userCategory;
+    public UploadedFile $file;
+    private string $filePath;
     const PHONE_NUM_LENGTH = 11;
     const TELEGRAM_LENGTH = 64;
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['login', 'email'], 'required'],
@@ -55,7 +56,7 @@ class OptionsForm extends Model
         ];
     }
 
-    public function loadToUser()
+    public function loadToUser(): void
     {
         if (!$this->uploadFile() && $this->file) {
             throw new FileUploadException('Загрузить файл не удалось');
@@ -87,7 +88,7 @@ class OptionsForm extends Model
 
     }
 
-    public function loadUserCategory()
+    public function loadUserCategory(): void
     {
         if (UserCategory::findOne(Yii::$app->user->id)) {
             Yii::$app->db->createCommand()
@@ -101,7 +102,7 @@ class OptionsForm extends Model
         }
     }
 
-    private function uploadFile()
+    private function uploadFile(): bool
     {
         if ($this->file && $this->validate()) {
             $newName = uniqid('upload') . '.' . $this->file->getExtension();

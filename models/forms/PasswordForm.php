@@ -9,13 +9,13 @@ use yii\base\Model;
 
 class PasswordForm extends Model
 {
-    public $oldPassword;
-    public $newPassword;
-    public $repeatPassword;
+    public string $oldPassword;
+    public string $newPassword;
+    public string $repeatPassword;
 
     const PASSWORD_MAX_LENGTH = 64;
 
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'oldPassword' => 'Старый пароль',
@@ -24,7 +24,7 @@ class PasswordForm extends Model
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['oldPassword', 'newPassword', 'repeatPassword', 'userId'], 'required'],
@@ -34,7 +34,7 @@ class PasswordForm extends Model
         ];
     }
 
-    public function validatePassword($attribute)
+    public function validatePassword($attribute): void
     {
         if (!$this->hasErrors()) {
             $user = User::findOne(['id' => Yii::$app->user->id]);;
@@ -44,7 +44,7 @@ class PasswordForm extends Model
         }
     }
 
-    public function loadToUser()
+    public function loadToUser(): void
     {
         $user = User::findOne(Yii::$app->user->id);
         $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->newPassword);
