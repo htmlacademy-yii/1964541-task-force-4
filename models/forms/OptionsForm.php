@@ -90,7 +90,7 @@ class OptionsForm extends Model
 
     public function loadUserCategory(): void
     {
-        UserCategory::deleteByUser();
+        UserCategory::deleteByUser(Yii::$app->user->id);
 
         foreach ($this->userCategory as $category) {
             $userCategory = new UserCategory();

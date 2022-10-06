@@ -15,13 +15,11 @@ use Yii;
  */
 class UserCategory extends \yii\db\ActiveRecord
 {
-    public static function deleteByUser()
+    public static function deleteByUser($userId)
     {
-        if (UserCategory::findOne(Yii::$app->user->id)) {
-            Yii::$app->db->createCommand()
-                ->delete('user_category', ['user_id' => Yii::$app->user->id])
-                ->query();
-        }
+        Yii::$app->db->createCommand()
+            ->delete('user_category', ['user_id' => Yii::$app->user->id])
+            ->query();
     }
 
     /**
@@ -41,8 +39,20 @@ class UserCategory extends \yii\db\ActiveRecord
             [['user_id', 'category_id'], 'required'],
             [['user_id', 'category_id'], 'integer'],
             [['user_id', 'category_id'], 'unique', 'targetAttribute' => ['user_id', 'category_id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Category::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['user_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => User::className(),
+                'targetAttribute' => ['user_id' => 'id']
+            ],
         ];
     }
 

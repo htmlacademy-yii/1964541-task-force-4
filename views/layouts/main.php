@@ -40,56 +40,65 @@ $this->beginPage() ?>
 <?php
 $this->beginBody() ?>
 <?php if (!Yii::$app->user->isGuest): ?>
-    <div class="<?= $hidden = 'hidden' ?>">
-        <header class="page-header">
-            <nav class="main-nav">
-                <a href='#' class="header-logo">
-                    <img class="logo-image" src="<?= Yii::$app->urlManager->baseUrl ?>/img/logotype.png" width=227
-                         height=60
-                         alt="taskforce">
-                </a>
-                <div class="nav-wrapper">
-                    <?= Menu::widget(['items' => [
+    <header class="page-header">
+        <nav class="main-nav">
+            <a href='#' class="header-logo">
+                <img class="logo-image" src="<?= Yii::$app->urlManager->baseUrl ?>/img/logotype.png" width=227
+                     height=60
+                     alt="taskforce">
+            </a>
+            <div class="nav-wrapper">
+                <?= Menu::widget([
+                    'items' => [
                         ['label' => 'Новое', 'url' => ['task/index']],
-                        ['label' => 'Мои задания', 'url' => ['task/my', 'type' => Task::STATUS_NEW], 'active' => Yii::$app->controller->action->id === 'my'],
-                        ['label' => 'Создать задание', 'url' => ['task/add']],
-                        ['label' => 'Настройки', 'url' => ['user/options'], 'active' => Yii::$app->controller->id === 'user']],
-                        'options' => [
-                                'class' => 'nav-list'
+                        [
+                            'label' => 'Мои задания',
+                            'url' => ['task/my', 'type' => Task::STATUS_NEW],
+                            'active' => Yii::$app->controller->action->id === 'my'
                         ],
-                        'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
-                        'activeCssClass' => 'list-item--active',
-                        'itemOptions' => [ 'class' => 'list-item']])
-                    ?>
-                </div>
-            </nav>
-            <div class="user-block">
-                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
-                    <img class="user-photo"
-                         src="/<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>"
-                         width="55"
-                         height="55" alt="Аватар">
-                </a>
-                <div class="user-menu">
-                    <p class="user-name"><?= Yii::$app->user->identity->login ?></p>
-                    <div class="popup-head">
-                        <ul class="popup-menu">
-                            <li class="menu-item">
-                                <a href="#" class="link">Настройки</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="link">Связаться с нами</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="<?= Yii::$app->urlManager->createUrl('user/logout') ?>" class="link">Выход из
-                                    системы</a>
-                            </li>
-                        </ul>
-                    </div>
+                        ['label' => 'Создать задание', 'url' => ['task/add']],
+                        [
+                            'label' => 'Настройки',
+                            'url' => ['user/options'],
+                            'active' => Yii::$app->controller->id === 'user'
+                        ]
+                    ],
+                    'options' => [
+                        'class' => 'nav-list'
+                    ],
+                    'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
+                    'activeCssClass' => 'list-item--active',
+                    'itemOptions' => ['class' => 'list-item']
+                ])
+                ?>
+            </div>
+        </nav>
+        <div class="user-block">
+            <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
+                <img class="user-photo"
+                     src="/<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>"
+                     width="55"
+                     height="55" alt="Аватар">
+            </a>
+            <div class="user-menu">
+                <p class="user-name"><?= Yii::$app->user->identity->login ?></p>
+                <div class="popup-head">
+                    <ul class="popup-menu">
+                        <li class="menu-item">
+                            <a href="#" class="link">Настройки</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="link">Связаться с нами</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="<?= Yii::$app->urlManager->createUrl('user/logout') ?>" class="link">Выход из
+                                системы</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </header>
-    </div>
+        </div>
+    </header>
 <?php endif; ?>
 
 <main>
