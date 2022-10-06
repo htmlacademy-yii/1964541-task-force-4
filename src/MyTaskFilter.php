@@ -56,7 +56,7 @@ class MyTaskFilter
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK]);
                 break;
             case Task::STATUS_CLOSED:
-                $taskQuery->orFilterWhere(['status' => Task::STATUS_EXECUTED])->orFilterWhere(['status' => Task::STATUS_CANCELED])->orFilterWhere(['status' => Task::STATUS_FAILED]);
+                $taskQuery->andFilterWhere(['in', 'status', [Task::STATUS_EXECUTED, Task::STATUS_CANCELED, Task::STATUS_FAILED]]);
                 break;
         }
         return $taskQuery->all();
@@ -76,7 +76,7 @@ class MyTaskFilter
                 $taskQuery->andFilterWhere(['status' => Task::STATUS_IN_WORK])->andFilterWhere(['<', 'deadline', new Expression('NOW()')]);
                 break;
             case Task::STATUS_CLOSED:
-                $taskQuery->orFilterWhere(['status' => Task::STATUS_EXECUTED])->orFilterWhere(['status' => Task::STATUS_FAILED]);
+                $taskQuery->andFilterWhere(['in', 'status', [Task::STATUS_EXECUTED, Task::STATUS_FAILED]]);
                 break;
         }
         return $taskQuery->all();
