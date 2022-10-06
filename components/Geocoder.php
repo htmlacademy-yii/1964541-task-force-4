@@ -36,8 +36,9 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    public function getLong($address)
+    public function getLong($address, $city)
     {
+        $address = $city . ', ' . $address;
         $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
 
         return $location[self::GEOCODE_LONGITUDE];
@@ -49,8 +50,9 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    public function getLat($address)
+    public function getLat($address, $city)
     {
+        $address = $city . ', ' . $address;
         $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
 
         return $location[self::GEOCODE_LATITUDE];
