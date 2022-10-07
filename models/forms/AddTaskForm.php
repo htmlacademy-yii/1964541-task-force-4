@@ -50,7 +50,14 @@ class AddTaskForm extends Model
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
             [['file'], 'file'],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
-            [['deadline'], 'compare', 'compareValue' => date('Y-m-d'), 'operator' => '>', 'type' => 'date', 'message' => 'Срок исполнения не может быть раньше текущей даты']
+            [
+                ['deadline'],
+                'compare',
+                'compareValue' => date('Y-m-d'),
+                'operator' => '>',
+                'type' => 'date',
+                'message' => 'Срок исполнения не может быть раньше текущей даты'
+            ]
         ];
     }
 
@@ -68,13 +75,8 @@ class AddTaskForm extends Model
 
     private function loadLocation($task)
     {
-        if ($this->address) {
-            $task->lat = Yii::$app->geocoder->getLat($this->address);
-            $task->long = Yii::$app->geocoder->getLong($this->address);
-        } else {
-            $task->city_id = Yii::$app->user->identity->city_id;
-        }
-
+        $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
+        $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
     }
 
     public function loadToTask()
@@ -92,7 +94,10 @@ class AddTaskForm extends Model
         $task->deadline = $this->deadline;
         $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
-        $this->loadLocation($task);
+        
+        if ($this->address) {
+            $this->loadLocation($task);
+        }
 
         return $task;
     }

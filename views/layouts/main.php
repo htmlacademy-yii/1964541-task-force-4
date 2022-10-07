@@ -6,11 +6,13 @@
 
 use app\assets\AppAsset;
 use app\assets\MainAsset;
+use app\models\Task;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\widgets\Menu;
 
 MainAsset::register($this);
 
@@ -29,7 +31,8 @@ $this->beginPage() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Taskforce</title>
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=<?= Yii::$app->geocoder->getApiKey() ?>&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=<?= Yii::$app->geocoder->getApiKey() ?>&lang=ru_RU"
+            type="text/javascript"></script>
     <?php
     $this->head() ?>
 </head>
@@ -37,33 +40,44 @@ $this->beginPage() ?>
 <?php
 $this->beginBody() ?>
 <?php if (!Yii::$app->user->isGuest): ?>
-<div class="<?= $hidden = 'hidden' ?>">
     <header class="page-header">
         <nav class="main-nav">
             <a href='#' class="header-logo">
-                <img class="logo-image" src="<?= Yii::$app->urlManager->baseUrl ?>/img/logotype.png" width=227 height=60
+                <img class="logo-image" src="<?= Yii::$app->urlManager->baseUrl ?>/img/logotype.png" width=227
+                     height=60
                      alt="taskforce">
             </a>
             <div class="nav-wrapper">
-                <ul class="nav-list">
-                    <li class="list-item list-item--active">
-                        <a href="<?= Yii::$app->urlManager->createUrl('task')?>" class="link link--nav">Новое</a>
-                    </li>
-                    <li class="list-item">
-                        <a href="#" class="link link--nav">Мои задания</a>
-                    </li>
-                    <li class="list-item">
-                        <a href="<?= Yii::$app->urlManager->createUrl('task/add')?>" class="link link--nav">Создать задание</a>
-                    </li>
-                    <li class="list-item">
-                        <a href="#" class="link link--nav">Настройки</a>
-                    </li>
-                </ul>
+                <?= Menu::widget([
+                    'items' => [
+                        ['label' => 'Новое', 'url' => ['task/index']],
+                        [
+                            'label' => 'Мои задания',
+                            'url' => ['task/my', 'type' => Task::STATUS_NEW],
+                            'active' => Yii::$app->controller->action->id === 'my'
+                        ],
+                        ['label' => 'Создать задание', 'url' => ['task/add']],
+                        [
+                            'label' => 'Настройки',
+                            'url' => ['user/options'],
+                            'active' => Yii::$app->controller->id === 'user'
+                        ]
+                    ],
+                    'options' => [
+                        'class' => 'nav-list'
+                    ],
+                    'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>',
+                    'activeCssClass' => 'list-item--active',
+                    'itemOptions' => ['class' => 'list-item']
+                ])
+                ?>
             </div>
         </nav>
         <div class="user-block">
             <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
-                <img class="user-photo" src="<?= isset(Yii::$app->user->identity->avatar) ? Yii::$app->user->identity->avatar : Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="55"
+                <img class="user-photo"
+                     src="/<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>"
+                     width="55"
                      height="55" alt="Аватар">
             </a>
             <div class="user-menu">
@@ -85,7 +99,6 @@ $this->beginBody() ?>
             </div>
         </div>
     </header>
-</div>
 <?php endif; ?>
 
 <main>

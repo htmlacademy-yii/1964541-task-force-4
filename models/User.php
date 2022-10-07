@@ -24,6 +24,7 @@ use yii\web\IdentityInterface;
  * @property int|null $city_id
  * @property int|null $phone
  * @property string|null $telegram
+ * @property string|null $description
  * @property string $bdate
  *
  * @property Category[] $categories

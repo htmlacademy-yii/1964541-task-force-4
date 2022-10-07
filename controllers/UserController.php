@@ -3,9 +3,13 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
+use app\models\forms\OptionsForm;
+use app\models\forms\PasswordForm;
 use app\models\User;
+use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 
 class UserController extends SecuredController
 {
@@ -25,5 +29,38 @@ class UserController extends SecuredController
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionOptions()
+    {
+        $optionsForm = new OptionsForm();
+        if (Yii::$app->request->getIsPost()) {
+            $optionsForm->load(Yii::$app->request->post());
+            $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
+
+            if ($optionsForm->validate()) {
+                $optionsForm->loadToUser();
+
+                return $this->redirect(['view', 'id' => Yii::$app->user->id]);
+            }
+        }
+        return $this->render('options', ['model' => $optionsForm]);
+    }
+
+    public function actionSecurity()
+    {
+        $passwordForm = new PasswordForm();
+
+        if (Yii::$app->request->getIsPost()) {
+            $passwordForm->load(Yii::$app->request->post());
+
+            if ($passwordForm->validate()) {
+                $passwordForm->loadToUser();
+
+                return $this->redirect(['view', 'id' => Yii::$app->user->id]);
+            }
+        }
+
+        return $this->render('security', ['model' => $passwordForm]);
     }
 }

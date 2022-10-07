@@ -8,7 +8,9 @@ use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
 use app\models\forms\ReviewForm;
 use app\models\Task;
+use app\models\User;
 use TaskForce\exceptions\ModelSaveException;
+use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
 use yii\web\NotFoundHttpException;
@@ -31,6 +33,21 @@ class TaskController extends SecuredController
         }
 
         return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
+    }
+
+    public function actionMy($type)
+    {
+        $taskFilter = new MyTaskFilter($type, Yii::$app->user->id);
+
+        if ($taskFilter->isCustomer()) {
+            $tasks = $taskFilter->getFilteredCustomerTasks();
+        }
+
+        if ($taskFilter->isExecutor()) {
+            $tasks = $taskFilter->getFilteredExecutorTasks();
+        }
+
+        return $this->render('my', ['tasks' => $tasks]);
     }
 
     public function actionView($id)
