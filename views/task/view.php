@@ -20,7 +20,8 @@ use yii\widgets\ActiveForm; ?>
     <div class="task-map">
         <div id="map" class="map"></div>
         <?php if ($task->lat): ?>
-        <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->city->lng . ' ' . $task->city->lat) ?></p>
+            <p class="map-address town"><?= $task->city->name ?></p>
+        <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
         <?php endif; ?>
     </div>
     <h4 class="head-regular">Отклики на задание</h4>
