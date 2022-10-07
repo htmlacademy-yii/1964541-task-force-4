@@ -15,7 +15,6 @@ use Yii;
  * @property int $id
  * @property string $title
  * @property string|null $description
- * @property string|null $file
  * @property float|null $long
  * @property float|null $lat
  * @property int|null $city_id
@@ -73,7 +72,6 @@ class Task extends \yii\db\ActiveRecord
             [['city_id', 'price', 'customer_id', 'executor_id', 'category_id'], 'integer'],
             [['deadline', 'dt_add'], 'safe'],
             [['title'], 'string', 'max' => 128],
-            [['file'], 'string', 'max' => 320],
             [
                 ['category_id'],
                 'exist',
@@ -114,7 +112,6 @@ class Task extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'description' => 'Description',
-            'file' => 'File',
             'long' => 'Long',
             'lat' => 'Lat',
             'city_id' => 'City ID',

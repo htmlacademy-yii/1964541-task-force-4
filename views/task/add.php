@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'price')->input('number', ['class' => 'budget-icon', 'labelOptions' => 'control-label']) ?>
         <?= $form->field($model, 'deadline')->input('date', ['labelOptions' => 'control-label'])?>
     </div>
-    <?= $form->field($model, 'file')->fileInput(['class' => 'new-file']) ?>
+    <?= $form->field($model, 'files[]')->fileInput(['multiple' => true, 'class' => 'new-file']) ?>
     <input type="submit" class="button button--blue" value="Опубликовать">
     <?php
     ActiveForm::end() ?>

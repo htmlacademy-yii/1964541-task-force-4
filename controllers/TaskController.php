@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
+use app\models\Files;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
@@ -68,13 +69,16 @@ class TaskController extends SecuredController
         $addTaskForm = new AddTaskForm();
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());
-            $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
+            $addTaskForm->files = UploadedFile::getInstances($addTaskForm, 'files');
             if ($addTaskForm->validate()) {
-
 
                 if (!$addTaskForm->loadToTask()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
                 }
+                $files = new Files();
+                $files->task_id = 1;
+                $files->file = '$filePath';
+                $files->save();
                 return $this->goHome();
             }
         }
