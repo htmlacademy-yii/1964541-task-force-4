@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
+use app\models\Auth;
 use app\models\forms\OptionsForm;
 use app\models\forms\PasswordForm;
 use app\models\User;
@@ -49,6 +50,11 @@ class UserController extends SecuredController
 
     public function actionSecurity()
     {
+        if (Auth::findOne(['user_id' => Yii::$app->user->id])) {
+
+            return $this->redirect('options');
+        }
+
         $passwordForm = new PasswordForm();
 
         if (Yii::$app->request->getIsPost()) {

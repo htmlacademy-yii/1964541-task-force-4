@@ -76,7 +76,7 @@ $this->beginBody() ?>
         <div class="user-block">
             <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => Yii::$app->user->identity->id]) ?>">
                 <img class="user-photo"
-                     src="<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>"
+                     src="<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . '/img/man-glasses.png' ?>"
                      width="55"
                      height="55" alt="Аватар">
             </a>
