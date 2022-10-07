@@ -55,6 +55,20 @@ class AuthHandler
     }
 
     /**
+     * Проверяет не зарегистрирован ли email пользователя
+     * @return User Возвращает либо уже зарегистрированного пользователя, либо создает нового.
+     */
+    public function getUser()
+    {
+        $user = User::findOne(['email' => $this->attributes['email']]);
+        if ($user) {
+            return $user;
+        }
+
+        return new User();
+    }
+
+    /**
      * @return mixed Пользователь
      */
     public function getAuth()
@@ -70,7 +84,7 @@ class AuthHandler
      */
     public function saveAuthUser()
     {
-        $user = new User();
+        $user = $this->getUser();
         $user->loadAuthUser($this->attributes);
         $transaction = Yii::$app->db->beginTransaction();
 
