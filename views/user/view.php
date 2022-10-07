@@ -1,3 +1,7 @@
+<?php
+
+
+use app\models\Task; ?>
 <div class="left-column">
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">
@@ -63,7 +67,7 @@
             <dt>Дата регистрации</dt>
             <dd><?= Yii::$app->formatter->asDate($user->dt_add) ?></dd>
             <dt>Статус</dt>
-            <dd>Открыт для новых заказов</dd>
+            <dd><?= Task::findOne(['executor_id' => $user->id, 'status' => Task::STATUS_IN_WORK]) ? 'Занят' : 'Открыт для новых заказов' ?></dd>
         </dl>
     </div>
     <div class="right-card white">

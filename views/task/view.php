@@ -17,13 +17,14 @@ use yii\widgets\ActiveForm; ?>
         <?= $actionObject !== null ? ActionsWidget::widget(['actionObject' => $actionObject]) : ''; ?>
     <?php endforeach; ?>
     <?php endif; ?>
+    <?php if ($task->lat): ?>
     <div class="task-map">
         <div id="map" class="map"></div>
-        <?php if ($task->lat): ?>
             <p class="map-address town"><?= $task->city->name ?></p>
         <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
-        <?php endif; ?>
     </div>
+    <?php endif; ?>
+    <?php if ($task->responses): ?>
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($task->responses as $response): ?>
         <div class="response-card">
@@ -58,6 +59,7 @@ use yii\widgets\ActiveForm; ?>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 <div class="right-column">
     <div class="right-card black info-card">
