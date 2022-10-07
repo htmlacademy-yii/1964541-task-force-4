@@ -6,6 +6,7 @@ use app\models\Category;
 use app\models\Task;
 use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
@@ -31,7 +32,7 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
-    public function getFilteredTasks(): array
+    public function getFilteredTasksData(): object
     {
         $activeQuery = $this->getTasksQuery();
 
@@ -49,7 +50,10 @@ class FilterForm extends Model
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
 
-        return $activeQuery->all();
+        return new ActiveDataProvider([
+            'query' => $activeQuery,
+            'pagination' => ['pageSize' => 5],
+        ]);
     }
 
     private function chooseRightPeriod($activeQuery): ActiveQuery

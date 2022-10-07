@@ -13,6 +13,7 @@ use TaskForce\exceptions\ModelSaveException;
 use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -21,18 +22,18 @@ class TaskController extends SecuredController
     public function actionIndex()
     {
         $filterForm = new FilterForm();
-        $tasks = $filterForm->getTasksQuery()->all();
+        $tasksDataProvider = $filterForm->getFilteredTasksData();
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
             if (!$filterForm->validate()) {
                 $errors = $this->getErrors();
             } else {
-                $tasks = $filterForm->getFilteredTasks();
+                $tasksDataProvider = $filterForm->getFilteredTasksData();
             }
         }
 
-        return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
+        return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
     }
 
     public function actionMy($type)
