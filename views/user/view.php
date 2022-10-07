@@ -70,13 +70,13 @@
         <h4 class="head-card">Контакты</h4>
         <ul class="enumeration-list">
             <li class="enumeration-item">
-                <a href="#" class="link link--block link--phone">+7 (906) 256-06-08</a>
+                <a href="#" class="link link--block link--phone"><?= $user->phone ? : 'Не указан' ?></a>
             </li>
             <li class="enumeration-item">
-                <a href="#" class="link link--block link--email">super-pavel@mail.ru</a>
+                <a href="#" class="link link--block link--email"><?= $user->email ?></a>
             </li>
             <li class="enumeration-item">
-                <a href="#" class="link link--block link--tg">@superpasha</a>
+                <a href="#" class="link link--block link--tg"><?= $user->telegram ? : 'Не указан' ?></a>
             </li>
         </ul>
     </div>
