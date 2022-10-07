@@ -77,6 +77,7 @@ class AddTaskForm extends Model
     {
         $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
         $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
+        $task->city_id = Yii::$app->user->identity->city_id;
     }
 
     public function loadToTask()
