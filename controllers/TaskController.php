@@ -61,7 +61,23 @@ class TaskController extends SecuredController
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
+
         return $this->render('view', ['task' => $task, 'responseForm' => $responseForm, 'reviewForm' => $reviewForm]);
+    }
+
+    public function actionFile($fileName) //полностью украл этот способ скачивания с интернета))))
+    {
+            $currentFile = Yii::$app->basePath . '/web/uploads/' . $fileName;
+
+            if (is_file($currentFile)) {
+                header("Content-Type: application/octet-stream");
+                header("Accept-Ranges: bytes");
+                header("Content-Length: " . filesize($currentFile));
+                header("Content-Disposition: attachment; filename=" . $fileName);
+                readfile($currentFile);
+
+                return $this->redirect(Yii::$app->request->referrer);
+            }
     }
 
     public function actionAdd()
@@ -72,13 +88,8 @@ class TaskController extends SecuredController
             $addTaskForm->files = UploadedFile::getInstances($addTaskForm, 'files');
             if ($addTaskForm->validate()) {
 
-                if (!$addTaskForm->loadToTask()->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
-                $files = new Files();
-                $files->task_id = 1;
-                $files->file = '$filePath';
-                $files->save();
+                $addTaskForm->loadToTask();
+
                 return $this->goHome();
             }
         }

@@ -33,6 +33,7 @@ use Yii;
  * @property User $executor
  * @property Response[] $responses
  * @property Review[] $reviews
+ * @property Files[] $files
  */
 class Task extends \yii\db\ActiveRecord
 {
@@ -173,6 +174,16 @@ class Task extends \yii\db\ActiveRecord
     public function getResponses()
     {
         return $this->hasMany(Response::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Files]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFiles()
+    {
+        return $this->hasMany(Files::className(), ['task_id' => 'id']);
     }
 
     public function checkUserResponse($id)

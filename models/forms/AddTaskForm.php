@@ -49,7 +49,7 @@ class AddTaskForm extends Model
             [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
-            [['files'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 4,'checkExtensionByMimeType' => false],
+            [['files'], 'file', 'skipOnEmpty' => false, 'maxFiles' => 4, 'checkExtensionByMimeType' => false],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
             [
                 ['deadline'],
@@ -93,24 +93,32 @@ class AddTaskForm extends Model
         $task->deadline = $this->deadline;
         $task->status = Task::STATUS_NEW;
 
-        if ($this->uploadFiles() && $this->files) {
-            foreach ($this->filePaths as $filePath) {
-                $files = new Files();
-                $files->task_id = $task->id;
-                $files->file = $filePath;
-                if (!$files->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
-            }
-        }
-
         if ($this->address) {
             $this->loadLocation($task);
         }
 
-        return $task;
+        if (!$task->save()) {
+            throw new ModelSaveException('Не удалось сохранить задание');
+        }
+
+        if ($this->files) {
+            $this->saveFiles($task);
+        } else {
+            throw new ModelSaveException('Не удалось сохранить файлы');
+        }
     }
 
+    private function saveFiles($task)
+    {
+        if ($this->uploadFiles()) {
+            foreach ($this->filePaths as $filePath) {
+                $files = new Files();
+                $files->task_id = $task->id;
+                $files->file = $filePath;
+                $files->save();
+            }
+        }
+    }
 
 
 }
