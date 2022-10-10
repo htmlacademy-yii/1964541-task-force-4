@@ -62,7 +62,7 @@ class AddTaskForm extends Model
         ];
     }
 
-    private function uploadFiles()
+    private function uploadFiles(): bool
     {
         if ($this->files && $this->validate()) {
             foreach ($this->files as $file) {
@@ -75,14 +75,14 @@ class AddTaskForm extends Model
         return false;
     }
 
-    private function loadLocation($task)
+    private function loadLocation(Task $task): void
     {
         $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
         $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
         $task->city_id = Yii::$app->user->identity->city_id;
     }
 
-    public function loadToTask()
+    public function loadToTask(): void
     {
         $task = new Task();
         $task->title = $this->title;
@@ -97,25 +97,35 @@ class AddTaskForm extends Model
             $this->loadLocation($task);
         }
 
-        if (!$task->save()) {
-            throw new ModelSaveException('Не удалось сохранить задание');
-        }
+        $transaction = Yii::$app->db->beginTransaction();
 
-        if ($this->files) {
-            $this->saveFiles($task);
-        } else {
-            throw new ModelSaveException('Не удалось сохранить файлы');
+        try {
+            if (!$task->save()) {
+                throw new ModelSaveException('Не удалось сохранить задание');
+            }
+
+            if ($this->files) {
+                $this->saveFiles($task);
+            }
+
+            $transaction->commit();
+        } catch (ModelSaveException $exception)
+        {
+            $transaction->rollback();
+            throw new ModelSaveException($exception->getMessage());
         }
     }
 
-    private function saveFiles($task)
+    private function saveFiles(Task $task): void
     {
         if ($this->uploadFiles()) {
             foreach ($this->filePaths as $filePath) {
                 $files = new Files();
                 $files->task_id = $task->id;
                 $files->file = $filePath;
-                $files->save();
+                if (!$files->save()) {
+                    throw new ModelSaveException('Не удалось сохранить файлы');
+                };
             }
         }
     }
