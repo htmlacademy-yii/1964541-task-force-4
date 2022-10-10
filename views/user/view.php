@@ -67,7 +67,7 @@ use app\models\Task; ?>
             <dt>Дата регистрации</dt>
             <dd><?= Yii::$app->formatter->asDate($user->dt_add) ?></dd>
             <dt>Статус</dt>
-            <dd><?= Task::findOne(['executor_id' => $user->id, 'status' => Task::STATUS_IN_WORK]) ? 'Занят' : 'Открыт для новых заказов' ?></dd>
+            <dd><?= Yii::$app->user->identity->isBusy() ? 'Занят' : 'Открыт для новых заказов' ?></dd>
         </dl>
     </div>
     <div class="right-card white">

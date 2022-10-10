@@ -6,7 +6,7 @@ use yii\widgets\Menu; ?>
     <h3 class="head-main head-task">Настройки</h3>
     <?= Menu::widget(['items' => [
     ['label' => 'Мой профиль', 'url' => ['user/options']],
-    ['label' => 'Безопасность', 'url' => ['user/security'], 'visible' => !Auth::findOne(['user_id' => Yii::$app->user->id])]],
+    ['label' => 'Безопасность', 'url' => ['user/security'], 'visible' => Yii::$app->user->identity->isSecurityAvailable()]],
         'options' => [
             'class' => 'side-menu-list',
         ],

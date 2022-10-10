@@ -34,6 +34,7 @@ use yii\web\IdentityInterface;
  * @property Task[] $tasks
  * @property Task[] $tasks0
  * @property UserCategory[] $userCategories
+ * @property Auth $auth
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -143,6 +144,40 @@ class User extends ActiveRecord implements IdentityInterface
     public function getCity()
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
+    }
+
+    /**
+     * Проверяет наличие регистрации через сторонний сервис
+     * @return bool
+     */
+    public function isSecurityAvailable(): bool
+    {
+        if (!Auth::findOne(['user_id' => $this->id])) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isBusy()
+    {
+        if (Task::findOne(['executor_id' => $this->id, 'status' => Task::STATUS_IN_WORK])){
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets query for [[Auth]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuth()
+    {
+        return $this->hasOne(Auth::className(), ['id' => 'user_id']);
     }
 
     /**
