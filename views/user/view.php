@@ -10,7 +10,7 @@ use app\widgets\StarsWidget; ?>
             <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191"
                  height="190" alt="Фото пользователя">
             <div class="card-rate">
-                <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => 3]) ?>
+                <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => $user->rating]) ?>
                 </div>
                 <span class="current-rate"><?= $user->rating ?></span>
             </div>
@@ -47,8 +47,8 @@ use app\widgets\StarsWidget; ?>
                 </p>
             </div>
             <div class="feedback-wrapper">
-                <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
-                            class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span>
+                <div class="stars-rating small">
+                    <?= StarsWidget::widget(['grade' => $review->grade]) ?>
                 </div>
                 <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($review->dt_add) ?></p>
             </div>
