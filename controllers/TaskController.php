@@ -37,6 +37,19 @@ class TaskController extends SecuredController
         return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
     }
 
+    public function actionFile($fileName) //полностью украл этот способ скачивания с интернета))))
+    {
+        $currentFile = Yii::$app->basePath . '/web/uploads/' . $fileName;
+
+        if (!is_file($currentFile)) {
+            throw new NotFoundHttpException('Файл не найден');
+        }
+            Yii::$app->response->sendFile($currentFile)->send();
+
+            return $this->redirect(Yii::$app->request->referrer);
+    }
+
+
     public function actionMy($type)
     {
         $taskFilter = new MyTaskFilter($type, Yii::$app->user->id);
