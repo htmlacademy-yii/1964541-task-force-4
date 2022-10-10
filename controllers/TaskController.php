@@ -65,21 +65,6 @@ class TaskController extends SecuredController
         return $this->render('view', ['task' => $task, 'responseForm' => $responseForm, 'reviewForm' => $reviewForm]);
     }
 
-    public function actionFile($fileName) //полностью украл этот способ скачивания с интернета))))
-    {
-            $currentFile = Yii::$app->basePath . '/web/uploads/' . $fileName;
-
-            if (is_file($currentFile)) {
-                header("Content-Type: application/octet-stream");
-                header("Accept-Ranges: bytes");
-                header("Content-Length: " . filesize($currentFile));
-                header("Content-Disposition: attachment; filename=" . $fileName);
-                readfile($currentFile);
-
-                return $this->redirect(Yii::$app->request->referrer);
-            }
-    }
-
     public function actionAdd()
     {
         $addTaskForm = new AddTaskForm();

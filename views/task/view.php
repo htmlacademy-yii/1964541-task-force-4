@@ -81,7 +81,7 @@ use yii\widgets\ActiveForm; ?>
         <ul class="enumeration-list">
             <?php foreach ($task->files as $file): ?>
             <li class="enumeration-item">
-                <a href="<?= Yii::$app->urlManager->createUrl(['task/file', 'fileName' => $file->file])?>" class="link link--block link--clip"><?= $file->file; ?></a>
+                <a href="<?= Yii::$app->urlManager->createUrl(['/uploads/' . $file->file])?>" class="link link--block link--clip"><?= $file->file; ?></a>
                 <p class="file-size"><?= filesize(Yii::$app->basePath . '/web/uploads/' . $file->file) / 8000 . ' кб' ?></p>
             </li>
             <?php endforeach; ?>
