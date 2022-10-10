@@ -1,7 +1,8 @@
 <?php
 
 
-use app\models\Task; ?>
+use app\models\Task;
+use app\widgets\StarsWidget; ?>
 <div class="left-column">
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">
@@ -9,8 +10,7 @@ use app\models\Task; ?>
             <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191"
                  height="190" alt="Фото пользователя">
             <div class="card-rate">
-                <div class="stars-rating big"><span class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span
-                            class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span>&nbsp;</span>
+                <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => 3]) ?>
                 </div>
                 <span class="current-rate"><?= $user->rating ?></span>
             </div>
