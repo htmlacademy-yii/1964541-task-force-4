@@ -9,6 +9,7 @@ use app\models\forms\PasswordForm;
 use app\models\User;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -52,7 +53,7 @@ class UserController extends SecuredController
     {
         if (Auth::findOne(['user_id' => Yii::$app->user->id])) {
 
-            return $this->redirect('options');
+            throw new HttpException('Данная страница вам недоступна');
         }
 
         $passwordForm = new PasswordForm();

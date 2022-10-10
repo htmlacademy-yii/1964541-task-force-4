@@ -32,7 +32,7 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
-    public function getFilteredTasksData(): object
+    public function getFilteredTasksData(): ActiveDataProvider
     {
         $activeQuery = $this->getTasksQuery();
 

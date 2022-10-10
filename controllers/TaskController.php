@@ -37,7 +37,7 @@ class TaskController extends SecuredController
         return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
     }
 
-    public function actionFile($fileName) //полностью украл этот способ скачивания с интернета))))
+    public function actionFile($fileName)
     {
         $currentFile = Yii::$app->basePath . '/web/uploads/' . $fileName;
 
