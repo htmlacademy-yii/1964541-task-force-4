@@ -21,6 +21,20 @@ use yii\web\UploadedFile;
 
 class TaskController extends SecuredController
 {
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['add'],
+            'matchCallback' => function ($rule, $action) {
+                    return Yii::$app->user->identity->user_type === USER::EXECUTOR_STATUS;
+            }];
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
     public function actionIndex()
     {
         $filterForm = new FilterForm();
@@ -45,9 +59,9 @@ class TaskController extends SecuredController
         if (!is_file($currentFile)) {
             throw new NotFoundHttpException('Файл не найден');
         }
-            Yii::$app->response->sendFile($currentFile)->send();
+        Yii::$app->response->sendFile($currentFile)->send();
 
-            return $this->redirect(Yii::$app->request->referrer);
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
 
@@ -81,10 +95,6 @@ class TaskController extends SecuredController
 
     public function actionAdd()
     {
-        if (Yii::$app->user->identity->user_type === USER::EXECUTOR_STATUS) {
-            throw new HttpException('404', 'Доступ запрещен');
-        }
-
         $addTaskForm = new AddTaskForm();
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());

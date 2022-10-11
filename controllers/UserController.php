@@ -15,6 +15,20 @@ use yii\web\UploadedFile;
 
 class UserController extends SecuredController
 {
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['security'],
+            'matchCallback' => function ($rule, $action) {
+                return Auth::findOne(['user_id' => Yii::$app->user->id]);
+            }];
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
     public function actionView($id)
     {
         $user = User::findOne($id);
@@ -55,11 +69,6 @@ class UserController extends SecuredController
 
     public function actionSecurity()
     {
-        if (Auth::findOne(['user_id' => Yii::$app->user->id])) {
-
-            throw new HttpException('404', 'Данная страница вам недоступна');
-        }
-
         $passwordForm = new PasswordForm();
 
         if (Yii::$app->request->getIsPost()) {
