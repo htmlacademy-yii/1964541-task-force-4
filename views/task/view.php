@@ -34,9 +34,9 @@ use yii\widgets\ActiveForm; ?>
                 <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>"
                    class="link link--block link--big"><?= $response->executor->login ?></a>
                 <div class="response-wrapper">
-                    <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
-                                class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span
-                                class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
+                    <div class="stars-rating small">
+                        <?= \app\widgets\StarsWidget::widget(['grade' => $response->executor->rating]) ?>
+                    </div>
                     <p class="reviews">2 отзыва</p>
                 </div>
                 <p class="response-message">
