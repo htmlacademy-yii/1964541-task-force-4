@@ -116,9 +116,22 @@ class User extends ActiveRecord implements IdentityInterface
     public function getRatingPosition()
     {
         $rowsArray = User::find()
-            ->select('id, ROW_NUMBER() OVER (ORDER BY rating DESC) as row_num')
+            ->select("user.id,
+       ROW_NUMBER() OVER (ORDER BY SUM(r.grade) / (COUNT(r.id) + (
+           SELECT COUNT(t.id)
+           FROM task t
+           WHERE status = 'failed'
+             AND user.id = t.executor_id)) DESC) AS `row_num`,
+       SUM(r.grade) / (COUNT(r.id) + (
+           SELECT COUNT(t.id)
+           FROM task t
+           WHERE status = 'failed'
+             AND user.id = t.executor_id)) as rating")
+            ->leftJoin('review r', 'user.id = r.executor_id')
+            ->groupBy('user.id')
             ->asArray()
             ->all();
+
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
     }
 
@@ -128,7 +141,7 @@ class User extends ActiveRecord implements IdentityInterface
         $reviewCount = Review::find()->where(['executor_id' => $this->id])->count();
         $failedTasks = Task::find()->where(['executor_id' => $this->id])->andFilterWhere(['status' => Task::STATUS_FAILED])->count();
 
-        if (!$reviewCount + $failedTasks) {
+        if (($reviewCount + $failedTasks) === 0) {
             return 0;
         }
 

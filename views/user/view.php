@@ -67,7 +67,7 @@ use app\widgets\StarsWidget; ?>
             <dt>Всего заказов</dt>
             <dd><?= $user->getExecutedTasks()->count(); ?> выполнено, <?= $user->getFailedTasks()->count(); ?> провалено</dd>
             <dt>Место в рейтинге</dt>
-            <dd><?= 'КАК СЧИТАТЬ' ?></dd>
+            <dd><?= $user->getRatingPosition() ?></dd>
             <dt>Дата регистрации</dt>
             <dd><?= Yii::$app->formatter->asDate($user->dt_add) ?></dd>
             <dt>Статус</dt>
