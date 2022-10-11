@@ -49,7 +49,7 @@ class AddTaskForm extends Model
             [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
-            [['files'], 'file', 'skipOnEmpty' => false, 'maxFiles' => 4, 'checkExtensionByMimeType' => false],
+            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 4, 'checkExtensionByMimeType' => false],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
             [
                 ['deadline'],

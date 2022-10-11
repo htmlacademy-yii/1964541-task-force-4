@@ -12,7 +12,7 @@ use app\widgets\StarsWidget; ?>
             <div class="card-rate">
                 <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => $user->rating]) ?>
                 </div>
-                <span class="current-rate"><?= $user->rating ?></span>
+                <span class="current-rate"><?= $user->getUserRating() ?></span>
             </div>
         </div>
         <p class="user-description"><?= $user->description ?></p>

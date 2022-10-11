@@ -165,7 +165,10 @@ class TaskService
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
-            if (!$task->save() && !$form->save()) {
+            if (!$task->save()) {
+                throw new ModelSaveException('Не удалось сохранить данные');
+            }
+            if (!$form->save()) {
                 throw new ModelSaveException('Не удалось сохранить данные');
             }
             $transaction->commit();

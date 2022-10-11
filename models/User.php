@@ -122,6 +122,15 @@ class User extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
     }
 
+    /*public function getUserRating()
+    {
+        $gradeSum = Review::find()->where(['executor_id' => $this->id])->sum('grade');
+        $reviewCount = Review::find()->where(['executor_id' => $this->id])->count();
+        $failedTasks = Task::find()->where(['executor_id' => $this->id])->andFilterWhere(['status' => Task::STATUS_FAILED])->count();
+
+        return floor($gradeSum / ($reviewCount + $failedTasks));
+    }*/
+
     public function getExecutedTasks()
     {
         return Task::find()
