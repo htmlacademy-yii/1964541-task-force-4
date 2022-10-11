@@ -20,7 +20,6 @@ use yii\web\IdentityInterface;
  * @property string|null $dt_add
  * @property string|null $avatar
  * @property string|null $user_type
- * @property int $rating
  * @property int|null $city_id
  * @property int|null $phone
  * @property string|null $telegram
@@ -68,7 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['email', 'password', 'login'], 'required'],
             [['dt_add'], 'safe'],
             [['avatar', 'user_type'], 'string'],
-            [['rating', 'city_id', 'phone'], 'integer'],
+            [['city_id', 'phone'], 'integer'],
             [['email', 'login'], 'string', 'max' => 320],
             [['password', 'telegram'], 'string', 'max' => 64],
             [['email'], 'unique'],
@@ -96,7 +95,6 @@ class User extends ActiveRecord implements IdentityInterface
             'dt_add' => 'Dt Add',
             'avatar' => 'Avatar',
             'user_type' => 'User Type',
-            'rating' => 'Rating',
             'city_id' => 'City ID',
             'phone' => 'Phone',
             'telegram' => 'Telegram',
