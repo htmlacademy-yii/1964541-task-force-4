@@ -28,7 +28,7 @@ class FilterForm extends Model
         $activeQuery->joinWith('category');
         $activeQuery->leftJoin('response', 'task.id = response.task_id');
         $activeQuery->where(['task.status' => Task::STATUS_NEW]);
-        $activeQuery->andFilterWhere(['city_id' => Yii::$app->user->identity->city_id])->orWhere(['city_id' => null]);
+        $activeQuery->andWhere(['or', ['city_id' => Yii::$app->user->identity->city_id], ['city_id' => null]]);
         return $activeQuery;
     }
 
