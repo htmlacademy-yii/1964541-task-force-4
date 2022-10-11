@@ -10,7 +10,7 @@ use app\widgets\StarsWidget; ?>
             <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191"
                  height="190" alt="Фото пользователя">
             <div class="card-rate">
-                <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => $user->rating]) ?>
+                <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => $user->getUserRating()]) ?>
                 </div>
                 <span class="current-rate"><?= $user->getUserRating() ?></span>
             </div>
@@ -18,6 +18,7 @@ use app\widgets\StarsWidget; ?>
         <p class="user-description"><?= $user->description ?></p>
     </div>
     <div class="specialization-bio">
+        <?php if (!empty($user->categories)): ?>
         <div class="specialization">
             <p class="head-info">Специализации</p>
             <ul class="special-list">
@@ -30,12 +31,14 @@ use app\widgets\StarsWidget; ?>
                 endforeach; ?>
             </ul>
         </div>
+        <?php endif; ?>
         <div class="bio">
             <p class="head-info">Био</p>
             <p class="bio-info"><span class="country-info">Россия</span>, <span
-                        class="town-info"><?= $user->city->name ?></span>, <span class="age-info">30</span> лет</p>
+                        class="town-info"><?= $user->city->name ?></span>, <span class="age-info"><?= date('Y', time()) - date( 'Y', strtotime($user->bdate)) ?></span> лет</p>
         </div>
     </div>
+    <?php if (!empty($user->reviews)): ?>
     <h4 class="head-regular">Отзывы заказчиков</h4>
     <?php
     foreach ($user->reviews as $review): ?>
@@ -55,6 +58,7 @@ use app\widgets\StarsWidget; ?>
         </div>
     <?php
     endforeach; ?>
+    <?php endif; ?>
 </div>
 <div class="right-column">
     <div class="right-card black">

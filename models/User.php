@@ -122,14 +122,18 @@ class User extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
     }
 
-    /*public function getUserRating()
+    public function getUserRating()
     {
         $gradeSum = Review::find()->where(['executor_id' => $this->id])->sum('grade');
         $reviewCount = Review::find()->where(['executor_id' => $this->id])->count();
         $failedTasks = Task::find()->where(['executor_id' => $this->id])->andFilterWhere(['status' => Task::STATUS_FAILED])->count();
 
+        if (!$reviewCount + $failedTasks) {
+            return 0;
+        }
+
         return floor($gradeSum / ($reviewCount + $failedTasks));
-    }*/
+    }
 
     public function getExecutedTasks()
     {
@@ -206,7 +210,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getReviews()
     {
-        return $this->hasMany(Review::className(), ['customer_id' => 'id']);
+        return $this->hasMany(Review::className(), ['executor_id' => 'id']);
     }
 
     /**
