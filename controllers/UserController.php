@@ -23,6 +23,10 @@ class UserController extends SecuredController
             throw new NotFoundHttpException("Юзер с ID $id не найден");
         }
 
+        if ($user->user_type === USER::CUSTOMER_STATUS) {
+            throw new HttpException('404', 'Доступ запрещен');
+        }
+
         return $this->render('view', ['user' => $user]);
     }
 
@@ -53,7 +57,7 @@ class UserController extends SecuredController
     {
         if (Auth::findOne(['user_id' => Yii::$app->user->id])) {
 
-            throw new HttpException('Данная страница вам недоступна');
+            throw new HttpException('404', 'Данная страница вам недоступна');
         }
 
         $passwordForm = new PasswordForm();
