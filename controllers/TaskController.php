@@ -15,6 +15,7 @@ use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
@@ -80,6 +81,10 @@ class TaskController extends SecuredController
 
     public function actionAdd()
     {
+        if (Yii::$app->user->identity->user_type === USER::EXECUTOR_STATUS) {
+            throw new HttpException('404', 'Доступ запрещен');
+        }
+
         $addTaskForm = new AddTaskForm();
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());
