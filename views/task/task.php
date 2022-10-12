@@ -25,6 +25,11 @@ use yii\widgets\ListView;
     ]);
     ?>
 </div>
+<?php
+if (!Yii::$app->user->identity->user_type) {
+    echo $this->render('userTypeModal', ['user' => Yii::$app->user->identity]);
+}
+?>
 <div class="right-column">
     <div class="right-card black">
         <div class="search-form">

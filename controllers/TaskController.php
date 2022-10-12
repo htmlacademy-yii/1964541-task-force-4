@@ -86,6 +86,21 @@ class TaskController extends SecuredController
         return $this->render('my', ['tasks' => $tasks]);
     }
 
+    public function actionModal()
+    {
+        $user = User::findOne(['id' => Yii::$app->user->id]);
+
+        if (Yii::$app->request->getIsPost()) {
+            $user->load(Yii::$app->request->post());
+            if ($user->validate()) {
+                if (!$user->save()) {
+                    throw new ModelSaveException('Не удалось сохранить тип пользователя');
+                }
+                $this->goHome();
+            }
+        }
+    }
+
     public function actionView($id)
     {
         $task = Task::findOne($id);

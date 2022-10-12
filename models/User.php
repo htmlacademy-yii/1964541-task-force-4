@@ -66,12 +66,13 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['email', 'password', 'login'], 'required'],
             [['dt_add'], 'safe'],
-            [['avatar', 'user_type'], 'string'],
+            [['avatar'], 'string'],
             [['city_id', 'phone'], 'integer'],
             [['email', 'login'], 'string', 'max' => 320],
             [['password', 'telegram'], 'string', 'max' => 64],
             [['email'], 'unique'],
             [['login'], 'unique'],
+            [['user_type'], 'in', 'range' => [self::CUSTOMER_STATUS, self::EXECUTOR_STATUS]],
             [
                 ['city_id'],
                 'exist',
@@ -94,11 +95,16 @@ class User extends ActiveRecord implements IdentityInterface
             'login' => 'Login',
             'dt_add' => 'Dt Add',
             'avatar' => 'Avatar',
-            'user_type' => 'User Type',
+            'user_type' => 'Тип пользователя',
             'city_id' => 'City ID',
             'phone' => 'Phone',
             'telegram' => 'Telegram',
         ];
+    }
+
+    public function typeAttributeLabels(): array
+    {
+        return [self::CUSTOMER_STATUS => 'Заказчик', self::EXECUTOR_STATUS => 'Исполнитель'];
     }
 
     /**
