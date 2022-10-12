@@ -3,13 +3,21 @@
 namespace app\widgets;
 
 use yii\base\Widget;
+use yii\helpers\Html;
 
 class StarsWidget extends Widget
 {
     public $grade;
+    const MAX_COUNT_FILL_STARS = 5;
 
     public function run()
     {
-        return str_repeat("<span class='fill-star'>&nbsp;</span>", $this->grade) . (str_repeat("<span>&nbsp;</span>", (5 - $this->grade)));
+        $result = '';
+        for ($i = 0; $i < self::MAX_COUNT_FILL_STARS; $i++) {
+            $result .= Html::tag('span', '&nbsp;', [
+                'class' => $this->grade > $i ? 'fill-star' : '',
+            ]);
+        }
+        return $result;
     }
 }
