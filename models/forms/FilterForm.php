@@ -48,7 +48,7 @@ class FilterForm extends Model
         if ($this->period) {
             $this->chooseRightPeriod($activeQuery);
         }
-        $activeQuery->orderBy(['dt_add' => SORT_ASC]);
+        $activeQuery->orderBy(['dt_add' => SORT_DESC]);
 
         return $activeQuery;
     }
