@@ -38,7 +38,10 @@ class TaskController extends SecuredController
     public function actionIndex()
     {
         $filterForm = new FilterForm();
-        $tasksDataProvider = $filterForm->getFilteredTasksData();
+        $tasksDataProvider = new ActiveDataProvider([
+            'query' => $filterForm->getFilteredTasksData(),
+            'pagination' => ['pageSize' => 5],
+        ]);
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
