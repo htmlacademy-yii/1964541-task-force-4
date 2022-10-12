@@ -32,7 +32,7 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
-    public function getFilteredTasksData(): ActiveDataProvider
+    public function getFilteredTasksData(): ActiveQuery
     {
         $activeQuery = $this->getTasksQuery();
 
@@ -50,10 +50,7 @@ class FilterForm extends Model
         }
         $activeQuery->orderBy(['dt_add' => SORT_ASC]);
 
-        return new ActiveDataProvider([
-            'query' => $activeQuery,
-            'pagination' => ['pageSize' => 5],
-        ]);
+        return $activeQuery;
     }
 
     private function chooseRightPeriod($activeQuery): ActiveQuery

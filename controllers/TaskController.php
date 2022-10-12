@@ -45,7 +45,10 @@ class TaskController extends SecuredController
             if (!$filterForm->validate()) {
                 $errors = $this->getErrors();
             } else {
-                $tasksDataProvider = $filterForm->getFilteredTasksData();
+                $tasksDataProvider = new ActiveDataProvider([
+                    'query' => $filterForm->getFilteredTasksData(),
+                    'pagination' => ['pageSize' => 5],
+                ]);
             }
         }
 
