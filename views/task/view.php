@@ -35,9 +35,9 @@ use yii\widgets\ActiveForm; ?>
                    class="link link--block link--big"><?= $response->executor->login ?></a>
                 <div class="response-wrapper">
                     <div class="stars-rating small">
-                        <?= \app\widgets\StarsWidget::widget(['grade' => $response->executor->rating]) ?>
+                        <?= \app\widgets\StarsWidget::widget(['grade' => $response->executor->getUserRating()]) ?>
                     </div>
-                    <p class="reviews">2 отзыва</p>
+                    <p class="reviews"><?= $response->executor->getReviewsCount() ?></p>
                 </div>
                 <p class="response-message">
                     <?= $response->content ?>

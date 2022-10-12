@@ -144,6 +144,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->bdate ? ', ' . date('Y', time()) - date( 'Y', strtotime($this->bdate)) . ' лет' : '';
     }
 
+    public function getReviewsCount()
+    {
+        return Review::find()->where(['executor_id' => $this->id])->count();
+    }
+
     public function getUserRating()
     {
         $gradeSum = Review::find()->where(['executor_id' => $this->id])->sum('grade');
