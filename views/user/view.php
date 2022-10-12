@@ -2,13 +2,13 @@
 
 
 use app\models\Task;
+use app\widgets\AvatarWidget;
 use app\widgets\StarsWidget; ?>
 <div class="left-column">
     <h3 class="head-main"><?= $user->login ?></h3>
     <div class="user-card">
         <div class="photo-rate">
-            <img class="card-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="191"
-                 height="190" alt="Фото пользователя">
+            <?= AvatarWidget::widget(['avatar' => $user->avatar, 'height' => 190, 'width' => 191])?>
             <div class="card-rate">
                 <div class="stars-rating big"> <?= StarsWidget::widget(['grade' => $user->getUserRating()]) ?>
                 </div>
@@ -35,7 +35,7 @@ use app\widgets\StarsWidget; ?>
         <div class="bio">
             <p class="head-info">Био</p>
             <p class="bio-info"><span class="country-info">Россия</span>, <span
-                        class="town-info"><?= $user->city->name ?></span> <span class="age-info"><?= $user->getUserAge() ?></p>
+                        class="town-info"><?= !empty($user->city) ? $user->city->name : '' ?></span> <span class="age-info"><?= $user->getUserAge() ?></p>
         </div>
     </div>
     <?php if (!empty($user->reviews)): ?>
@@ -43,10 +43,10 @@ use app\widgets\StarsWidget; ?>
     <?php
     foreach ($user->reviews as $review): ?>
         <div class="response-card">
-            <img class="customer-photo" src="../img/man-coat.png" width="120" height="127" alt="Фото заказчиков">
+            <?= AvatarWidget::widget(['avatar' => $review->executor->avatar, 'width' => 120, 'height' => 127]) ?>
             <div class="feedback-wrapper">
                 <p class="feedback"><?= $review->content ?></p>
-                <p class="task">Задание «<a href="#" class="link link--small"><?= $review->task->title ?></a>» выполнено
+                <p class="task">Задание «<a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $review->task->id]) ?>" class="link link--small"><?= $review->task->title ?></a>» выполнено
                 </p>
             </div>
             <div class="feedback-wrapper">
