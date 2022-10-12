@@ -37,7 +37,7 @@ class UserController extends SecuredController
             throw new NotFoundHttpException("Юзер с ID $id не найден");
         }
 
-        if ($user->user_type === USER::CUSTOMER_STATUS) {
+        if (!$user->user_type === User::CUSTOMER_STATUS) {
             throw new HttpException('404', 'Доступ запрещен');
         }
 
