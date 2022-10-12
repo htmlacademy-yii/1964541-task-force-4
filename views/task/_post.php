@@ -7,7 +7,7 @@
     <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($model->dt_add) ?></p>
     <p class="task-text"><?= $model->description ?></p>
     <div class="footer-task">
-        <?php if (isset($model->city->name)): ?>
+        <?php if (isset($model->city)): ?>
             <p class="info-text town-text"><?= $model->city->name ?></p>
         <?php endif;?>
         <p class="info-text category-text"><?= $model->category->name ?></p>

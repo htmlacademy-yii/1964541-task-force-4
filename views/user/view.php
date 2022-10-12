@@ -35,7 +35,7 @@ use app\widgets\StarsWidget; ?>
         <div class="bio">
             <p class="head-info">Био</p>
             <p class="bio-info"><span class="country-info">Россия</span>, <span
-                        class="town-info"><?= $user->city->name ?></span>, <span class="age-info"><?= date('Y', time()) - date( 'Y', strtotime($user->bdate)) ?></span> лет</p>
+                        class="town-info"><?= $user->city->name ?></span> <span class="age-info"><?= $user->getUserAge() ?></p>
         </div>
     </div>
     <?php if (!empty($user->reviews)): ?>

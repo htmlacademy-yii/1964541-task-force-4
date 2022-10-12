@@ -58,6 +58,10 @@ class Files extends \yii\db\ActiveRecord
         return $this->hasOne(Task::className(), ['id' => 'task_id']);
     }
 
+    /**
+     * Возвращает размер файла
+     * @return string|null
+     */
     public function getFileSize()
     {
         return Yii::$app->formatter->asSize(filesize(Yii::$app->basePath . '/web/uploads/' . $this->file));

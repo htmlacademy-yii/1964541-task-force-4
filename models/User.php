@@ -133,6 +133,11 @@ class User extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
     }
 
+    public function getUserAge()
+    {
+        return $this->bdate ? ', ' . date('Y', time()) - date( 'Y', strtotime($this->bdate)) . ' лет' : '';
+    }
+
     public function getUserRating()
     {
         $gradeSum = Review::find()->where(['executor_id' => $this->id])->sum('grade');
