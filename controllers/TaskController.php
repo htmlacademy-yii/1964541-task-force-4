@@ -40,7 +40,7 @@ class TaskController extends SecuredController
         $filterForm = new FilterForm();
         $tasksDataProvider = new ActiveDataProvider([
             'query' => $filterForm->getFilteredTasksData(),
-            'pagination' => ['pageSize' => 5],
+            'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
         ]);
 
         if (Yii::$app->request->getIsPost()) {
@@ -50,7 +50,7 @@ class TaskController extends SecuredController
             } else {
                 $tasksDataProvider = new ActiveDataProvider([
                     'query' => $filterForm->getFilteredTasksData(),
-                    'pagination' => ['pageSize' => 5],
+                    'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
                 ]);
             }
         }
