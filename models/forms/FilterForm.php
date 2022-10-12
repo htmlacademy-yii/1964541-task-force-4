@@ -18,8 +18,8 @@ class FilterForm extends Model
     public $period = '';
 
     const ONE_HOUR = '1 hour';
-    const TWELVE_HOURS = '12 hours';
     const TWENTY_FOUR_HOURS = '24 hours';
+    const ONE_WEEK = '1 week';
 
     public function getTasksQuery(): ActiveQuery
     {
@@ -58,10 +58,10 @@ class FilterForm extends Model
         switch ($this->period) {
             case self::ONE_HOUR:
                 return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 1 HOUR')]);
-            case self::TWELVE_HOURS:
-                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 12 HOUR')]);
             case self::TWENTY_FOUR_HOURS:
-                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 24 HOUR')]);
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 12 HOUR')]);
+            case self::ONE_WEEK:
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 168 HOUR')]);
         }
     }
 
@@ -81,13 +81,13 @@ class FilterForm extends Model
             [['noResponse'], 'boolean'],
             [['noAddress'], 'boolean'],
             [['category'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']]],
-            ['period', 'in', 'range' => [self::ONE_HOUR, self::TWELVE_HOURS, self::TWENTY_FOUR_HOURS]]
+            ['period', 'in', 'range' => [self::ONE_HOUR, self::TWENTY_FOUR_HOURS, self::ONE_WEEK]]
         ];
     }
 
     public function periodAttributeLabels(): array
     {
-        return [self::ONE_HOUR => '1 час', self::TWELVE_HOURS => '12 часов', self::TWENTY_FOUR_HOURS => '24 часа'];
+        return [self::ONE_HOUR => '1 час', self::TWENTY_FOUR_HOURS => '12 часов', self::ONE_WEEK => '1 неделя'];
     }
 
 }
