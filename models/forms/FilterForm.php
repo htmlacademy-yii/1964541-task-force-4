@@ -61,7 +61,7 @@ class FilterForm extends Model
             case self::TWENTY_FOUR_HOURS:
                 return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 12 HOUR')]);
             case self::ONE_WEEK:
-                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 168 HOUR')]);
+                return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 1 WEEK')]);
         }
     }
 

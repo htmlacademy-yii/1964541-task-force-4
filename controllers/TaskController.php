@@ -96,7 +96,7 @@ class TaskController extends SecuredController
                 if (!$user->save()) {
                     throw new ModelSaveException('Не удалось сохранить тип пользователя');
                 }
-                $this->goHome();
+                return $this->goHome();
             }
         }
     }
