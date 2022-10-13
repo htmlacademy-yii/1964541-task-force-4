@@ -15,6 +15,7 @@ use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\web\BadRequestHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -91,14 +92,18 @@ class TaskController extends SecuredController
         $user = User::findOne(['id' => Yii::$app->user->id]);
 
         if (Yii::$app->request->getIsPost()) {
-            $user->load(Yii::$app->request->post());
+            $user->loadUserType(Yii::$app->request->post());
+
             if ($user->validate()) {
+
                 if (!$user->save()) {
                     throw new ModelSaveException('Не удалось сохранить тип пользователя');
                 }
+
                 return $this->goHome();
             }
         }
+        throw new BadRequestHttpException();
     }
 
     public function actionView($id)

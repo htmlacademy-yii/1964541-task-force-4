@@ -117,6 +117,11 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 
+    public function loadUserType($post)
+    {
+        $this->user_type = $post['User']['user_type'];
+    }
+
     public function getRatingPosition()
     {
         $rowsArray = User::find()
