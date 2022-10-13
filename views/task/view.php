@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm; ?>
             <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146"
                  height="156" alt="Фото заказчиков">
             <div class="feedback-wrapper">
-                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>"
+                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->executor->id]) ?>"
                    class="link link--block link--big"><?= $response->executor->login ?></a>
                 <div class="response-wrapper">
                     <div class="stars-rating small">
