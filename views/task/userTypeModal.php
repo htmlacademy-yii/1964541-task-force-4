@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
         <div class="addition-form pop-up--form regular-form">
             <?php
             $form = ActiveForm::begin(['id' => 'modal-form', 'action' => Yii::$app->urlManager->createUrl(['task/modal'])]) ?>
-            <?= $form->field($user, 'user_type',)->dropDownList($user->typeAttributeLabels()) ?>
+            <?= $form->field($user, 'user_type',)->dropDownList(User::typeAttributeLabels()) ?>
             <input type="submit" class="button button--pop-up button--blue" value="Принять">
             <?php ActiveForm::end() ?>
         </div>

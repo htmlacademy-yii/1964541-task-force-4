@@ -8,6 +8,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\i18n\MessageFormatter;
 use yii\web\IdentityInterface;
 
 /**
@@ -102,7 +103,11 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function typeAttributeLabels(): array
+    /**
+     * Лейблы для типов юзера
+     * @return string[]
+     */
+    public static function typeAttributeLabels(): array
     {
         return [self::CUSTOMER_STATUS => 'Заказчик', self::EXECUTOR_STATUS => 'Исполнитель'];
     }
@@ -117,12 +122,21 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
     }
 
-    public function loadUserType($post)
+    /**
+     * Добавляет тип юзера в модель
+     * @param string $type Значение из POST запроса
+     * @return void
+     */
+    public function loadUserType($type):void
     {
-        $this->user_type = $post['User']['user_type'];
+        $this->user_type = $type;
     }
 
-    public function getRatingPosition()
+    /**
+     * Возвращает позицию юзера в рейтинге
+     * @return mixed
+     */
+    public function getRatingPosition(): int
     {
         $rowsArray = User::find()
             ->select("user.id,
@@ -144,21 +158,38 @@ class User extends ActiveRecord implements IdentityInterface
         return ArrayHelper::map($rowsArray, 'id', 'row_num')[$this->id];
     }
 
-    public function getUserAge()
+    /** Вычисляет и форматирует возраст юзера
+     * @return string возраст
+     * @throws \Exception
+     */
+    public function getUserAge(): string
     {
-        return $this->bdate ? ', ' . date('Y', time()) - date( 'Y', strtotime($this->bdate)) . ' лет' : '';
+        $now = new \DateTimeImmutable('now');
+        $bdate = new \DateTimeImmutable($this->bdate);
+        $interval = $now->diff($bdate);
+        $formatter = new MessageFormatter();
+        $formatter->format('plural', ['год', 'года', 'лет'], 'ru');
+
+        return  Yii::t('app', '{interval, plural, one{# год} few{# года} many{# лет}}', ['interval' => $interval->format('%Y')]);
     }
 
-    public function getReviewsCount()
+    /**
+     * @return int Кол-во отзывов
+     */
+    public function getReviewsCount(): int
     {
-        return Review::find()->where(['executor_id' => $this->id])->count();
+        return $this->getReviews()->count();
     }
 
-    public function getUserRating()
+    /**
+     * Вычисляет рейтинг пользователя
+     * @return float|int Рейтинг пользователя
+     */
+    public function getUserRating(): float|int
     {
         $gradeSum = Review::find()->where(['executor_id' => $this->id])->sum('grade');
-        $reviewCount = Review::find()->where(['executor_id' => $this->id])->count();
-        $failedTasks = Task::find()->where(['executor_id' => $this->id])->andFilterWhere(['status' => Task::STATUS_FAILED])->count();
+        $reviewCount = $this->getReviewsCount();
+        $failedTasks = $this->getFailedTasks()->count();
 
         if (($reviewCount + $failedTasks) === 0) {
             return 0;
@@ -167,14 +198,22 @@ class User extends ActiveRecord implements IdentityInterface
         return floor($gradeSum / ($reviewCount + $failedTasks));
     }
 
-    public function getExecutedTasks()
+    /**
+     * Возвращает выполненные задания
+     * @return ActiveQuery
+     */
+    public function getExecutedTasks(): ActiveQuery
     {
         return Task::find()
             ->andFilterWhere(['executor_id' => $this->id])
             ->andFilterWhere(['status' => Task::STATUS_EXECUTED]);
     }
 
-    public function getFailedTasks()
+    /**
+     * Возвращает проваленные задания
+     * @return ActiveQuery
+     */
+    public function getFailedTasks(): ActiveQuery
     {
         return Task::find()
             ->andFilterWhere(['executor_id' => $this->id])
@@ -205,7 +244,11 @@ class User extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-    public function isBusy()
+    /**
+     * Проверят в работе исполнитель или нет
+     * @return bool
+     */
+    public function isBusy(): bool
     {
         if (Task::findOne(['executor_id' => $this->id, 'status' => Task::STATUS_IN_WORK])){
 
@@ -303,7 +346,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
      */
-    public function loadAuthUser($userInfo)
+    public function loadAuthUser($userInfo): void
     {
         $this->email = $userInfo['email'];
         $this->login = $userInfo['first_name'] . ' ' . $userInfo['last_name'];

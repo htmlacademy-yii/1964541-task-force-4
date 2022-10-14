@@ -92,7 +92,7 @@ class TaskController extends SecuredController
         $user = User::findOne(['id' => Yii::$app->user->id]);
 
         if (Yii::$app->request->getIsPost()) {
-            $user->loadUserType(Yii::$app->request->post());
+            $user->loadUserType(Yii::$app->request->post()['User']['user_type']);
 
             if ($user->validate()) {
 
