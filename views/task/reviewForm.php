@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
         <div class="completion-form pop-up--form regular-form">
             <?php $form = ActiveForm::begin(['id' => 'review-form', 'action' => Yii::$app->urlManager->createUrl(['task/review'])]) ?>
             <?= $form->field($reviewForm, 'content')->textarea(['labelOptions' => ['class' => 'control-label']]) ?>
-            <?= $form->field($reviewForm, 'grade')->input('number', ['labelOptions' => ['class' => 'control-label']]) ?>
+            <?= $form->field($reviewForm, 'grade', ['template' => '{input}'])->hiddenInput()->label(false)?>
             <?= $form->field($reviewForm, 'taskId', ['template' => '{input}'])->hiddenInput(['value' => $task->id])->label(false) ?>
             <p class="completion-head control-label">Оценка работы</p>
             <div class="stars-rating big active-stars">
@@ -25,3 +25,4 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 </section>
+

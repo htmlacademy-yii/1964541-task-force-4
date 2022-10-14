@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
             <div class="photo-editing">
                 <div>
                     <p class="form-label">Аватар</p>
-                    <img class="avatar-preview" src="/<?= Yii::$app->user->identity->avatar ?? Yii::$app->urlManager->baseUrl . 'img/man-glasses.png' ?>" width="83" height="83">
+                    <?= \app\widgets\AvatarWidget::widget(['avatar' => Yii::$app->user->identity->avatar, 'width' => 83, 'height' => 83, 'class' => 'avatar-preview']) ?>
                 </div>
                 <?= $form->field($model, 'file')->fileInput(['hidden' => ''])->label('Сменить аватар', ['class' => 'button button--black']) ?>
             </div>

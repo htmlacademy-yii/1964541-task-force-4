@@ -17,27 +17,27 @@ use yii\widgets\ActiveForm; ?>
         <?= $actionObject !== null ? ActionsWidget::widget(['actionObject' => $actionObject]) : ''; ?>
     <?php endforeach; ?>
     <?php endif; ?>
+    <?php if ($task->lat): ?>
     <div class="task-map">
         <div id="map" class="map"></div>
-        <?php if ($task->city_id): ?>
-        <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->city->lng . ' ' . $task->city->lat) ?></p>
-        <?php else: ?>
-            <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
-        <?php endif; ?>
+            <p class="map-address town"><?= $task->city->name ?></p>
+        <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
     </div>
+    <?php endif; ?>
+    <?php if ($task->responses): ?>
     <h4 class="head-regular">Отклики на задание</h4>
     <?php foreach ($task->responses as $response): ?>
         <div class="response-card">
             <img class="customer-photo" src="<?= Yii::$app->urlManager->baseUrl ?>/img/man-glasses.png" width="146"
                  height="156" alt="Фото заказчиков">
             <div class="feedback-wrapper">
-                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->customer->id]) ?>"
+                <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->executor->id]) ?>"
                    class="link link--block link--big"><?= $response->executor->login ?></a>
                 <div class="response-wrapper">
-                    <div class="stars-rating small"><span class="fill-star">&nbsp;</span><span
-                                class="fill-star">&nbsp;</span><span class="fill-star">&nbsp;</span><span
-                                class="fill-star">&nbsp;</span><span>&nbsp;</span></div>
-                    <p class="reviews">2 отзыва</p>
+                    <div class="stars-rating small">
+                        <?= \app\widgets\StarsWidget::widget(['grade' => $response->executor->getUserRating()]) ?>
+                    </div>
+                    <p class="reviews"><?= $response->executor->getReviewsCount() ?></p>
                 </div>
                 <p class="response-message">
                     <?= $response->content ?>
@@ -59,6 +59,7 @@ use yii\widgets\ActiveForm; ?>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
 <div class="right-column">
     <div class="right-card black info-card">
@@ -74,19 +75,19 @@ use yii\widgets\ActiveForm; ?>
             <dd><?= $task->getStatusLabel() ?></dd>
         </dl>
     </div>
+    <?php if ($task->files): ?>
     <div class="right-card white file-card">
         <h4 class="head-card">Файлы задания</h4>
         <ul class="enumeration-list">
+            <?php foreach ($task->files as $file): ?>
             <li class="enumeration-item">
-                <a href="#" class="link link--block link--clip">my_picture.jpg</a>
-                <p class="file-size">356 Кб</p>
+                <a href="<?= Yii::$app->urlManager->createUrl(['task/file', 'fileName' => $file->file])?>" class="link link--block link--clip"><?= $file->file; ?></a>
+                <p class="file-size"><?= $file->getFileSize() ?></p>
             </li>
-            <li class="enumeration-item">
-                <a href="#" class="link link--block link--clip">information.docx</a>
-                <p class="file-size">12 Кб</p>
-            </li>
+            <?php endforeach; ?>
         </ul>
     </div>
+    <?php endif; ?>
 </div>
     <script type="text/javascript">
         // Функция ymaps.ready() будет вызвана, когда

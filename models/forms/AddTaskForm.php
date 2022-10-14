@@ -3,6 +3,7 @@
 namespace app\models\forms;
 
 use app\models\Category;
+use app\models\Files;
 use app\models\Task;
 use GuzzleHttp\Client;
 use TaskForce\AddressTransformer;
@@ -19,8 +20,8 @@ class AddTaskForm extends Model
     public $category;
     public $price;
     public $deadline;
-    public $file;
-    public $filePath;
+    public $files;
+    public $filePaths;
     public $address;
     const TITLE_MIN_LENGTH = 10;
     const TITLE_MAX_LENGTH = 128;
@@ -35,7 +36,7 @@ class AddTaskForm extends Model
             'price' => 'Бюджет',
             'address' => 'Локация',
             'deadline' => 'Срок исполнения',
-            'file' => 'Файлы',
+            'files' => 'Файлы',
         ];
     }
 
@@ -48,7 +49,7 @@ class AddTaskForm extends Model
             [['description'], 'string', 'length' => [self::DESCRIPTION_MIN_LENGTH]],
             [['deadline'], 'date', 'format' => 'php:Y-m-d'],
             [['category'], 'exist', 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']],
-            [['file'], 'file'],
+            [['files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 4, 'checkExtensionByMimeType' => false],
             [['price'], 'compare', 'compareValue' => 0, 'operator' => '>', 'type' => 'number'],
             [
                 ['deadline'],
@@ -61,30 +62,28 @@ class AddTaskForm extends Model
         ];
     }
 
-    private function uploadFile()
+    private function uploadFiles(): bool
     {
-        if ($this->file && $this->validate()) {
-            $newName = uniqid('upload') . '.' . $this->file->getExtension();
-            $this->file->saveAs('@webroot/uploads/' . $newName);
-
-            $this->filePath = $newName;
+        if ($this->files && $this->validate()) {
+            foreach ($this->files as $file) {
+                $newName = uniqid('upload') . '.' . $file->getExtension();
+                $file->saveAs('@webroot/uploads/' . $newName);
+                $this->filePaths[] = $newName;
+            }
             return true;
         }
         return false;
     }
 
-    private function loadLocation($task)
+    private function loadLocation(Task $task): void
     {
         $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
         $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
+        $task->city_id = Yii::$app->user->identity->city_id;
     }
 
-    public function loadToTask()
+    public function loadToTask(): void
     {
-        if (!$this->uploadFile() && $this->file) {
-            throw new FileUploadException('Загрузить файл не удалось');
-        }
-
         $task = new Task();
         $task->title = $this->title;
         $task->description = $this->description;
@@ -92,13 +91,44 @@ class AddTaskForm extends Model
         $task->price = $this->price;
         $task->customer_id = Yii::$app->user->id;
         $task->deadline = $this->deadline;
-        $task->file = $this->filePath;
         $task->status = Task::STATUS_NEW;
-        
+
         if ($this->address) {
             $this->loadLocation($task);
         }
 
-        return $task;
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            if (!$task->save()) {
+                throw new ModelSaveException('Не удалось сохранить задание');
+            }
+
+            if ($this->files) {
+                $this->saveFiles($task);
+            }
+
+            $transaction->commit();
+        } catch (ModelSaveException $exception)
+        {
+            $transaction->rollback();
+            throw new ModelSaveException($exception->getMessage());
+        }
     }
+
+    private function saveFiles(Task $task): void
+    {
+        if ($this->uploadFiles()) {
+            foreach ($this->filePaths as $filePath) {
+                $files = new Files();
+                $files->task_id = $task->id;
+                $files->file = $filePath;
+                if (!$files->save()) {
+                    throw new ModelSaveException('Не удалось сохранить файлы');
+                };
+            }
+        }
+    }
+
+
 }

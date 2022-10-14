@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
+use app\models\Files;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
@@ -13,27 +14,63 @@ use TaskForce\exceptions\ModelSaveException;
 use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\web\BadRequestHttpException;
+use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 class TaskController extends SecuredController
 {
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['add'],
+            'matchCallback' => function ($rule, $action) {
+                    return Yii::$app->user->identity->user_type === USER::EXECUTOR_STATUS;
+            }];
+        array_unshift($rules['access']['rules'], $rule);
+
+        return $rules;
+    }
+
     public function actionIndex()
     {
         $filterForm = new FilterForm();
-        $tasks = $filterForm->getTasksQuery()->all();
+        $tasksDataProvider = new ActiveDataProvider([
+            'query' => $filterForm->getFilteredTasksData(),
+            'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
+        ]);
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
             if (!$filterForm->validate()) {
                 $errors = $this->getErrors();
             } else {
-                $tasks = $filterForm->getFilteredTasks();
+                $tasksDataProvider = new ActiveDataProvider([
+                    'query' => $filterForm->getFilteredTasksData(),
+                    'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
+                ]);
             }
         }
 
-        return $this->render('task', ['tasks' => $tasks, 'model' => $filterForm]);
+        return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
     }
+
+    public function actionFile($fileName)
+    {
+        $currentFile = Yii::$app->basePath . '/web/uploads/' . $fileName;
+
+        if (!is_file($currentFile)) {
+            throw new NotFoundHttpException('Файл не найден');
+        }
+        Yii::$app->response->sendFile($currentFile)->send();
+
+        return $this->redirect(Yii::$app->request->referrer);
+    }
+
 
     public function actionMy($type)
     {
@@ -50,6 +87,25 @@ class TaskController extends SecuredController
         return $this->render('my', ['tasks' => $tasks]);
     }
 
+    public function actionModal()
+    {
+        $user = User::findOne(['id' => Yii::$app->user->id]);
+
+        if (Yii::$app->request->getIsPost()) {
+            $user->loadUserType(Yii::$app->request->post()['User']['user_type']);
+
+            if ($user->validate()) {
+
+                if (!$user->save()) {
+                    throw new ModelSaveException('Не удалось сохранить тип пользователя');
+                }
+
+                return $this->goHome();
+            }
+        }
+        throw new BadRequestHttpException();
+    }
+
     public function actionView($id)
     {
         $task = Task::findOne($id);
@@ -59,6 +115,7 @@ class TaskController extends SecuredController
         if (!$task) {
             throw new NotFoundHttpException("Задание с ID $id не найден");
         }
+
         return $this->render('view', ['task' => $task, 'responseForm' => $responseForm, 'reviewForm' => $reviewForm]);
     }
 
@@ -67,13 +124,11 @@ class TaskController extends SecuredController
         $addTaskForm = new AddTaskForm();
         if (Yii::$app->request->getIsPost()) {
             $addTaskForm->load(Yii::$app->request->post());
-            $addTaskForm->file = UploadedFile::getInstance($addTaskForm, 'file');
+            $addTaskForm->files = UploadedFile::getInstances($addTaskForm, 'files');
             if ($addTaskForm->validate()) {
 
+                $addTaskForm->loadToTask();
 
-                if (!$addTaskForm->loadToTask()->save()) {
-                    throw new ModelSaveException('Не удалось сохранить данные');
-                }
                 return $this->goHome();
             }
         }

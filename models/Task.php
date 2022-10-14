@@ -15,7 +15,6 @@ use Yii;
  * @property int $id
  * @property string $title
  * @property string|null $description
- * @property string|null $file
  * @property float|null $long
  * @property float|null $lat
  * @property int|null $city_id
@@ -34,6 +33,7 @@ use Yii;
  * @property User $executor
  * @property Response[] $responses
  * @property Review[] $reviews
+ * @property Files[] $files
  */
 class Task extends \yii\db\ActiveRecord
 {
@@ -73,7 +73,6 @@ class Task extends \yii\db\ActiveRecord
             [['city_id', 'price', 'customer_id', 'executor_id', 'category_id'], 'integer'],
             [['deadline', 'dt_add'], 'safe'],
             [['title'], 'string', 'max' => 128],
-            [['file'], 'string', 'max' => 320],
             [
                 ['category_id'],
                 'exist',
@@ -114,7 +113,6 @@ class Task extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'description' => 'Description',
-            'file' => 'File',
             'long' => 'Long',
             'lat' => 'Lat',
             'city_id' => 'City ID',
@@ -176,6 +174,16 @@ class Task extends \yii\db\ActiveRecord
     public function getResponses()
     {
         return $this->hasMany(Response::className(), ['task_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Files]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFiles()
+    {
+        return $this->hasMany(Files::className(), ['task_id' => 'id']);
     }
 
     public function checkUserResponse($id)
