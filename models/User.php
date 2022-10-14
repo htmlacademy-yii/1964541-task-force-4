@@ -170,7 +170,7 @@ class User extends ActiveRecord implements IdentityInterface
         $formatter = new MessageFormatter();
         $formatter->format('plural', ['год', 'года', 'лет'], 'ru');
 
-        return  Yii::t('app', '{interval, plural, one{# год} few{# года} many{# лет}}', ['interval' => $interval->format('%Y')]);
+        return  Yii::$app->i18n->format('{interval, plural, one{# год} few{# года} many{# лет} other{лежит # лет}}',  ['interval' => $interval->format('%Y')], 'ru_RU');
     }
 
     /**
