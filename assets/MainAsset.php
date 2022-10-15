@@ -9,12 +9,13 @@ class MainAsset extends AssetBundle
     public $basePath = '@webroot';
 
     public $css = [
-        'css/style.css'
+        'css/style.css',
     ];
 
     public $js = [
         'js/main.js',
         'js/starsGrade.js',
-        'js/autoCompleteJS.js'
+        'js/autoCompleteJS.js',
+        'autoComplete.js'
     ];
 }
