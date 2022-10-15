@@ -14,7 +14,8 @@ class MainAsset extends AssetBundle
 
     public $js = [
         'js/main.js',
-        'js/starsGrade.js'
+        'js/starsGrade.js',
+        'js/autocomplete.js'
     ];
 
 }
