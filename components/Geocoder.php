@@ -83,7 +83,7 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    private function loadLocation($address)
+    public function loadLocation($address)
     {
         $response = $this->client->request('GET', '1.x',
             ['query' => ['apikey' => $this->apiKey, 'geocode' => $address, 'format' => 'json']]);
@@ -100,5 +100,17 @@ class Geocoder extends Component
 
         return $responseData;
 
+    }
+
+    public function getAutocompleteData($address, $city)
+    {
+        $address = $city . ', ' . $address;
+        $data = $this->loadLocation($address);
+        $feature_members = ArrayHelper::getValue($data,'response.GeoObjectCollection.featureMember');
+        foreach ($feature_members as $feature_member) {
+            $autoComplete[] = ArrayHelper::getColumn($feature_member, 'name')['GeoObject'];
+        }
+
+        return $autoComplete;
     }
 }

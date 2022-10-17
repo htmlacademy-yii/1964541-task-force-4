@@ -21,3 +21,33 @@ use yii\widgets\ActiveForm;
     <?php
     ActiveForm::end() ?>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+<script>
+    const autoCompleteJS = new autoComplete({
+        placeHolder: "Введите адрес",
+        data: {
+            src: async (query) => {
+                try {
+                    const source = await fetch(`autocomplete/${query}`);
+                    let data = await source.json();
+
+                    return data;
+                } catch (error) {
+                    return error;
+                }
+            },
+            cache: false,
+        },
+        resultItem: {
+            highlight: true
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection;
+                }
+            }
+        }
+    });
+</script>
