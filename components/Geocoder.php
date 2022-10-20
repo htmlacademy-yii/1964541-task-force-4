@@ -36,7 +36,7 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    public function getLong($address, $city)
+    public function getLong($address, $city): string
     {
         $address = $city . ', ' . $address;
         $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
@@ -50,7 +50,7 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    public function getLat($address, $city)
+    public function getLat($address, $city): string
     {
         $address = $city . ', ' . $address;
         $location = explode(' ', ArrayHelper::getValue($this->loadLocation($address), self::GEOCODE_COORDINATES_KEY));
@@ -64,7 +64,7 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    public function getAddress($address)
+    public function getAddress($address): string
     {
         return ArrayHelper::getValue($this->loadLocation($address), self::GEOCODER_ADDRESS_KEY);
     }
@@ -72,7 +72,7 @@ class Geocoder extends Component
     /** Geocoder ApiKey
      * @return string Возвращает АПИ ключ из конфига
      */
-    public function getApiKey()
+    public function getApiKey(): string
     {
         return $this->apiKey;
     }
@@ -83,7 +83,7 @@ class Geocoder extends Component
      * @throws BadRequestException Ошибка запроса к серверу
      * @throws WrongAnswerFormatException Неверный формат ответа
      */
-    private function loadLocation($address)
+    public function loadLocation($address): array
     {
         $response = $this->client->request('GET', '1.x',
             ['query' => ['apikey' => $this->apiKey, 'geocode' => $address, 'format' => 'json']]);
@@ -100,5 +100,25 @@ class Geocoder extends Component
 
         return $responseData;
 
+    }
+
+    /**
+     * Извлекает из ответа геокодера похожие адреса
+     * @param string $address Вводимый пользователем адрес
+     * @param string $city Город пользователя
+     * @return array Массив с данными для отправки в autocomplete
+     * @throws BadRequestException
+     * @throws WrongAnswerFormatException
+     */
+    public function getAutocompleteData($address, $city): array
+    {
+        $address = $city . ', ' . $address;
+        $data = $this->loadLocation($address);
+        $feature_members = ArrayHelper::getValue($data,'response.GeoObjectCollection.featureMember');
+        foreach ($feature_members as $feature_member) {
+            $autoComplete[] = ArrayHelper::getColumn($feature_member, 'name')['GeoObject'];
+        }
+
+        return $autoComplete;
     }
 }

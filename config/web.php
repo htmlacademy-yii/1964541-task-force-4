@@ -69,7 +69,8 @@ $config = [
             'rules' => [
                 'task/view/<id:\d+>' => 'task/view',
                 'task/my/<type:\w+>' => 'task/my',
-                'user/view/<id:\d+>' => 'user/view'
+                'user/view/<id:\d+>' => 'user/view',
+                'task/autocomplete/<query:\w+>' => 'task/autocomplete'
             ],
         ],
     ],

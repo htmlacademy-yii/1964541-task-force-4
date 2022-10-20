@@ -12,7 +12,7 @@ use yii\widgets\ListView;
     echo ListView::widget([
         'dataProvider' => $tasksDataProvider,
         'itemView' => '_post',
-        'layout' => "{summary}\n{items}\n<div class='pagination-wrapper'>{pager}</div>",
+        'layout' => "{items}\n<div class='pagination-wrapper'>{pager}</div>",
         'pager' => ['activePageCssClass' => 'pagination-item--active',
             'pageCssClass' => 'pagination-item',
             'options' => ['class' => 'pagination-list'],

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "<p align=\"center\">     <a href=\"https://github.com/yiisoft\" target=\"_blank\">         <img src=\"https://avatars0.githubusercontent.com/u/993323\" height=\"100px\">     </a>     <h1 align=\"center\">Yii 2 Basic Project Template</h1>     <br> </p>",
   "main": "index.js",
+  "type": "module",
   "directories": {
     "test": "tests"
   },
@@ -20,6 +21,6 @@
   },
   "homepage": "https://github.com/g123udini/1964541-task-force-4#readme",
   "dependencies": {
-    "@tarekraafat/autocomplete.js": "^10.2.7"
+    "@tarekraafat/autocomplete.js": "^10.2.7",
   }
 }

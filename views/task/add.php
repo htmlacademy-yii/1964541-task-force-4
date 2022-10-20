@@ -21,3 +21,7 @@ use yii\widgets\ActiveForm;
     <?php
     ActiveForm::end() ?>
 </div>
+<?php
+$this->registerJsFile('https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js');
+$this->registerJsFile('/js/autoComplete.js');
+$this->registerCssFile('https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.02.min.css');?>

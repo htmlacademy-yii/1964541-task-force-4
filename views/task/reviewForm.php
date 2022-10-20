@@ -1,5 +1,6 @@
 <?php
 use yii\widgets\ActiveForm;
+$this->registerJsFile('/js/starsGrade.js')
 ?>
 <section class="pop-up pop-up--completion pop-up--close">
     <div class="pop-up--wrapper">

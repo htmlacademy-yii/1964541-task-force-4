@@ -15,6 +15,7 @@ use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -192,5 +193,10 @@ class TaskController extends SecuredController
         $taskService->actionCancel();
 
         return $this->goHome();
+    }
+
+    public function actionAutocomplete($query)
+    {
+        $this->asJson(Yii::$app->geocoder->getAutocompleteData($query, Yii::$app->user->identity->city->name));
     }
 }
