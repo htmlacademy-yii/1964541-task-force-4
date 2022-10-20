@@ -33,7 +33,6 @@ $this->beginPage() ?>
     <title>Taskforce</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=<?= Yii::$app->geocoder->getApiKey() ?>&lang=ru_RU"
             type="text/javascript"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.02.min.css">
     <?php
     $this->head() ?>
 </head>
