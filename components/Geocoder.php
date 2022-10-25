@@ -102,8 +102,7 @@ class Geocoder extends Component
 
     }
 
-    /**
-     * Извлекает из ответа геокодера похожие адреса
+    /**Извлекает из ответа геокодера похожие адреса
      * @param string $address Вводимый пользователем адрес
      * @param string $city Город пользователя
      * @return array Массив с данными для отправки в autocomplete
