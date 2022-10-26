@@ -18,7 +18,7 @@ class RegistrationController extends AnonymousController
                 if (!$registrationForm->loadToUser()->save()) {
                     throw new ModelSaveException('Не удалось сохранить данные');
                 }
-                Yii::$app->response->redirect(['task']);
+                return Yii::$app->response->redirect(['task']);
             }
         }
         return $this->render('registration', ['model' => $registrationForm]);
