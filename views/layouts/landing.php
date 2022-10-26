@@ -119,8 +119,8 @@
     </footer>
 </div>
 <div class="overlay"></div>
-<script src="../js/landing.js"></script>
 <?php
+$this->registerJsFile('/js/landing.js');
 $this->endBody() ?>
 </body>
 </html>
