@@ -11,6 +11,7 @@ use app\models\forms\ReviewForm;
 use app\models\Task;
 use app\models\User;
 use TaskForce\exceptions\ModelSaveException;
+use TaskForce\exceptions\ValidationException;
 use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
@@ -47,14 +48,13 @@ class TaskController extends SecuredController
 
         if (Yii::$app->request->getIsPost()) {
             $filterForm->load(Yii::$app->request->post());
-            if (!$filterForm->validate()) {
-                $errors = $this->getErrors();
-            } else {
+            if ($filterForm->validate()) {
                 $tasksDataProvider = new ActiveDataProvider([
                     'query' => $filterForm->getFilteredTasksData(),
                     'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
                 ]);
             }
+            throw new ValidationException('Форма не прошла валидацию');
         }
 
         return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
@@ -103,6 +103,7 @@ class TaskController extends SecuredController
 
                 return $this->goHome();
             }
+            throw new ValidationException('Форма не прошла валидацию');
         }
         throw new BadRequestHttpException();
     }
@@ -132,6 +133,7 @@ class TaskController extends SecuredController
 
                 return $this->goHome();
             }
+            throw new ValidationException('Форма не прошла валидацию');
         }
 
         return $this->render('add', ['model' => $addTaskForm]);
@@ -164,6 +166,7 @@ class TaskController extends SecuredController
 
             return Yii::$app->response->redirect(['task/view', 'id' => $responseForm->taskId]);
         }
+        throw new ValidationException('Форма не прошла валидацию');
     }
 
     public function actionReview()
@@ -177,6 +180,7 @@ class TaskController extends SecuredController
 
             return Yii::$app->response->redirect(['task']);
         }
+        throw new ValidationException('Форма не прошла валидацию');
     }
 
     public function actionRefuse($id, $response_id)
