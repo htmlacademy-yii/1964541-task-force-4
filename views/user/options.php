@@ -16,9 +16,9 @@ use yii\widgets\ActiveForm;
                 </div>
                 <?= $form->field($model, 'file')->fileInput(['hidden' => ''])->label('Сменить аватар', ['class' => 'button button--black']) ?>
             </div>
-            <?= $form->field($model, 'login')->textInput(['labelOptions' => ['class' => 'control-label']])?>
+            <?= $form->field($model, 'login')->textInput(['value' => Yii::$app->user->identity->login, 'labelOptions' => ['class' => 'control-label']])?>
             <div class="half-wrapper">
-                <?= $form->field($model, 'email')->input('email', ['labelOptions' => ['class' => 'control-label']]) ?>
+                <?= $form->field($model, 'email')->input('email', ['value' => Yii::$app->user->identity->email, 'labelOptions' => ['class' => 'control-label']]) ?>
                 <?= $form->field($model, 'birthDate')->input('date', ['format' => 'php:dd.mm.YYYY', 'labelOptions' => ['class' => 'control-label']]) ?>
             </div>
             <div class="half-wrapper">
