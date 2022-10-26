@@ -82,7 +82,7 @@ $this->beginBody() ?>
                 <div class="popup-head">
                     <ul class="popup-menu">
                         <li class="menu-item">
-                            <a href="#" class="link">Настройки</a>
+                            <a href="<?= Yii::$app->urlManager->createUrl(['user/options']) ?>" class="link">Настройки</a>
                         </li>
                         <li class="menu-item">
                             <a href="#" class="link">Связаться с нами</a>
