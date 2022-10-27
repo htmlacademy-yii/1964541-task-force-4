@@ -17,6 +17,7 @@ use TaskForce\actions\ActionReject;
 use TaskForce\exceptions\ActionUnavailableException;
 use TaskForce\exceptions\ModelSaveException;
 use Yii;
+use yii\db\ActiveRecord;
 
 class TaskService
 {
@@ -160,7 +161,7 @@ class TaskService
      * @return void
      * @throws \yii\db\Exception Не удалось провести транзакцию
      */
-    private function saveTransaction(Task $task, Response|Review $form)
+    private function saveTransaction(Task $task, ActiveRecord $form)
     {
         $transaction = Yii::$app->db->beginTransaction();
 

@@ -37,7 +37,7 @@ class UserController extends SecuredController
             throw new NotFoundHttpException("Юзер с ID $id не найден");
         }
 
-    if ($user->user_type !== User::EXECUTOR_STATUS) {
+        if ($user->user_type !== User::EXECUTOR_STATUS) {
             throw new HttpException('404', 'Доступ запрещен');
         }
 
@@ -54,6 +54,8 @@ class UserController extends SecuredController
     public function actionOptions()
     {
         $optionsForm = new OptionsForm();
+        $optionsForm->login = Yii::$app->user->identity->login;
+        $optionsForm->email = Yii::$app->user->identity->email;
         if (Yii::$app->request->getIsPost()) {
             $optionsForm->load(Yii::$app->request->post());
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
