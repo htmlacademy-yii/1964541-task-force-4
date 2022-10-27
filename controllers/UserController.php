@@ -54,6 +54,8 @@ class UserController extends SecuredController
     public function actionOptions()
     {
         $optionsForm = new OptionsForm();
+        $optionsForm->login = Yii::$app->user->identity->login;
+        $optionsForm->email = Yii::$app->user->identity->email;
         if (Yii::$app->request->getIsPost()) {
             $optionsForm->load(Yii::$app->request->post());
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');

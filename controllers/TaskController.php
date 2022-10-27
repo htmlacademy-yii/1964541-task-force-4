@@ -54,7 +54,6 @@ class TaskController extends SecuredController
                     'pagination' => ['pageSize' => Yii::$app->params['pageSize']],
                 ]);
             }
-            throw new ValidationException('Форма не прошла валидацию');
         }
 
         return $this->render('task', ['tasksDataProvider' => $tasksDataProvider, 'model' => $filterForm]);
