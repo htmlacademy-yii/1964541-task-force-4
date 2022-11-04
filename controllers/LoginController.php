@@ -3,20 +3,10 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\AnonymousController;
-use app\models\Auth;
 use app\models\forms\LoginForm;
-use app\models\User;
-use GuzzleHttp\Client;
-use http\Exception\UnexpectedValueException;
 use TaskForce\AuthHandler;
-use TaskForce\exceptions\BadRequestException;
-use TaskForce\exceptions\WrongAnswerFormatException;
 use Yii;
-use yii\authclient\clients\VKontakte;
-use yii\db\Exception;
-use yii\helpers\ArrayHelper;
 use yii\web\Response;
-use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 
 class LoginController extends AnonymousController

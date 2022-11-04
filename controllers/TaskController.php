@@ -3,7 +3,6 @@
 namespace app\controllers;
 
 use app\components\AccessControllers\SecuredController;
-use app\models\Files;
 use app\models\forms\AddTaskForm;
 use app\models\forms\FilterForm;
 use app\models\forms\ResponseForm;
@@ -16,9 +15,7 @@ use TaskForce\MyTaskFilter;
 use TaskForce\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use yii\web\BadRequestHttpException;
-use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 

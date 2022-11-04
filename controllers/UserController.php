@@ -7,7 +7,6 @@ use app\models\Auth;
 use app\models\forms\OptionsForm;
 use app\models\forms\PasswordForm;
 use app\models\User;
-use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
