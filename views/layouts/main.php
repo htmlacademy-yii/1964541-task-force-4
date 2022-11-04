@@ -4,14 +4,9 @@
 
 /** @var string $content */
 
-use app\assets\AppAsset;
 use app\assets\MainAsset;
 use app\models\Task;
-use app\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use yii\helpers\Html;
 use yii\widgets\Menu;
 
 MainAsset::register($this);
@@ -78,7 +73,7 @@ $this->beginBody() ?>
                 <?= \app\widgets\AvatarWidget::widget(['avatar' => Yii::$app->user->identity->avatar, 'width' => 55, 'height' => 55, 'class' => 'user-photo']) ?>
             </a>
             <div class="user-menu">
-                <p class="user-name"><?= Yii::$app->user->identity->login ?></p>
+                <p class="user-name"><?= Html::encode(Yii::$app->user->identity->login) ?></p>
                 <div class="popup-head">
                     <ul class="popup-menu">
                         <li class="menu-item">

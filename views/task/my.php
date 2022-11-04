@@ -2,6 +2,7 @@
 
 use app\models\Task;
 use app\models\User;
+use yii\helpers\Html;
 use yii\widgets\Menu; ?>
 <div class="left-menu">
     <h3 class="head-main head-task">Мои задания</h3>
@@ -39,15 +40,15 @@ use yii\widgets\Menu; ?>
         <div class="task-card">
             <div class="header-task">
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id]) ?>"
-                   class="link link--block link--big"><?= $task->title ?></a>
-                <p class="price price--task"><?= $task->price ?></p>
+                   class="link link--block link--big"><?= Html::encode($task->title) ?></a>
+                <p class="price price--task"><?= Html::encode($task->price) ?></p>
             </div>
             <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?>
             </p>
-            <p class="task-text"><?= $task->description ?></p>
+            <p class="task-text"><?= Html::encode($task->description) ?></p>
             <div class="footer-task">
                 <?= !empty($task->city->name) ? "<p class='info-text town-text'>" . $task->city->name . '</p>' : '' ?>
-                <p class="info-text category-text"><?= $task->category->name ?></p>
+                <p class="info-text category-text"><?= Html::encode($task->category->name) ?></p>
                 <a href="<?= Yii::$app->urlManager->createUrl(['task/view', 'id' => $task->id]) ?>"
                    class="button button--black">Смотреть Задание</a>
             </div>

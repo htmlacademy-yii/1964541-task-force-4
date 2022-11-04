@@ -4,14 +4,14 @@
 use app\models\Response;
 use app\models\Task;
 use app\widgets\ActionsWidget;
-use TaskForce\actions\ActionAccept;
-use yii\widgets\ActiveForm; ?>
+use yii\helpers\Html;
+?>
 <div class="left-column">
     <div class="head-wrapper">
-        <h3 class="head-main"><?= $task->title ?></h3>
-        <p class="price price--big"><?= $task->price ?></p>
+        <h3 class="head-main"><?= Html::encode($task->title) ?></h3>
+        <p class="price price--big"><?= Html::encode($task->price) ?></p>
     </div>
-    <p class="task-description"><?= $task->description ?></p>
+    <p class="task-description"><?= Html::encode($task->description) ?></p>
     <?php if (!$task->checkUserResponse(Yii::$app->user->id)): ?>
     <?php foreach ($task->getAvailableActions(Yii::$app->user->id) as $actionObject): ?>
         <?= $actionObject !== null ? ActionsWidget::widget(['actionObject' => $actionObject]) : ''; ?>
@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm; ?>
     <?php if ($task->lat): ?>
     <div class="task-map">
         <div id="map" class="map"></div>
-            <p class="map-address town"><?= $task->city->name ?></p>
+            <p class="map-address town"><?= Html::encode($task->city->name) ?></p>
         <p class="map-address"><?= Yii::$app->geocoder->getAddress($task->long . ' ' . $task->lat) ?></p>
     </div>
     <?php endif; ?>
@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm; ?>
                  height="156" alt="Фото заказчиков">
             <div class="feedback-wrapper">
                 <a href="<?= Yii::$app->urlManager->createUrl(['user/view', 'id' => $response->executor->id]) ?>"
-                   class="link link--block link--big"><?= $response->executor->login ?></a>
+                   class="link link--block link--big"><?= Html::encode($response->executor->login) ?></a>
                 <div class="response-wrapper">
                     <div class="stars-rating small">
                         <?= \app\widgets\StarsWidget::widget(['grade' => $response->executor->getUserRating()]) ?>
@@ -40,14 +40,14 @@ use yii\widgets\ActiveForm; ?>
                     <p class="reviews"><?= $response->executor->getReviewsCount() ?></p>
                 </div>
                 <p class="response-message">
-                    <?= $response->content ?>
+                    <?= Html::encode($response->content) ?>
                 </p>
 
             </div>
             <div class="feedback-wrapper">
                 <p class="info-text"><span
                             class="current-time"><?= Yii::$app->formatter->asRelativeTime($response->dt_add) ?></p>
-                <p class="price price--small"><?= $response->price ?></p>
+                <p class="price price--small"><?= Html::encode($response->price) ?></p>
             </div>
             <?php if (Yii::$app->user->id === $task->customer_id && $task->status !== Task::STATUS_CANCELED && $task->status !== Task::STATUS_EXECUTED && $task->status !== Task::STATUS_IN_WORK && $response->status !== Response::STATUS_CANCELED): ?>
                 <div class="button-popup">
@@ -66,7 +66,7 @@ use yii\widgets\ActiveForm; ?>
         <h4 class="head-card">Информация о задании</h4>
         <dl class="black-list">
             <dt>Категория</dt>
-            <dd><?= $task->category->name ?></dd>
+            <dd><?= Html::encode($task->category->name)?></dd>
             <dt>Дата публикации</dt>
             <dd><?= Yii::$app->formatter->asRelativeTime($task->dt_add) ?></dd>
             <dt>Срок выполнения</dt>

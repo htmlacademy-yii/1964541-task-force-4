@@ -7,7 +7,6 @@ use app\models\Auth;
 use app\models\forms\OptionsForm;
 use app\models\forms\PasswordForm;
 use app\models\User;
-use TaskForce\exceptions\ModelSaveException;
 use Yii;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -56,6 +55,10 @@ class UserController extends SecuredController
         $optionsForm = new OptionsForm();
         $optionsForm->login = Yii::$app->user->identity->login;
         $optionsForm->email = Yii::$app->user->identity->email;
+        $optionsForm->telegram = Yii::$app->user->identity?->telegram;
+        $optionsForm->phone = Yii::$app->user->identity?->phone;
+        $optionsForm->birthDate = Yii::$app->user->identity?->bdate;
+        $optionsForm->description = Yii::$app->user->identity?->description;
         if (Yii::$app->request->getIsPost()) {
             $optionsForm->load(Yii::$app->request->post());
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');

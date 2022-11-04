@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Category;
+use app\widgets\AvatarWidget;
 use yii\widgets\ActiveForm;
 ?>
 <main class="main-content main-content--left container">
@@ -12,7 +13,7 @@ use yii\widgets\ActiveForm;
             <div class="photo-editing">
                 <div>
                     <p class="form-label">Аватар</p>
-                    <?= \app\widgets\AvatarWidget::widget(['avatar' => Yii::$app->user->identity->avatar, 'width' => 83, 'height' => 83, 'class' => 'avatar-preview']) ?>
+                    <?= AvatarWidget::widget(['avatar' => Yii::$app->user->identity->avatar, 'width' => 83, 'height' => 83, 'class' => 'avatar-preview']) ?>
                 </div>
                 <?= $form->field($model, 'file')->fileInput(['hidden' => ''])->label('Сменить аватар', ['class' => 'button button--black']) ?>
             </div>
