@@ -38,19 +38,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    public static function findIdentity($id)
-    {
-        return self::findOne($id);
-    }
-
-    public function getId()
-    {
-        return $this->getPrimaryKey();
-    }
-
     public const CUSTOMER_STATUS = 'customer';
-    public const EXECUTOR_STATUS = 'executor';
 
+    public const EXECUTOR_STATUS = 'executor';
     /**
      * {@inheritdoc}
      */
@@ -120,6 +110,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function getCategories()
     {
         return $this->hasMany(Category::class, ['id' => 'category_id'])->viaTable('user_category', ['user_id' => 'id']);
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
     }
 
     /**
@@ -210,6 +205,16 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Gets query for [[Auth]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuth()
+    {
+        return $this->hasOne(Auth::className(), ['id' => 'user_id']);
+    }
+
+    /**
      * Возвращает проваленные задания
      * @return ActiveQuery
      */
@@ -258,14 +263,9 @@ class User extends ActiveRecord implements IdentityInterface
         return false;
     }
 
-    /**
-     * Gets query for [[Auth]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAuth()
+    public static function findIdentity($id)
     {
-        return $this->hasOne(Auth::className(), ['id' => 'user_id']);
+        return self::findOne($id);
     }
 
     /**

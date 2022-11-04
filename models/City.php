@@ -28,16 +28,6 @@ class City extends \yii\db\ActiveRecord
         return 'city';
     }
 
-    public static function getIdByName($cityName)
-    {
-        $city = City::findOne(['name' => $cityName]);
-        if (!$city) {
-            throw new SourceFileException('Такого города нет в таблице');
-        }
-
-        return $city->id;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -47,15 +37,6 @@ class City extends \yii\db\ActiveRecord
             [['lng', 'lat'], 'number'],
             [['name'], 'string', 'max' => 64],
         ];
-    }
-
-    public static function getCityList()
-    {
-        $cityList = City::find()
-            ->select('id, name')
-            ->asArray()
-            ->all();
-        return ArrayHelper::map($cityList, 'id', 'name');
     }
 
     /**
@@ -71,6 +52,16 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    public static function getIdByName($cityName)
+    {
+        $city = City::findOne(['name' => $cityName]);
+        if (!$city) {
+            throw new SourceFileException('Такого города нет в таблице');
+        }
+
+        return $city->id;
+    }
+
     /**
      * Gets query for [[Tasks]].
      *
@@ -79,6 +70,15 @@ class City extends \yii\db\ActiveRecord
     public function getTasks()
     {
         return $this->hasMany(Task::className(), ['city_id' => 'id']);
+    }
+
+    public static function getCityList()
+    {
+        $cityList = City::find()
+            ->select('id, name')
+            ->asArray()
+            ->all();
+        return ArrayHelper::map($cityList, 'id', 'name');
     }
 
     /**
