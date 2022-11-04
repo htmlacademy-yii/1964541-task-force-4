@@ -1,6 +1,4 @@
 <?php
-
-use app\models\Auth;
 use yii\widgets\Menu; ?>
 <div class="left-menu left-menu--edit">
     <h3 class="head-main head-task">Настройки</h3>

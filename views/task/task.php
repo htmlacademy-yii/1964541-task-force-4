@@ -2,7 +2,6 @@
 
 use app\models\Category;
 use yii\widgets\ActiveForm;
-use yii\widgets\LinkPager;
 use yii\widgets\ListView;
 
 ?>
