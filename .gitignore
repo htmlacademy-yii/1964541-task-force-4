@@ -35,9 +35,4 @@ tests/_support/_generated
 #vagrant folder
 /.vagrant
 
-#users files
-/web/uploads
-
-/node_modules/
-
 /runtime
