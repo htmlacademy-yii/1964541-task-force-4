@@ -9,17 +9,12 @@ class LoginForm extends Model
 {
     public $email;
     public $password;
-
     private $_user;
 
-    public function attributeLabels()
-    {
-        return [
-            'email' => 'Почта',
-            'password' => 'Пароль'
-        ];
-    }
-
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -29,6 +24,36 @@ class LoginForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email' => 'Почта',
+            'password' => 'Пароль'
+        ];
+    }
+
+    /**
+     * Возвращает Объект пользователя, если находит
+     * @return User|null Пользователь или его отсутствие
+     */
+    public function getUser()
+    {
+        if ($this->_user === null) {
+            $this->_user = User::findOne(['email' => $this->email]);
+        }
+
+        return $this->_user;
+    }
+
+    /**
+     * Сравнивает пароль введенный пользователем с хэшем пароля, хранящимся в БД
+     * @param $attribute
+     * @return void
+     */
     public function validatePassword($attribute)
     {
         if (!$this->hasErrors()) {
@@ -37,14 +62,5 @@ class LoginForm extends Model
                 $this->addError($attribute, 'Неправильный email или пароль');
             }
         }
-    }
-
-    public function getUser()
-    {
-        if ($this->_user === null) {
-            $this->_user = User::findOne(['email' => $this->email]);
-        }
-
-        return $this->_user;
     }
 }

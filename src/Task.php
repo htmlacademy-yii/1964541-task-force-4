@@ -27,11 +27,21 @@ class Task
         $this->executor_id = $executor_id;
     }
 
+    /**
+     * Получить действующий статус
+     * @return string Статус
+     */
     public function getCurrentStatus(): string
     {
         return $this->current_status;
     }
 
+    /**
+     * Получить следующий возможный action для переданного action
+     * @param string $action Десйтвующий action
+     * @return string Возвращает возможный action
+     * @throws ActionNotExistsException Переданные action не сущетсвует
+     */
     public function getNextStatus(string $action): string
     {
         return match ($action) {
@@ -43,6 +53,12 @@ class Task
         };
     }
 
+    /**
+     * Проверка возможного действия для текущего пользователя в сесии
+     * @param int $id ID польщзователя
+     * @return string[] Возможные действия
+     * @throws StatusNotExistsException Не существует статус
+     */
     public function getAvailableActions(int $id): array
     {
         switch ($this->current_status) {
@@ -55,6 +71,13 @@ class Task
         }
     }
 
+    /**
+     * Action принятия задания
+     * @param int $id ID пользоавтеля сессии
+     * @return void
+     * @throws ActionUnavailableException Пользователь не может совершить данное действие
+     * @throws StatusNotExistsException Статус не существует
+     */
     public function actionAccept(int $id): void
     {
         if (in_array(ActionAccept::class, $this->getAvailableActions($id))) {
@@ -64,6 +87,13 @@ class Task
         }
     }
 
+    /**
+     * Action отказа
+     * @param int $id ID пользоавтеля сессии
+     * @return void
+     * @throws ActionUnavailableException Пользователь не может совершить данное действие
+     * @throws StatusNotExistsException Статус не существует
+     */
     public function actionRefuse(int $id): void
     {
         if (in_array(ActionCancel::class, $this->getAvailableActions($id))) {
@@ -73,6 +103,13 @@ class Task
         }
     }
 
+    /**
+     * Action выполнения задания
+     * @param int $id ID пользоавтеля сессии
+     * @return void
+     * @throws ActionUnavailableException Пользователь не может совершить данное действие
+     * @throws StatusNotExistsException Статус не существует
+     */
     public function actionExecute(int $id): void
     {
         if (in_array(ActionExecute::class, $this->getAvailableActions($id))) {
@@ -82,6 +119,13 @@ class Task
         }
     }
 
+    /**
+     * Action отмены
+     * @param int $id ID пользоавтеля сессии
+     * @return void
+     * @throws ActionUnavailableException Пользователь не может совершить данное действие
+     * @throws StatusNotExistsException Статус не существует
+     */
     public function actionCancel(int $id): void
     {
         if (in_array(ActionReject::class, $this->getAvailableActions($id))) {
@@ -91,6 +135,10 @@ class Task
         }
     }
 
+    /**
+     * Возвращает все возможные статусы и действия
+     * @return string[]
+     */
     public function getStatusMap(): array
     {
         return [

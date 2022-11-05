@@ -204,11 +204,20 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasMany(Review::className(), ['task_id' => 'id']);
     }
 
+    /**
+     * Возвращает лейбл статуса
+     * @return string
+     */
     public function getStatusLabel(): string
     {
         return self::$statusMap[$this->status];
     }
 
+    /**
+     * Возвращает массив Actions возможных текущему пользователю
+     * @param int $id
+     * @return array|null[]|ActionAccept[]|ActionCancel[]|ActionReject[]
+     */
     public function getAvailableActions(int $id): array
     {
         switch ($this->status) {

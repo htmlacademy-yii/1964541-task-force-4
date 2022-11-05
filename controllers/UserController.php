@@ -66,7 +66,7 @@ class UserController extends SecuredController
             if ($optionsForm->validate()) {
                 $optionsForm->loadToUser();
 
-                return $this->redirect(['view', 'id' => Yii::$app->user->id]);
+                return Yii::$app->user->identity->user_type === 'executor' ? $this->redirect(['view', 'id' => Yii::$app->user->id]) : $this->goHome();
             }
         }
         return $this->render('options', ['model' => $optionsForm]);

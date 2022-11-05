@@ -25,6 +25,10 @@ abstract class AbstractDataImporter
         $this->column_names = $column_names;
     }
 
+    /**
+     * Выполняет импорт данных из CSV файла в файл с SQL инструкциями
+     * @return void
+     */
     public function import(): void
     {
         try {
@@ -36,6 +40,17 @@ abstract class AbstractDataImporter
         }
     }
 
+    /**
+     * Возвращает список значений таблицы
+     * @return array
+     */
+    abstract protected function getTableValues(): array;
+
+    /**
+     * Создает файл SQL и записывает имеющиеся данные в него
+     * @return void
+     * @throws SourceFileException Ошибка создания файла
+     */
     protected function insertInto(): void
     {
         try {
@@ -52,6 +67,12 @@ abstract class AbstractDataImporter
         $new_file = null;
     }
 
+    /**
+     * Переделывает полученные из файла данные в CRUD запросы
+     * @return void
+     * @throws ColumnsNameException Прокидывается ошибка из функции создания колонок (Кол-во не совпадает)
+     * @throws SqlTransformException Не удалось преобразовать данные в CRUD запросы
+     */
     protected function dataIntoSql(): void
     {
         $sql_query = 'INSERT INTO ' . $this->table_name;
@@ -66,6 +87,11 @@ abstract class AbstractDataImporter
         }
     }
 
+    /**
+     * Извлекает данные и записывает их в массив
+     * @return void
+     * @throws SourceFileException Файл не удалось создать
+     */
     protected function extractDataArr(): void
     {
         try {
@@ -79,8 +105,11 @@ abstract class AbstractDataImporter
         }
     }
 
-    abstract protected function getTableValues(): array;
-
+    /**
+     * Получает названия слобцов в таблице
+     * @return array
+     * @throws ColumnsNameException Кол-во столбцов не совпадает с заданными в файле
+     */
     protected function getTableTitles(): array
     {
         $this->file_object->rewind();
@@ -91,6 +120,10 @@ abstract class AbstractDataImporter
 
     }
 
+    /**
+     * Генератор, проходится по файлу CSV и извлекает данные по строчке
+     * @return iterable|null
+     */
     protected function getNextLine(): ?iterable
     {
         while (!$this->file_object->eof()) {

@@ -27,19 +27,10 @@ class AddTaskForm extends Model
     const TITLE_MAX_LENGTH = 128;
     const DESCRIPTION_MIN_LENGTH = 30;
 
-    public function attributeLabels()
-    {
-        return [
-            'title' => 'Опишите суть проблемы',
-            'description' => 'Подробности задания',
-            'category' => 'Категория',
-            'price' => 'Бюджет',
-            'address' => 'Локация',
-            'deadline' => 'Срок исполнения',
-            'files' => 'Файлы',
-        ];
-    }
-
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -62,26 +53,31 @@ class AddTaskForm extends Model
         ];
     }
 
-    private function uploadFiles(): bool
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
+    public function attributeLabels()
     {
-        if ($this->files && $this->validate()) {
-            foreach ($this->files as $file) {
-                $newName = uniqid('upload') . '.' . $file->getExtension();
-                $file->saveAs('@webroot/uploads/' . $newName);
-                $this->filePaths[] = $newName;
-            }
-            return true;
-        }
-        return false;
+        return [
+            'title' => 'Опишите суть проблемы',
+            'description' => 'Подробности задания',
+            'category' => 'Категория',
+            'price' => 'Бюджет',
+            'address' => 'Локация',
+            'deadline' => 'Срок исполнения',
+            'files' => 'Файлы',
+        ];
     }
 
-    private function loadLocation(Task $task): void
-    {
-        $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
-        $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
-        $task->city_id = Yii::$app->user->identity->city_id;
-    }
-
+    /**
+     * Создает объект задания и грузит туда все данные из формы
+     * @return void
+     * @throws ModelSaveException Не удалось сохранить модель задания
+     * @throws \TaskForce\exceptions\BadRequestException Ошибка работы компонента геокодера проброшенные выше (Ошибка запроса)
+     * @throws \TaskForce\exceptions\WrongAnswerFormatException Ошибка работы компонента геокодера проброшенные выше (Ответ не пришел в формате json)
+     * @throws \yii\db\Exception Не удалось провести транзакцию
+     */
     public function loadToTask(): void
     {
         $task = new Task();
@@ -116,6 +112,43 @@ class AddTaskForm extends Model
         }
     }
 
+    /**
+     * Грузит файл в паку загрузок
+     * @return bool
+     */
+    private function uploadFiles(): bool
+    {
+        if ($this->files && $this->validate()) {
+            foreach ($this->files as $file) {
+                $newName = uniqid('upload') . '.' . $file->getExtension();
+                $file->saveAs('@webroot/uploads/' . $newName);
+                $this->filePaths[] = $newName;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Грузит в модель задания координаты локации и город
+     * @param Task $task Экземпляр класса задания
+     * @return void
+     * @throws \TaskForce\exceptions\BadRequestException Ошибка работы компонента геокодера проброшенные выше (Ошибка запроса)
+     * @throws \TaskForce\exceptions\WrongAnswerFormatException Ошибка работы компонента геокодера проброшенные выше (Ответ не пришел в формате json)
+     */
+    private function loadLocation(Task $task): void
+    {
+        $task->lat = Yii::$app->geocoder->getLat($this->address, Yii::$app->user->identity->city->name);
+        $task->long = Yii::$app->geocoder->getLong($this->address, Yii::$app->user->identity->city->name);
+        $task->city_id = Yii::$app->user->identity->city_id;
+    }
+
+    /**
+     * Сохраняет файл в таблицу
+     * @param Task $task  Экземпляр класса задания
+     * @return void
+     * @throws ModelSaveException Сохранение в БД не удалось
+     */
     private function saveFiles(Task $task): void
     {
         if ($this->uploadFiles()) {

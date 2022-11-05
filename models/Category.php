@@ -19,16 +19,6 @@ use yii\helpers\ArrayHelper;
 class Category extends \yii\db\ActiveRecord
 {
 
-    public static function getCategoriesList(): array
-    {
-        $data = static::find()
-            ->select(['id', 'name'])
-            ->orderBy('id')
-            ->asArray()
-            ->all();
-        return ArrayHelper::map($data, 'id', 'name');
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -38,7 +28,8 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
+     * Возвращает массив правил валидации
+     * @return array
      */
     public function rules()
     {
@@ -51,6 +42,7 @@ class Category extends \yii\db\ActiveRecord
     }
 
     /**
+     * Аттрибуты ле
      * {@inheritdoc}
      */
     public function attributeLabels()
@@ -64,7 +56,6 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * Gets query for [[Tasks]].
-     *
      * @return \yii\db\ActiveQuery
      */
     public function getTasks()
@@ -74,7 +65,6 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * Gets query for [[UserCategories]].
-     *
      * @return \yii\db\ActiveQuery
      */
     public function getUserCategories()
@@ -84,11 +74,24 @@ class Category extends \yii\db\ActiveRecord
 
     /**
      * Gets query for [[Users]].
-     *
      * @return \yii\db\ActiveQuery
      */
     public function getUsers()
     {
         return $this->hasMany(User::className(), ['id' => 'user_id'])->viaTable('user_category', ['category_id' => 'id']);
+    }
+
+    /**
+     * Лист доступных категорий
+     * @return array
+     */
+    public static function getCategoriesList(): array
+    {
+        $data = static::find()
+            ->select(['id', 'name'])
+            ->orderBy('id')
+            ->asArray()
+            ->all();
+        return ArrayHelper::map($data, 'id', 'name');
     }
 }

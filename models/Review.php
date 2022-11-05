@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\models\forms\ResponseForm;
 use Yii;
 
 /**
@@ -79,11 +80,21 @@ class Review extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'executor_id']);
     }
 
+    /**
+     * Gets query for [[Customer]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getCustomer()
     {
         return $this->hasOne(User::className(), ['id' => 'customer_id']);
     }
 
+    /**
+     * Грузит данные из формы в модель класса Review
+     * @param ResponseForm $responseForm экземпляр класса ResponseForm
+     * @return void
+     */
     public function loadForm($responseForm)
     {
         $this->content = $responseForm->content;
