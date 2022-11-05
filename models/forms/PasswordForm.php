@@ -15,15 +15,10 @@ class PasswordForm extends Model
 
     const PASSWORD_MAX_LENGTH = 64;
 
-    public function attributeLabels(): array
-    {
-        return [
-            'oldPassword' => 'Старый пароль',
-            'newPassword' => 'Новый пароль',
-            'repeatPassword' => 'Повторите пароль'
-        ];
-    }
-
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -34,6 +29,24 @@ class PasswordForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'oldPassword' => 'Старый пароль',
+            'newPassword' => 'Новый пароль',
+            'repeatPassword' => 'Повторите пароль'
+        ];
+    }
+
+    /**
+     * Сравнивает пароль введенный пользователем с хэшем пароля, хранящимся в БД
+     * @param $attribute
+     * @return void
+     */
     public function validatePassword($attribute): void
     {
         if (!$this->hasErrors()) {
@@ -44,6 +57,12 @@ class PasswordForm extends Model
         }
     }
 
+    /**
+     * Грузит хэш нового пароля в БД
+     * @return void
+     * @throws ModelSaveException Сохранение модели пользователя не удалось
+     * @throws \yii\base\Exception Не удалось сгенерировать хэш
+     */
     public function loadToUser(): void
     {
         $user = User::findOne(Yii::$app->user->id);

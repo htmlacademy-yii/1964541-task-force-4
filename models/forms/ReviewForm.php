@@ -13,6 +13,10 @@ class ReviewForm extends Model
     public $taskId;
     public $grade;
 
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -23,6 +27,10 @@ class ReviewForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
     public function attributeLabels()
     {
         return [

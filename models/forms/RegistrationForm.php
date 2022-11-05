@@ -17,6 +17,10 @@ class RegistrationForm extends Model
     public $cityId;
     public $isExecutor;
 
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -32,6 +36,10 @@ class RegistrationForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
     public function attributeLabels()
     {
         return [
@@ -45,6 +53,11 @@ class RegistrationForm extends Model
         ];
     }
 
+    /**
+     * Создает объект User и грузит в него данные из формы
+     * @return User Новый юзер
+     * @throws \yii\base\Exception Ошибка создания хэша пароля
+     */
     public function loadToUser()
     {
         $user = new User;
@@ -53,6 +66,7 @@ class RegistrationForm extends Model
         $user->login = $this->login;
         $user->city_id = $this->cityId;
         $user->user_type = $this->isExecutor == 1 ? User::EXECUTOR_STATUS : User::CUSTOMER_STATUS;
+
         return $user;
     }
 }

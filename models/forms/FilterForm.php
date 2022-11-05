@@ -21,6 +21,25 @@ class FilterForm extends Model
     const TWENTY_FOUR_HOURS = '24 hours';
     const ONE_WEEK = '1 week';
 
+    public function rules() {
+        return [
+            [['noResponse'], 'boolean'],
+            [['noAddress'], 'boolean'],
+            [['category'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']]],
+            ['period', 'in', 'range' => [self::ONE_HOUR, self::TWENTY_FOUR_HOURS, self::ONE_WEEK]]
+        ];
+    }
+
+    public function attributeLabels(): array
+    {
+        return [
+            'category' => 'Категории',
+            'noResponse' => 'Без откликов',
+            'noAddress' => 'Удаленная работа',
+            'period' => 'Период'
+        ];
+    }
+
     public function getTasksQuery(): ActiveQuery
     {
         $activeQuery = Task::find();
@@ -53,6 +72,7 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
+
     private function chooseRightPeriod($activeQuery): ActiveQuery
     {
         switch ($this->period) {
@@ -63,26 +83,6 @@ class FilterForm extends Model
             case self::ONE_WEEK:
                 return $activeQuery->andFilterWhere(['between', 'deadline', new Expression('NOW()'), new Expression('NOW() + INTERVAL 1 WEEK')]);
         }
-    }
-
-
-    public function attributeLabels(): array
-    {
-        return [
-            'category' => 'Категории',
-            'noResponse' => 'Без откликов',
-            'noAddress' => 'Удаленная работа',
-            'period' => 'Период'
-        ];
-    }
-
-    public function rules() {
-        return [
-            [['noResponse'], 'boolean'],
-            [['noAddress'], 'boolean'],
-            [['category'], 'each', 'rule' => ['exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category' => 'id']]],
-            ['period', 'in', 'range' => [self::ONE_HOUR, self::TWENTY_FOUR_HOURS, self::ONE_WEEK]]
-        ];
     }
 
     public function periodAttributeLabels(): array

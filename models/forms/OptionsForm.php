@@ -28,6 +28,10 @@ class OptionsForm extends Model
     const PHONE_NUM_LENGTH = 11;
     const TELEGRAM_LENGTH = 64;
 
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -42,6 +46,10 @@ class OptionsForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
     public function attributeLabels(): array
     {
         return [
@@ -56,6 +64,13 @@ class OptionsForm extends Model
         ];
     }
 
+    /**
+     * Сохраняет в найденного пользователя все из формы настроек
+     * @return void
+     * @throws FileUploadException Загрузка Аватара переданного пользователем не удалась
+     * @throws ModelSaveException Сохранения изменений юзера не удались
+     * @throws \yii\db\Exception Не удалось провести транзакцию
+     */
     public function loadToUser(): void
     {
         if (!$this->uploadFile() && $this->file) {
@@ -88,6 +103,10 @@ class OptionsForm extends Model
 
     }
 
+    /**
+     * Загрузка категорий пользователя
+     * @return void
+     */
     public function loadUserCategory(): void
     {
         UserCategory::deleteByUser(Yii::$app->user->id);
@@ -100,6 +119,10 @@ class OptionsForm extends Model
         }
     }
 
+    /**
+     * Загрузка файла пользователя
+     * @return bool
+     */
     private function uploadFile(): bool
     {
         if ($this->file && $this->validate()) {
