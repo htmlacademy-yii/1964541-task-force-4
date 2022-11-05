@@ -37,24 +37,6 @@ class AuthHandler
     }
 
     /**
-     * Проверяет существование пользователя, если есть, сохраняет
-     * @return bool Пользователь есть|нет
-     */
-    public function isAuthExist()
-    {
-        $this->auth = Auth::find()->where([
-            'source' => $this->vk->getId(),
-            'source_id' => $this->attributes['id'],
-        ])->one();
-
-        if ($this->auth) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Проверяет не зарегистрирован ли email пользователя
      * @return User Возвращает либо уже зарегистрированного пользователя, либо создает нового.
      */
@@ -74,6 +56,24 @@ class AuthHandler
     public function getAuth()
     {
         return $this->auth;
+    }
+
+    /**
+     * Проверяет существование пользователя, если есть, сохраняет
+     * @return bool Пользователь есть|нет
+     */
+    public function isAuthExist()
+    {
+        $this->auth = Auth::find()->where([
+            'source' => $this->vk->getId(),
+            'source_id' => $this->attributes['id'],
+        ])->one();
+
+        if ($this->auth) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

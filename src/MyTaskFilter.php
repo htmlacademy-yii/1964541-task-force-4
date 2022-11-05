@@ -24,6 +24,10 @@ class MyTaskFilter
         }
     }
 
+    /**
+     * Проверка пользователя сессия на то, является ли он исполнителем
+     * @return bool
+     */
     public function isExecutor(): bool
     {
         if (Yii::$app->user->identity->user_type === User::EXECUTOR_STATUS) {
@@ -33,6 +37,10 @@ class MyTaskFilter
         return false;
     }
 
+    /**
+     * Проверка пользователя сессия на то, является ли он заказчиком
+     * @return bool
+     */
     public function isCustomer(): bool
     {
         if (Yii::$app->user->identity->user_type === User::CUSTOMER_STATUS) {
@@ -42,6 +50,10 @@ class MyTaskFilter
         return false;
     }
 
+    /**
+     * Возвращает отфильтрованные задания Пользователя заказчика
+     * @return array
+     */
     public function getFilteredCustomerTasks(): array
     {
         $taskQuery = Task::find()
@@ -62,6 +74,10 @@ class MyTaskFilter
         return $taskQuery->all();
     }
 
+    /**
+     * Возвращает отфильтрованные задания Пользователя исполнителя
+     * @return array
+     */
     public function getFilteredExecutorTasks(): array
     {
         $taskQuery = Task::find()

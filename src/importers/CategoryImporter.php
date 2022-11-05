@@ -6,6 +6,10 @@ class CategoryImporter extends AbstractDataImporter
 {
     protected string $table_name = 'category';
 
+    /**
+     * Возвращает возможные значения для таблицы
+     * @return array
+     */
     protected function getTableValues(): array
     {
 

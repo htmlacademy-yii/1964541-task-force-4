@@ -6,6 +6,10 @@ class CityImporter extends AbstractDataImporter
 {
     protected string $table_name = 'city';
 
+    /**
+     * Возвращает возможные значения для таблицы
+     * @return array
+     */
     protected function getTableValues(): array
     {
         unset($this->data[0]);
