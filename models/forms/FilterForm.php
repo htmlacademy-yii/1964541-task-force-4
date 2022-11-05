@@ -6,7 +6,6 @@ use app\models\Category;
 use app\models\Task;
 use Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
@@ -21,6 +20,10 @@ class FilterForm extends Model
     const TWENTY_FOUR_HOURS = '24 hours';
     const ONE_WEEK = '1 week';
 
+    /**
+     * Возвращает массив правил валидации
+     * @return array
+     */
     public function rules() {
         return [
             [['noResponse'], 'boolean'],
@@ -30,6 +33,10 @@ class FilterForm extends Model
         ];
     }
 
+    /**
+     * Возвращает массив лейблов для аттрибутов
+     * @return string[]
+     */
     public function attributeLabels(): array
     {
         return [
@@ -40,6 +47,10 @@ class FilterForm extends Model
         ];
     }
 
+    /**
+     * Возвращает запрос на задания подходящие пользователю в сессии
+     * @return ActiveQuery
+     */
     public function getTasksQuery(): ActiveQuery
     {
         $activeQuery = Task::find();
@@ -51,6 +62,10 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
+    /**
+     * Добавляет фильтры в запрос в зависимости от данных формы
+     * @return ActiveQuery
+     */
     public function getFilteredTasksData(): ActiveQuery
     {
         $activeQuery = $this->getTasksQuery();
@@ -72,7 +87,11 @@ class FilterForm extends Model
         return $activeQuery;
     }
 
-
+    /**
+     * Меняет период в зависимости от данных формы
+     * @param $activeQuery
+     * @return ActiveQuery
+     */
     private function chooseRightPeriod($activeQuery): ActiveQuery
     {
         switch ($this->period) {
@@ -85,6 +104,10 @@ class FilterForm extends Model
         }
     }
 
+    /**
+     * Аттрибуты для лейблов периода
+     * @return string[]
+     */
     public function periodAttributeLabels(): array
     {
         return [self::ONE_HOUR => '1 час', self::TWENTY_FOUR_HOURS => '12 часов', self::ONE_WEEK => '1 неделя'];

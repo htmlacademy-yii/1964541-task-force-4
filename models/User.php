@@ -118,16 +118,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Добавляет тип юзера в модель
-     * @param string $type Значение из POST запроса
-     * @return void
-     */
-    public function loadUserType($type):void
-    {
-        $this->user_type = $type;
-    }
-
-    /**
      * Возвращает позицию юзера в рейтинге
      * @return mixed
      */
@@ -236,39 +226,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Проверяет наличие регистрации через сторонний сервис
-     * @return bool
-     */
-    public function isSecurityAvailable(): bool
-    {
-        if (!Auth::findOne(['user_id' => $this->id])) {
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Проверят в работе исполнитель или нет
-     * @return bool
-     */
-    public function isBusy(): bool
-    {
-        if (Task::findOne(['executor_id' => $this->id, 'status' => Task::STATUS_IN_WORK])){
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function findIdentity($id)
-    {
-        return self::findOne($id);
-    }
-
-    /**
      * Gets query for [[Responses]].
      *
      * @return \yii\db\ActiveQuery
@@ -318,24 +275,62 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(UserCategory::className(), ['user_id' => 'id']);
     }
 
+    /**
+     * Добавляет тип юзера в модель
+     * @param string $type Значение из POST запроса
+     * @return void
+     */
+    public function loadUserType($type):void
+    {
+        $this->user_type = $type;
+    }
+
+    /**
+     * Проверяет наличие регистрации через сторонний сервис
+     * @return bool
+     */
+    public function isSecurityAvailable(): bool
+    {
+        if (!Auth::findOne(['user_id' => $this->id])) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Проверят в работе исполнитель или нет
+     * @return bool
+     */
+    public function isBusy(): bool
+    {
+        if (Task::findOne(['executor_id' => $this->id, 'status' => Task::STATUS_IN_WORK])){
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Возвращает ID юзера
+     * @param $id
+     * @return User|IdentityInterface|null
+     */
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * Валидирует пароль введенный пользователем
+     * @param $password
+     * @return bool
+     */
     public function validatePassword($password)
     {
         return \Yii::$app->security->validatePassword($password, $this->password);
-    }
-
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        // TODO: Implement findIdentityByAccessToken() method.
-    }
-
-    public function validateAuthKey($authKey)
-    {
-        // TODO: Implement validateAuthKey() method.
-    }
-
-    public function getAuthKey()
-    {
-        // TODO: Implement getAuthKey() method.
     }
 
     /**
@@ -356,4 +351,18 @@ class User extends ActiveRecord implements IdentityInterface
         $this->bdate = Yii::$app->formatter->asDate($userInfo['bdate'], 'php:Y-m-d');
     }
 
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
 }

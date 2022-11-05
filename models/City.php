@@ -52,6 +52,12 @@ class City extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Возвращает ID города по переданному ему названию
+     * @param string $cityName Переданное название города
+     * @return int
+     * @throws SourceFileException Город отсутствует в таблице
+     */
     public static function getIdByName($cityName)
     {
         $city = City::findOne(['name' => $cityName]);
@@ -72,6 +78,10 @@ class City extends \yii\db\ActiveRecord
         return $this->hasMany(Task::className(), ['city_id' => 'id']);
     }
 
+    /**
+     * Возвращает массив городов занесенных в БД
+     * @return array
+     */
     public static function getCityList()
     {
         $cityList = City::find()
