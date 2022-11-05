@@ -59,6 +59,7 @@ class UserController extends SecuredController
         $optionsForm->phone = Yii::$app->user->identity?->phone;
         $optionsForm->birthDate = Yii::$app->user->identity?->bdate;
         $optionsForm->description = Yii::$app->user->identity?->description;
+        $optionsForm->userCategory = Yii::$app->user->identity?->userCategories;
         if (Yii::$app->request->getIsPost()) {
             $optionsForm->load(Yii::$app->request->post());
             $optionsForm->file = UploadedFile::getInstance($optionsForm, 'file');
