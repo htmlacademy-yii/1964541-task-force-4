@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'login')->textInput(['labelOptions' => ['class' => 'control-label']])?>
             <div class="half-wrapper">
                 <?= $form->field($model, 'email')->input('email', ['labelOptions' => ['class' => 'control-label']]) ?>
-                <?= $form->field($model, 'birthDate')->input('date', ['format' => 'php:dd.mm.YYYY', 'labelOptions' => ['class' => 'control-label']]) ?>
+                <?= $form->field($model, 'birthDate')->input('date', ['format' => 'php:dd.mm.YYYY', 'value' => Yii::$app->formatter->asDate($model->birthDate, 'yyyy-MM-dd'), 'labelOptions' => ['class' => 'control-label']]) ?>
             </div>
             <div class="half-wrapper">
                 <?= $form->field($model, 'phone')->input('tel', ['labelOptions' => ['class' => 'control-label']])?>
